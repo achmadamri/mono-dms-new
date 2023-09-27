@@ -1,0 +1,1 @@
+c:\xampp\mysql\bin\mysqldump.exe -uroot -pP@55w0rd bsd_api_dms_order > "C:\Users\Achmad Amri\git\mono-dms\bsd-api-dms-order\bsd_api_dms_order.sql"

@@ -1,0 +1,151 @@
+<div class="main-content">
+  <div class="container-fluid">
+    <div class="row">
+      <div class="col-md-12">
+        <div class="card">
+          <div class="card-header card-header-danger">
+            <h4 class="card-title">Confirm</h4>
+            <p class="card-category">Confirm details</p>
+          </div>
+          <div class="card-body">
+            <form>
+              <div class="row">
+                <div class="col-md-3">
+                  <mat-form-field class="example-full-width">
+                    <input matInput placeholder="Date" type="text" value="{{dateNow | date: 'dd MMM yyyy'}}" readonly>
+                  </mat-form-field>
+                </div>
+                <div class="col-md-3">
+                  <mat-form-field class="example-full-width">
+                    <input matInput placeholder="Awb" type="text" [(ngModel)]="tbopAwb" name="tbopAwb" [disabled]="clicked" readonly>
+                  </mat-form-field>
+                </div>
+                <div class="col-md-3">
+                  <mat-form-field class="example-full-width">
+                    <input matInput placeholder="QC ID" type="text" [(ngModel)]="tbopQcId" name="tbopQcId" [disabled]="clicked" readonly>
+                  </mat-form-field>
+                </div>
+              </div>
+              <div class="row">
+                <div class="col-md-6">
+                  <div class="card">
+                    <div class="card-header card-header-warning">
+                      <h4 class="card-title">Order Details</h4>
+                    </div>
+                    <div class="card-body">
+                      <form>
+                        <div class="row">
+                          <div class="col-md-6">
+                            <mat-form-field class="example-full-width">
+                              <input matInput placeholder="Brand" type="text" [(ngModel)]="getOrderPackResponse.tbOrderPack.tbopBrand" name="tbopBrand" readonly>
+                            </mat-form-field>
+                          </div>
+                          <div class="col-md-6">
+                            <mat-form-field class="example-full-width">
+                              <input matInput placeholder="Order No" type="text" [(ngModel)]="getOrderPackResponse.tbOrderPack.tbopOrderNo" name="tbopOrderNo" readonly>
+                            </mat-form-field>
+                          </div>
+                        </div>
+                        <div class="row">
+                          <div class="col-md-6">
+                            <mat-form-field class="example-full-width">
+                              <input matInput placeholder="Market" type="text" [(ngModel)]="getOrderPackResponse.tbOrderPack.tbopMarket" name="tbopMarket" readonly>
+                            </mat-form-field>
+                          </div>
+                          <div class="col-md-6">
+                            <mat-form-field class="example-full-width">
+                              <input matInput placeholder="Name" type="text" [(ngModel)]="getOrderPackResponse.tbOrderPack.tbopName" name="tbopName" readonly>
+                            </mat-form-field>
+                          </div>
+                        </div>
+                        <div class="row">
+                          <div class="col-md-6">
+                            <mat-form-field class="example-full-width">
+                              <input matInput placeholder="QC ID" type="text" [(ngModel)]="getOrderPackResponse.tbOrderPack.tbopQcId" name="tbopQcId" readonly>
+                            </mat-form-field>
+                          </div>
+                          <div class="col-md-6">
+                            <mat-form-field class="example-full-width">
+                              <input matInput placeholder="Notes" type="text" [(ngModel)]="getOrderPackResponse.tbOrderPack.tbopNotes" name="tbopNotes" readonly>
+                            </mat-form-field>
+                          </div>
+                        </div>
+                        <div class="clearfix"></div>
+                        <table class="table table-hover">
+                          <thead class="text-warning">
+                            <tr>
+                              <th scope="col">No</th>
+                              <th scope="col">Sku</th>
+                              <th scope="col">Product</th>
+                              <th scope="col">Qty</th>
+                              <th scope="col">Check</th>
+                            </tr>
+                          </thead>
+                          <tbody *ngIf="getOrderPackResponse.lstTbOrder[0].tboSku != undefined">
+                            <tr *ngFor="let tbOrder of getOrderPackResponse.lstTbOrder; let i = index">
+                              <td>{{i + 1}}</td>
+                              <td>{{tbOrder.tboSku}}</td>
+                              <td title="{{tbOrder.tboItem}}">{{tbOrder.tboItemShort}}</td>
+                              <td>{{tbOrder.tboQty}}</td>
+                              <td>
+                                <div *ngIf="tbOrder.tboCheck == 'OK'" style="color: red; font-weight: bold;">OK</div>
+                                <div *ngIf="tbOrder.tboCheck == 'NOT OK'" style="cursor: pointer; color: grey;" (click)="notOk(tbOrder.tboSku, tbOrder.tboItem);">NOT OK</div>
+                              </td>
+                            </tr>
+                          </tbody>
+                        </table>
+                      </form>
+                    </div>
+                  </div>
+                </div>
+                <div class="col-md-6">
+                  <div class="card">
+                    <div class="card-header card-header-warning">
+                      <h4 class="card-title">Packing Details</h4>
+                    </div>
+                    <div class="card-body">
+                      <form>
+                        <div class="clearfix"></div>
+                        <table class="table table-hover">
+                          <thead class="text-warning">
+                            <tr>
+                              <th scope="col">No</th>
+                              <th scope="col">Type</th>
+                              <th scope="col">Sku</th>                              
+                              <th scope="col">Product</th>
+                              <th scope="col">Qty</th>
+                              <th scope="col">Status</th>
+                              <th scope="col">Check</th>
+                            </tr>
+                          </thead>
+                          <tbody>
+                            <tr *ngFor="let tbOrderPackDetail of getOrderPackResponse.lstTbOrderPackDetail; let i = index">
+                              <td>{{i + 1}}</td>
+                              <td>{{tbOrderPackDetail.tbopdType}}</td>
+                              <td>{{tbOrderPackDetail.tbopdSku}}</td>                              
+                              <td title="{{tbOrderPackDetail.tbopdItem}}">{{tbOrderPackDetail.tbopdItemShort}}</td>
+                              <td>{{tbOrderPackDetail.tbopdQty}} / {{tbOrderPackDetail.tbopdQtyPack}}</td>
+                              <td>{{tbOrderPackDetail.tbopdStatus}}<br>{{tbOrderPackDetail.tbopdSkuAdditional}}</td>
+                              <td>
+                                <div *ngIf="tbOrderPackDetail.tbopdCheck == 'OK' && tbOrderPackDetail.tbopdStatus != 'Delivered'" style="cursor: pointer; color: red; font-weight: bold;" (click)="delete(tbOrderPackDetail.tbopdId, tbOrderPackDetail.tbopdSku, tbOrderPackDetail.tbopdItem);">OK</div>
+                                <div *ngIf="tbOrderPackDetail.tbopdCheck == 'OK' && tbOrderPackDetail.tbopdStatus == 'Delivered'" style="color: red; font-weight: bold;">OK</div>
+                                <div *ngIf="tbOrderPackDetail.tbopdCheck == 'NOT OK' && tbOrderPackDetail.tbopdType != 'Product'" style="color: grey;">NOT OK</div>
+                                <div *ngIf="tbOrderPackDetail.tbopdCheck == 'NOT OK' && tbOrderPackDetail.tbopdType == 'Product'" style="cursor: pointer; color: grey;" (click)="notOk(tbOrderPackDetail.tbopdSku, tbOrderPackDetail.tbopdItem);">NOT OK</div>
+                              </td>
+                            </tr>
+                          </tbody>
+                        </table>
+                      </form>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="clearfix"></div>
+              <button mat-raised-button type="button" class="btn btn-success pull-right" [disabled]="clicked" (click)="back();">Back</button>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

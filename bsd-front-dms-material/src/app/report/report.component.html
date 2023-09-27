@@ -1,0 +1,229 @@
+<div class="main-content">
+  <div class="container-fluid">
+      <div class="row">
+          <div class="col-lg-12 col-md-12">
+              <div class="card">
+                  <div class="card-header card-header-tabs card-header-primary">
+                      <div class="nav-tabs-navigation">
+                          <div class="nav-tabs-wrapper">
+                              <ul class="nav nav-tabs" data-tabs="tabs">
+                                  <li class="nav-item" (click)="getOrderList(null)">
+                                      <a mat-button class="nav-link active" href="#order" data-toggle="tab">
+                                          <i class="material-icons">assignment</i> Order
+                                          <div class="ripple-container"></div>
+                                      </a>
+                                  </li>
+                                  <li class="nav-item" (click)="getStockList(null)">
+                                      <a mat-button class="nav-link" href="#stock" data-toggle="tab">
+                                          <i class="material-icons">assignment</i> Stock
+                                          <div class="ripple-container"></div>
+                                      </a>
+                                  </li>
+                                  <li class="nav-item" (click)="getSalesList(null)">
+                                      <a mat-button class="nav-link" href="#sales" data-toggle="tab">
+                                          <i class="material-icons">assignment</i> Sales
+                                          <div class="ripple-container"></div>
+                                      </a>
+                                  </li>
+                              </ul>
+                          </div>
+                      </div>
+                  </div>
+                  <div class="card-body table-responsive">
+                      <div class="tab-content">
+                          <div class="tab-pane active" id="order">
+                            <div class="card-body table-responsive">            
+                              <div class="row">
+                                <div class="col-md-4">
+                                  <mat-form-field>
+                                    <mat-label>Order Date</mat-label>
+                                    <mat-date-range-input [formGroup]="rangeOrder" [rangePicker]="picker">
+                                      <input matStartDate formControlName="start" placeholder="Start date">
+                                      <input matEndDate formControlName="end" placeholder="End date" (dateChange)="getOrderList(null)">
+                                    </mat-date-range-input>
+                                    <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+                                    <mat-date-range-picker #picker></mat-date-range-picker>
+                                    
+                                    <mat-error *ngIf="rangeOrder.controls.start.hasError('matStartDateInvalid')">Invalid start date</mat-error>
+                                    <mat-error *ngIf="rangeOrder.controls.end.hasError('matEndDateInvalid')">Invalid end date</mat-error>
+                                  </mat-form-field>
+                                </div>
+                                <div class="col-md-4">
+                                  <mat-form-field>
+                                    <mat-label>Brand</mat-label>
+                                    <mat-select [(ngModel)]="brandOrder" (selectionChange)="getOrderList(null)">
+                                      <mat-option value="">
+                                        All
+                                      </mat-option>
+                                      <mat-option *ngFor="let lstTbBrand of getBrandResponse.lstTbBrand" [value]="lstTbBrand.tbbBrand">
+                                        {{lstTbBrand.tbbBrand}}
+                                      </mat-option>
+                                    </mat-select>
+                                  </mat-form-field>
+                                </div> 
+                                <div class="col-md-4">
+                                  <mat-form-field class="example-full-width">
+                                    <input matInput placeholder="Order No" type="text" [(ngModel)]="orderNoOrder" (keyup.enter)="getOrderList(null)">
+                                  </mat-form-field>
+                                </div>
+                              </div>
+                              <mat-paginator [length]="lengthOrder" [pageSize]="pageSizeOrder" [pageSizeOptions]="pageSizeOptionsOrder" (page)="getPageOrder($event)" [disabled]="clicked"></mat-paginator>
+                              <table class="table table-hover">
+                                <thead class="text-warning">
+                                  <tr>
+                                    <th scope="col">Date</th>
+                                    <th scope="col">Brand</th>
+                                    <th scope="col">Market</th>
+                                    <th scope="col">Order No</th>
+                                    <th scope="col">Name</th>
+                                    <th scope="col">Hp</th>
+                                    <th scope="col">Address</th>
+                                  </tr>
+                                </thead>
+                                <tbody *ngIf="this.getOrderListResponse.lstViewOrder[0].tboOrderNo != undefined">
+                                  <tr *ngFor="let viewOrder of getOrderListResponse.lstViewOrder">
+                                    <td>{{viewOrder.tboCreateDate | date: 'M/dd/yyyy'}}</td>
+                                    <td>{{viewOrder.tboBrand}}</td>
+                                    <td>{{viewOrder.tboMarket}}</td>
+                                    <td>{{viewOrder.tboOrderNo}}</td>
+                                    <td>{{viewOrder.tboName}}</td>
+                                    <td>{{viewOrder.tboHp}}</td>
+                                    <td style="width: 50%;">{{viewOrder.tboFullAddress}}</td>
+                                  </tr>
+                                </tbody>
+                              </table>
+                              <mat-paginator [length]="lengthOrder" [pageSize]="pageSizeOrder" [pageSizeOptions]="pageSizeOptionsOrder" (page)="getPageOrder($event)" [disabled]="clicked"></mat-paginator>
+                              <input type="button" class="btn btn-success pull-right" value="Download File" [disabled]="clicked || !downloadOrder" (click)="downloadFileOrder();" />
+                            </div>
+                          </div>
+                          <div class="tab-pane" id="stock">
+                            <div class="card-body table-responsive">            
+                              <div class="row">
+                                <div class="col-md-4">
+                                  <mat-form-field>
+                                    <mat-label>Brand</mat-label>
+                                    <mat-select [(ngModel)]="brandStock" (selectionChange)="getStockList(null)">
+                                      <mat-option value="">
+                                        All
+                                      </mat-option>
+                                      <mat-option *ngFor="let lstTbBrand of getBrandResponse.lstTbBrand" [value]="lstTbBrand.tbbBrand">
+                                        {{lstTbBrand.tbbBrand}}
+                                      </mat-option>
+                                    </mat-select>
+                                  </mat-form-field>
+                                </div>
+                                <div class="col-md-4">
+                                  <mat-form-field class="example-full-width">
+                                    <input matInput placeholder="Sku/Code" type="text" [(ngModel)]="skuStock" (keyup.enter)="getStockList(null)">
+                                  </mat-form-field>
+                                </div>
+                                <div class="col-md-4">
+                                  <mat-form-field class="example-full-width">
+                                    <input matInput placeholder="Item" type="text" [(ngModel)]="itemStock" (keyup.enter)="getStockList(null)">
+                                  </mat-form-field>
+                                </div>
+                              </div>
+                              <mat-paginator [length]="lengthStock" [pageSize]="pageSizeStock" [pageSizeOptions]="pageSizeOptionsStock" (page)="getPageStock($event)" [disabled]="clicked"></mat-paginator>
+                              <table class="table table-hover">
+                                <thead class="text-warning">
+                                  <tr>
+                                    <th scope="col">Brand</th>
+                                    <th scope="col">Sku</th>
+                                    <th scope="col">Code</th>
+                                    <th scope="col">Item</th>
+                                    <th scope="col">Qty</th>
+                                  </tr>
+                                </thead>
+                                <tbody *ngIf="this.getStockListResponse.lstViewStock[0].tbpBrand != undefined">
+                                  <tr *ngFor="let viewStock of getStockListResponse.lstViewStock">
+                                    <td>{{viewStock.tbpBrand}}</td>
+                                    <td>{{viewStock.tbpSku}}</td>
+                                    <td>{{viewStock.tbpCode}}</td>
+                                    <td>{{viewStock.tbpItem}}</td>
+                                    <td>{{viewStock.tbpQty}}</td>
+                                  </tr>
+                                </tbody>
+                              </table>
+                              <mat-paginator [length]="lengthStock" [pageSize]="pageSizeStock" [pageSizeOptions]="pageSizeOptionsStock" (page)="getPageStock($event)" [disabled]="clicked"></mat-paginator>
+                              <input type="button" class="btn btn-success pull-right" value="Download File" [disabled]="clicked || !downloadStock" (click)="downloadFileStock();" />
+                            </div>
+                          </div>
+                          <div class="tab-pane" id="sales">
+                            <div class="card-body table-responsive">            
+                              <div class="row">
+                                <div class="col-md-3">
+                                  <mat-form-field>
+                                    <mat-label>Sales Date</mat-label>
+                                    <mat-date-range-input [formGroup]="rangeSales" [rangePicker]="picker">
+                                      <input matStartDate formControlName="start" placeholder="Start date">
+                                      <input matEndDate formControlName="end" placeholder="End date" (dateChange)="getSalesList(null)">
+                                    </mat-date-range-input>
+                                    <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+                                    <mat-date-range-picker #picker></mat-date-range-picker>
+                                    
+                                    <mat-error *ngIf="rangeSales.controls.start.hasError('matStartDateInvalid')">Invalid start date</mat-error>
+                                    <mat-error *ngIf="rangeSales.controls.end.hasError('matEndDateInvalid')">Invalid end date</mat-error>
+                                  </mat-form-field>
+                                </div>
+                                <div class="col-md-3">
+                                  <mat-form-field>
+                                    <mat-label>Brand</mat-label>
+                                    <mat-select [(ngModel)]="brandSales" (selectionChange)="getSalesList(null)">
+                                      <mat-option value="">
+                                        All
+                                      </mat-option>
+                                      <mat-option *ngFor="let lstTbBrand of getBrandResponse.lstTbBrand" [value]="lstTbBrand.tbbBrand">
+                                        {{lstTbBrand.tbbBrand}}
+                                      </mat-option>
+                                    </mat-select>
+                                  </mat-form-field>
+                                </div> 
+                                <div class="col-md-3">
+                                  <mat-form-field class="example-full-width">
+                                    <input matInput placeholder="Order No" type="text" [(ngModel)]="orderNoSales" (keyup.enter)="getSalesList(null)">
+                                  </mat-form-field>
+                                </div>
+                                <div class="col-md-3">
+                                  <mat-form-field class="example-full-width">
+                                    <input matInput placeholder="Sku/Code" type="text" [(ngModel)]="skuSales" (keyup.enter)="getSalesList(null)">
+                                  </mat-form-field>
+                                </div>
+                              </div>
+                              <mat-paginator [length]="lengthSales" [pageSize]="pageSizeSales" [pageSizeOptions]="pageSizeOptionsSales" (page)="getPageSales($event)" [disabled]="clicked"></mat-paginator>
+                              <table class="table table-hover">
+                                <thead class="text-warning">
+                                  <tr>
+                                    <th scope="col">Date</th>
+                                    <th scope="col">Brand</th>
+                                    <th scope="col">Market</th>
+                                    <th scope="col">Order No</th>
+                                    <th scope="col">Sku</th>
+                                    <th scope="col">Code</th>
+                                    <th scope="col">Item</th>
+                                    <th scope="col">Qty</th>
+                                  </tr>
+                                </thead>
+                                <tbody *ngIf="this.getSalesListResponse.lstViewSales[0].tboOrderNo != undefined">
+                                  <tr *ngFor="let viewSales of getSalesListResponse.lstViewSales">
+                                    <td>{{viewSales.tboCreateDate | date: 'M/dd/yyyy'}}</td>
+                                    <td>{{viewSales.tboBrand}}</td>
+                                    <td>{{viewSales.tboMarket}}</td>
+                                    <td>{{viewSales.tboOrderNo}}</td>
+                                    <td>{{viewSales.tboSku}}</td>
+                                    <td>{{viewSales.tboCode}}</td>
+                                    <td>{{viewSales.tboItem}}</td>
+                                    <td>{{viewSales.tboQty}}</td>
+                                  </tr>
+                                </tbody>
+                              </table>
+                              <mat-paginator [length]="lengthSales" [pageSize]="pageSizeSales" [pageSizeOptions]="pageSizeOptionsSales" (page)="getPageSales($event)" [disabled]="clicked"></mat-paginator>
+                              <input type="button" class="btn btn-success pull-right" value="Download File" [disabled]="clicked || !downloadSales" (click)="downloadFileSales();" />
+                            </div>
+                          </div>
+                      </div>
+                  </div>
+              </div>
+          </div>
+      </div>
+  </div>
+</div>

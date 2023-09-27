@@ -1,0 +1,147 @@
+<div class="main-content">
+  <div class="container-fluid">
+    <div class="row">
+      <div class="col-md-12">
+        <div class="card">
+          <div class="card-header card-header-danger">
+            <h4 class="card-title">Confirm</h4>
+            <p class="card-category">Stock out confirm</p>
+          </div>
+          <div class="card-body table-responsive">
+            <div class="row">
+              <div class="col-md-3">
+                <mat-form-field>
+                  <mat-label>Order Date</mat-label>
+                  <mat-date-range-input [formGroup]="range" [rangePicker]="picker">
+                    <input matStartDate formControlName="start" placeholder="Start date">
+                    <input matEndDate formControlName="end" placeholder="End date" (dateChange)="getOrderConfirmList(null)">
+                  </mat-date-range-input>
+                  <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+                  <mat-date-range-picker #picker></mat-date-range-picker>
+                  
+                  <mat-error *ngIf="range.controls.start.hasError('matStartDateInvalid')">Invalid start date</mat-error>
+                  <mat-error *ngIf="range.controls.end.hasError('matEndDateInvalid')">Invalid end date</mat-error>
+                </mat-form-field>
+              </div>              
+              <div class="col-md-3">
+                <mat-form-field>
+                  <mat-label>Brand</mat-label>
+                  <mat-select [(ngModel)]="brand" (selectionChange)="getOrderConfirmList(null)">
+                    <mat-option value="">
+                      All
+                    </mat-option>
+                    <mat-option *ngFor="let lstTbBrand of getBrandResponse.lstTbBrand" [value]="lstTbBrand.tbbBrand">
+                      {{lstTbBrand.tbbBrand}}
+                    </mat-option>
+                  </mat-select>
+                </mat-form-field>
+              </div>     
+              <div class="col-md-3">
+                <mat-form-field>
+                  <mat-label>Type</mat-label>
+                  <mat-select [(ngModel)]="type" (selectionChange)="getOrderConfirmList(null)">
+                    <mat-option value="">
+                      All
+                    </mat-option>
+                    <mat-option value="Order">
+                      Order
+                    </mat-option>
+                    <mat-option value="Manual Stock Out">
+                      Manual Stock Out
+                    </mat-option>
+                  </mat-select>
+                </mat-form-field>
+              </div>
+              <div class="col-md-3">
+                <mat-form-field>
+                  <mat-label>Status</mat-label>
+                  <mat-select [(ngModel)]="status" (selectionChange)="getOrderConfirmList(null)">
+                    <mat-option value="">
+                      All ({{sumAll}})
+                    </mat-option>
+                    <mat-option value="Not Confirmed">
+                      Not Confirmed ({{sumNotConfirmed}})
+                    </mat-option>
+                    <mat-option value="Packed">
+                      Packed ({{sumPacked}})
+                    </mat-option>
+                    <mat-option value="Additional Packed">
+                      Additional Packed ({{sumAdditionalPacked}})
+                    </mat-option>
+                    <mat-option value="Not Packed">
+                      Not Packed ({{sumNotPacked}})
+                    </mat-option>
+                    <mat-option value="Delivered">
+                      Delivered ({{sumDelivered}})
+                    </mat-option>
+                  </mat-select>
+                </mat-form-field>
+              </div>
+            </div>
+            <div class="row">
+              <div class="col-md-6">
+                <mat-form-field class="example-full-width">
+                  <input matInput placeholder="Order No" type="text" [(ngModel)]="orderNo" (keyup.enter)="getOrderConfirmList(null)">
+                </mat-form-field>
+              </div>
+              <div class="col-md-6">
+                <mat-form-field class="example-full-width">
+                  <input matInput placeholder="Sku/Code" type="text" [(ngModel)]="sku" (keyup.enter)="getOrderConfirmList(null)">
+                </mat-form-field>
+              </div>
+            </div>
+            <mat-paginator [length]="length" [pageSize]="pageSize" [pageSizeOptions]="pageSizeOptions" (page)="getPage($event)" [disabled]="clicked"></mat-paginator>
+            <table class="table table-hover">
+              <thead class="text-warning">
+                <tr>
+                  <th scope="col" style="cursor: pointer;" (click)="checkAll();">Check All</th>
+                  <th scope="col">Date</th>
+                  <th scope="col">Order Number</th>
+                  <th scope="col">Sku</th>
+                  <th scope="col">Code</th>
+                  <th scope="col">Product</th>
+                  <th scope="col">Order Qty</th>
+                  <th scope="col">Packing Qty</th>
+                  <th scope="col">Packing PIC</th>
+                  <th scope="col">Type</th>
+                  <th scope="col">Status</th>
+                  <th scope="col">Action</th>
+                </tr>
+              </thead>
+              <tbody *ngIf="getOrderConfirmListResponse.lstViewOrderConfirm[0].orderNo != undefined">
+                <tr *ngFor="let viewOrderConfirm of getOrderConfirmListResponse.lstViewOrderConfirm">
+                  <td>
+                    <div class="form-check">
+                      <label class="form-check-label">
+                          <input class="form-check-input" type="checkbox" [(ngModel)]="viewOrderConfirm.check">
+                          <span class="form-check-sign">
+                              <span class="check" style="width: 16px; height: 16px;"></span>
+                          </span>
+                      </label>
+                    </div>
+                  </td>
+                  <td>{{viewOrderConfirm.createDate | date: 'M/dd/yyyy'}}</td>
+                  <td>{{viewOrderConfirm.orderNo}}</td>
+                  <td>{{viewOrderConfirm.sku}}</td>
+                  <td>{{viewOrderConfirm.code}}</td>
+                  <td title="{{viewOrderConfirm.item}}">{{viewOrderConfirm.itemShort}}</td>
+                  <td>{{viewOrderConfirm.orderQty}}</td>
+                  <td>{{viewOrderConfirm.packQty}}</td>
+                  <td>{{viewOrderConfirm.packingPic}}</td>
+                  <td>{{viewOrderConfirm.type}}</td>
+                  <td>{{viewOrderConfirm.status}}</td>
+                  <td>
+                    <input type="button" style="padding: 2px 15px;" class="btn btn-warning" value="view" [disabled]="clicked" [routerLink]="['/confirm-details', viewOrderConfirm.orderNo]"/>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+            <mat-paginator [length]="length" [pageSize]="pageSize" [pageSizeOptions]="pageSizeOptions" (page)="getPage($event)" [disabled]="clicked"></mat-paginator>
+            <input type="button" class="btn btn-success pull-right" value="Confirm" [disabled]="clicked" (click)="confirm();" />
+            <input type="button" class="btn btn-success pull-right" value="Download File" [disabled]="clicked || !download" (click)="downloadFile();" />
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

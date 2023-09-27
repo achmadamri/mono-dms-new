@@ -1,0 +1,52 @@
+<div class="main-content">
+  <div class="container-fluid">
+    <div class="row">
+      <div class="col-md-12">
+        <div class="card">
+          <div class="card-header card-header-danger">
+            <h4 class="card-title">Market Add</h4>
+            <p class="card-category">Add new Market</p>
+          </div>
+          <div class="card-body">
+            <form>
+              <div class="row">
+                <div class="col-md-6">                  
+                  <mat-form-field>
+                    <mat-label>Parent</mat-label>
+                    <mat-select [(ngModel)]="postMarketEditRequest.tbmParentId" name="tbmParentId">
+                        <mat-option *ngFor="let tbMarket of getMarketListResponse.lstTbMarket" [value]="tbMarket.tbmId">
+                            {{tbMarket.tbmMarket}}
+                        </mat-option>
+                    </mat-select>
+                  </mat-form-field>
+                </div>
+              </div>
+              <div class="row">
+                <div class="col-md-6">
+                  <mat-form-field>
+                    <mat-label>Role</mat-label>
+                    <mat-select [(ngModel)]="postMarketEditRequest.tbmRole" name="tbmRole">
+                        <mat-option *ngFor="let role of role" [value]="role">
+                          {{role}}
+                        </mat-option>
+                    </mat-select>
+                  </mat-form-field>
+                </div>
+              </div>
+              <div class="row">
+                <div class="col-md-6">
+                  <mat-form-field class="example-full-width">
+                    <input matInput placeholder="Market" type="text" [(ngModel)]="postMarketEditRequest.tbmMarket" name="tbmMarket">
+                  </mat-form-field>
+                </div>
+              </div>
+              <button mat-raised-button type="submit" class="btn btn-success pull-right" [disabled]="clicked" (click)="save();">Save</button>
+              <button mat-raised-button type="button" class="btn btn-success pull-right" [disabled]="clicked" (click)="back();">Back</button>
+              <div class="clearfix"></div>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

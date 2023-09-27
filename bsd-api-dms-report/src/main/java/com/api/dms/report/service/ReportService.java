@@ -1,0 +1,453 @@
+package com.api.dms.report.service;
+
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Optional;
+
+import org.apache.poi.ss.usermodel.Cell;
+import org.apache.poi.ss.usermodel.Row;
+import org.apache.poi.ss.usermodel.Sheet;
+import org.apache.poi.ss.usermodel.Workbook;
+import org.apache.poi.xssf.usermodel.XSSFWorkbook;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.env.Environment;
+import org.springframework.data.domain.Example;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
+import org.springframework.stereotype.Service;
+
+import com.api.dms.report.db.entity.TbProduct;
+import com.api.dms.report.db.entity.TbProductMarket;
+import com.api.dms.report.db.entity.TbUser;
+import com.api.dms.report.db.entity.ViewOrder;
+import com.api.dms.report.db.entity.ViewSales;
+import com.api.dms.report.db.entity.ViewStock;
+import com.api.dms.report.db.repository.TbOrderRepository;
+import com.api.dms.report.db.repository.TbProductMarketRepository;
+import com.api.dms.report.db.repository.TbProductRepository;
+import com.api.dms.report.db.repository.TbUserRepository;
+import com.api.dms.report.db.repository.ViewOrderRepository;
+import com.api.dms.report.db.repository.ViewSalesRepository;
+import com.api.dms.report.db.repository.ViewStockRepository;
+import com.api.dms.report.model.report.GetOrderListRequestModel;
+import com.api.dms.report.model.report.GetOrderListResponseModel;
+import com.api.dms.report.model.report.GetSalesListRequestModel;
+import com.api.dms.report.model.report.GetSalesListResponseModel;
+import com.api.dms.report.model.report.GetStockListRequestModel;
+import com.api.dms.report.model.report.GetStockListResponseModel;
+import com.api.dms.report.model.report.PostSyncOrderRequestModel;
+import com.api.dms.report.model.report.PostSyncOrderResponseModel;
+import com.api.dms.report.model.report.PostSyncProductRequestModel;
+import com.api.dms.report.model.report.PostSyncProductResponseModel;
+import com.api.dms.report.util.SimpleMapper;
+import com.api.dms.report.util.TokenUtil;
+
+@Service
+public class ReportService {
+
+	private Logger log = LoggerFactory.getLogger(ReportService.class);
+	
+	@Autowired
+	private Environment env;
+	
+	private TokenUtil tokenUtil = new TokenUtil();
+	
+	@Autowired
+	private TbUserRepository tbUserRepository;
+	
+	@Autowired
+	private TbProductRepository tbProductRepository;
+	
+	@Autowired
+	private TbProductMarketRepository tbProductMarketRepository;
+	
+	@Autowired
+	private TbOrderRepository tbOrderRepository;
+	
+	@Autowired
+	private ViewOrderRepository viewOrderRepository;
+	
+	@Autowired
+	private ViewStockRepository viewStockRepository;
+	
+	@Autowired
+	private ViewSalesRepository viewSalesRepository;
+	
+	public PostSyncOrderResponseModel postSyncOrder(PostSyncOrderRequestModel requestModel) throws Exception {
+		PostSyncOrderResponseModel responseModel = new PostSyncOrderResponseModel(requestModel);
+		
+		TbUser exampleTbUser = new TbUser();
+		exampleTbUser.setTbuEmail(requestModel.getEmail());
+		exampleTbUser.setTbuStatus(TbUserRepository.Active);
+		Optional<TbUser> optTbUser = tbUserRepository.findOne(Example.of(exampleTbUser));
+		
+		optTbUser.ifPresentOrElse(tbUser -> {
+			tbOrderRepository.saveAll(requestModel.getLstTbOrder());
+			
+			responseModel.setStatus("200");
+			responseModel.setMessage("Sync Order ok");
+		}, () -> {
+			responseModel.setStatus("404");
+			responseModel.setMessage("Not found");
+		});
+		
+		return responseModel;
+	}
+	
+	public PostSyncProductResponseModel postSyncProduct(PostSyncProductRequestModel requestModel) throws Exception {
+		PostSyncProductResponseModel responseModel = new PostSyncProductResponseModel(requestModel);
+		
+		TbUser exampleTbUser = new TbUser();
+		exampleTbUser.setTbuEmail(requestModel.getEmail());
+		exampleTbUser.setTbuStatus(TbUserRepository.Active);
+		Optional<TbUser> optTbUser = tbUserRepository.findOne(Example.of(exampleTbUser));
+		
+		if (optTbUser.isPresent()) {
+			SimpleMapper simpleMapper = new SimpleMapper();
+			
+			for (com.api.dms.report.model.report.TbProduct tbProductReport : requestModel.getLstTbProduct()) {
+				TbProduct tbProduct = new TbProduct();
+				
+				tbProduct = (TbProduct) simpleMapper.assign(tbProductReport, tbProduct);
+				
+				TbProduct exampleTbProduct = new TbProduct();
+				exampleTbProduct.setTbpSku(tbProduct.getTbpSku());
+				Optional<TbProduct> optTbProduct = tbProductRepository.findOne(Example.of(exampleTbProduct));
+				
+				if (optTbProduct.isPresent()) {
+					tbProduct.setTbpId(optTbProduct.get().getTbpId());
+				} else {
+					tbProduct.setTbpId(null);
+				}
+				
+				tbProductRepository.save(tbProduct);
+				
+				List<com.api.dms.report.model.report.TbProductMarket> lstTbProductMarketReport = tbProductReport.getLstTbProductMarket();
+				if (lstTbProductMarketReport != null) {
+					for (com.api.dms.report.model.report.TbProductMarket tbProductMarketReport : lstTbProductMarketReport) {
+						TbProductMarket tbProductMarket = new TbProductMarket();
+						tbProductMarket = (TbProductMarket) simpleMapper.assign(tbProductMarketReport, tbProductMarket);
+						
+						tbProductMarketRepository.save(tbProductMarket);
+					}
+				}				
+			}
+			
+			responseModel.setStatus("200");
+			responseModel.setMessage("Sync Product ok");
+		} else {
+			responseModel.setStatus("404");
+			responseModel.setMessage("Not found");
+		}
+		
+		return responseModel;
+	}
+	
+	public GetOrderListResponseModel getOrderList(String brand, String orderNo, String startDate, String endDate, String length, String pageSize, String pageIndex, GetOrderListRequestModel requestModel) throws Exception {
+		GetOrderListResponseModel responseModel = new GetOrderListResponseModel(requestModel);
+		
+		tokenUtil.claims(requestModel);
+		
+		TbUser exampleTbUser = new TbUser();
+		exampleTbUser.setTbuEmail(requestModel.getEmail());
+		exampleTbUser.setTbuStatus(TbUserRepository.Active);
+		Optional<TbUser> optTbUser = tbUserRepository.findOne(Example.of(exampleTbUser));
+		
+		if (optTbUser.isPresent()) {
+			List<ViewOrder> lstViewOrder = viewOrderRepository.find(optTbUser.get().getTbuId(), brand, orderNo, new SimpleDateFormat("yyyy-MM-dd hh:mm:ss").parse(startDate + " 00:00:00"), new SimpleDateFormat("yyyy-MM-dd hh:mm:ss").parse(endDate + " 23:59:50"), PageRequest.of(Integer.valueOf(pageIndex), Integer.valueOf(pageSize), Sort.by("tboCreateDate").ascending()));
+			
+			if (lstViewOrder.size() > 0) {
+				responseModel.setLength(viewOrderRepository.count(optTbUser.get().getTbuId(),brand, orderNo, new SimpleDateFormat("yyyy-MM-dd hh:mm:ss").parse(startDate + " 00:00:00"), new SimpleDateFormat("yyyy-MM-dd hh:mm:ss").parse(endDate + " 23:59:50")));
+				responseModel.setLstViewOrder(lstViewOrder);
+				
+				responseModel.setStatus("200");
+				responseModel.setMessage("Get Order List ok");
+			} else {
+				responseModel.setStatus("404");
+				responseModel.setMessage("Not found");
+			}
+		} else {
+			responseModel.setStatus("404");
+			responseModel.setMessage("Not found");
+		}
+		
+		return responseModel;
+	}
+	
+	public ByteArrayInputStream getOrderListReportExcel(String brand, String orderNo, String startDate, String endDate, String length, String pageSize, String pageIndex, GetOrderListRequestModel requestModel) throws Exception {
+		pageSize = "1000000000";
+		
+		ByteArrayOutputStream out = new ByteArrayOutputStream();
+
+		Workbook workbook = new XSSFWorkbook();
+		
+		Sheet sheet = workbook.createSheet("Raw");
+		int intRow = 0;
+		Row row = sheet.createRow(intRow);
+		
+		Cell cell = null;
+		
+		int intCell = 0;
+		
+		cell = row.createCell(intCell++);
+		cell.setCellValue("Date");
+		
+		cell = row.createCell(intCell++);
+		cell.setCellValue("Brand");
+		
+		cell = row.createCell(intCell++);
+		cell.setCellValue("Market");
+
+		cell = row.createCell(intCell++);
+		cell.setCellValue("Order No");
+		
+		cell = row.createCell(intCell++);
+		cell.setCellValue("Name");
+
+		cell = row.createCell(intCell++);
+		cell.setCellValue("Hp");
+		
+		cell = row.createCell(intCell++);
+		cell.setCellValue("Address");
+		
+		intRow++;
+		
+		SimpleDateFormat simpleDateFormat = new SimpleDateFormat("MM/dd/yyyy");
+		
+		List<ViewOrder> lstViewOrderRaw = getOrderList(brand, orderNo, startDate, endDate, length, pageSize, "0", requestModel).getLstViewOrder();
+		for (ViewOrder viewOrder : lstViewOrderRaw) {
+			row = sheet.createRow(intRow);
+			
+			intCell = 0;
+			
+			cell = row.createCell(intCell++);
+			cell.setCellValue(simpleDateFormat.format(viewOrder.getTboCreateDate()));
+			
+			cell = row.createCell(intCell++);
+			cell.setCellValue(viewOrder.getTboBrand());
+			
+			cell = row.createCell(intCell++);
+			cell.setCellValue(viewOrder.getTboMarket());
+			
+			cell = row.createCell(intCell++);
+			cell.setCellValue(viewOrder.getTboOrderNo());
+			
+			cell = row.createCell(intCell++);
+			cell.setCellValue(viewOrder.getTboName());
+			
+			cell = row.createCell(intCell++);
+			cell.setCellValue(viewOrder.getTboHp());
+			
+			cell = row.createCell(intCell++);
+			cell.setCellValue(viewOrder.getTboFullAddress());
+			
+			intRow++;
+		}
+		
+		workbook.write(out);
+		workbook.close();
+		
+		return new ByteArrayInputStream(out.toByteArray());
+	}
+	
+	public GetStockListResponseModel getStockList(String brand, String sku, String item, String length, String pageSize, String pageIndex, GetStockListRequestModel requestModel) throws Exception {
+		GetStockListResponseModel responseModel = new GetStockListResponseModel(requestModel);
+		
+		tokenUtil.claims(requestModel);
+		
+		TbUser exampleTbUser = new TbUser();
+		exampleTbUser.setTbuEmail(requestModel.getEmail());
+		exampleTbUser.setTbuStatus(TbUserRepository.Active);
+		Optional<TbUser> optTbUser = tbUserRepository.findOne(Example.of(exampleTbUser));
+		
+		if (optTbUser.isPresent()) {
+			List<ViewStock> lstViewStock = viewStockRepository.find(optTbUser.get().getTbuId(), brand, sku, item, PageRequest.of(Integer.valueOf(pageIndex), Integer.valueOf(pageSize), Sort.by("tbpSku").ascending()));
+			
+			if (lstViewStock.size() > 0) {
+				responseModel.setLength(viewStockRepository.count(optTbUser.get().getTbuId(), brand, sku, item));
+				responseModel.setLstViewStock(lstViewStock);
+				
+				responseModel.setStatus("200");
+				responseModel.setMessage("Get Stock List ok");
+			} else {
+				responseModel.setStatus("404");
+				responseModel.setMessage("Not found");
+			}
+		} else {
+			responseModel.setStatus("404");
+			responseModel.setMessage("Not found");
+		}
+		
+		return responseModel;
+	}
+	
+	public ByteArrayInputStream getStockListReportExcel(String brand, String sku, String item, String length, String pageSize, String pageIndex, GetStockListRequestModel requestModel) throws Exception {
+		pageSize = "1000000000";
+		
+		ByteArrayOutputStream out = new ByteArrayOutputStream();
+
+		Workbook workbook = new XSSFWorkbook();
+		
+		Sheet sheet = workbook.createSheet("Raw");
+		int intRow = 0;
+		Row row = sheet.createRow(intRow);
+		
+		Cell cell = null;
+		
+		int intCell = 0;
+		
+		cell = row.createCell(intCell++);
+		cell.setCellValue("Brand");
+		
+		cell = row.createCell(intCell++);
+		cell.setCellValue("Sku");
+
+		cell = row.createCell(intCell++);
+		cell.setCellValue("Item");
+		
+		cell = row.createCell(intCell++);
+		cell.setCellValue("Qty");
+
+		intRow++;
+		
+		SimpleDateFormat simpleDateFormat = new SimpleDateFormat("MM/dd/yyyy");
+		
+		List<ViewStock> lstViewStockRaw = getStockList(brand, sku, item, length, pageSize, "0", requestModel).getLstViewStock();
+		for (ViewStock viewStock : lstViewStockRaw) {
+			row = sheet.createRow(intRow);
+			
+			intCell = 0;
+			
+			cell = row.createCell(intCell++);
+			cell.setCellValue(viewStock.getTbpBrand());
+			
+			cell = row.createCell(intCell++);
+			cell.setCellValue(viewStock.getTbpSku());
+			
+			cell = row.createCell(intCell++);
+			cell.setCellValue(viewStock.getTbpItem());
+			
+			cell = row.createCell(intCell++);
+			cell.setCellValue(viewStock.getTbpQty());
+			
+			intRow++;
+		}
+		
+		workbook.write(out);
+		workbook.close();
+		
+		return new ByteArrayInputStream(out.toByteArray());
+	}
+	
+	public GetSalesListResponseModel getSalesList(String brand, String orderNo, String sku, String startDate, String endDate, String length, String pageSize, String pageIndex, GetSalesListRequestModel requestModel) throws Exception {
+		GetSalesListResponseModel responseModel = new GetSalesListResponseModel(requestModel);
+		
+		tokenUtil.claims(requestModel);
+		
+		TbUser exampleTbUser = new TbUser();
+		exampleTbUser.setTbuEmail(requestModel.getEmail());
+		exampleTbUser.setTbuStatus(TbUserRepository.Active);
+		Optional<TbUser> optTbUser = tbUserRepository.findOne(Example.of(exampleTbUser));
+		
+		if (optTbUser.isPresent()) {
+			List<ViewSales> lstViewSales = viewSalesRepository.find(optTbUser.get().getTbuId(), brand, orderNo, sku, new SimpleDateFormat("yyyy-MM-dd hh:mm:ss").parse(startDate + " 00:00:00"), new SimpleDateFormat("yyyy-MM-dd hh:mm:ss").parse(endDate + " 23:59:50"), PageRequest.of(Integer.valueOf(pageIndex), Integer.valueOf(pageSize), Sort.by("tboCreateDate").ascending()));
+			
+			if (lstViewSales.size() > 0) {
+				responseModel.setLength(viewSalesRepository.count(optTbUser.get().getTbuId(), brand, orderNo, sku, new SimpleDateFormat("yyyy-MM-dd hh:mm:ss").parse(startDate + " 00:00:00"), new SimpleDateFormat("yyyy-MM-dd hh:mm:ss").parse(endDate + " 23:59:50")));
+				responseModel.setLstViewSales(lstViewSales);
+				
+				responseModel.setStatus("200");
+				responseModel.setMessage("Get Sales List ok");
+			} else {
+				responseModel.setStatus("404");
+				responseModel.setMessage("Not found");
+			}
+		} else {
+			responseModel.setStatus("404");
+			responseModel.setMessage("Not found");
+		}
+		
+		return responseModel;
+	}
+	
+	public ByteArrayInputStream getSalesListReportExcel(String brand, String orderNo, String sku, String startDate, String endDate, String length, String pageSize, String pageIndex, GetSalesListRequestModel requestModel) throws Exception {
+		pageSize = "1000000000";
+		
+		ByteArrayOutputStream out = new ByteArrayOutputStream();
+
+		Workbook workbook = new XSSFWorkbook();
+		
+		Sheet sheet = workbook.createSheet("Raw");
+		int intRow = 0;
+		Row row = sheet.createRow(intRow);
+		
+		Cell cell = null;
+		
+		int intCell = 0;
+		
+		cell = row.createCell(intCell++);
+		cell.setCellValue("Date");
+		
+		cell = row.createCell(intCell++);
+		cell.setCellValue("Brand");
+		
+		cell = row.createCell(intCell++);
+		cell.setCellValue("Market");
+
+		cell = row.createCell(intCell++);
+		cell.setCellValue("Order No");
+		
+		cell = row.createCell(intCell++);
+		cell.setCellValue("Sku");
+
+		cell = row.createCell(intCell++);
+		cell.setCellValue("Item");
+		
+		cell = row.createCell(intCell++);
+		cell.setCellValue("Qty");
+		
+		intRow++;
+		
+		SimpleDateFormat simpleDateFormat = new SimpleDateFormat("MM/dd/yyyy");
+		
+		List<ViewSales> lstViewSalesRaw = getSalesList(brand, orderNo, sku, startDate, endDate, length, pageSize, "0", requestModel).getLstViewSales();
+		for (ViewSales viewSales : lstViewSalesRaw) {
+			row = sheet.createRow(intRow);
+			
+			intCell = 0;
+			
+			cell = row.createCell(intCell++);
+			cell.setCellValue(simpleDateFormat.format(viewSales.getTboCreateDate()));
+			
+			cell = row.createCell(intCell++);
+			cell.setCellValue(viewSales.getTboBrand());
+			
+			cell = row.createCell(intCell++);
+			cell.setCellValue(viewSales.getTboMarket());
+			
+			cell = row.createCell(intCell++);
+			cell.setCellValue(viewSales.getTboOrderNo());
+			
+			cell = row.createCell(intCell++);
+			cell.setCellValue(viewSales.getTboSku());
+			
+			cell = row.createCell(intCell++);
+			cell.setCellValue(viewSales.getTboItem());
+			
+			cell = row.createCell(intCell++);
+			cell.setCellValue(viewSales.getTboQty());
+			
+			intRow++;
+		}
+		
+		workbook.write(out);
+		workbook.close();
+		
+		return new ByteArrayInputStream(out.toByteArray());
+	}
+}

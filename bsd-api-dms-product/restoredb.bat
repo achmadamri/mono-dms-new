@@ -1,0 +1,1 @@
+c:\xampp\mysql\bin\mysql.exe -uroot -pP@55w0rd bsd_api_dms_product < "C:\Users\Achmad Amri\git\mono-dms\bsd-api-dms-product\bsd_api_dms_product.sql"

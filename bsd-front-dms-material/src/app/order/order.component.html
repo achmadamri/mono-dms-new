@@ -1,0 +1,119 @@
+<div class="main-content">
+  <div class="container-fluid">
+    <div class="row">
+      <div class="col-md-12">
+        <div class="card">
+          <div class="card-header card-header-danger">
+            <h4 class="card-title">Order</h4>
+            <p class="card-category">List of order</p>
+          </div>
+          <div class="card-body table-responsive">            
+            <div class="row">
+              <div class="col-md-4">
+                <mat-form-field class="example-full-width">
+                  <input matInput placeholder="Order No" type="text" [(ngModel)]="orderNo" (keyup.enter)="getOrderList(null)">
+                </mat-form-field>
+              </div>
+              <div class="col-md-4">
+                <mat-form-field>
+                  <mat-label>Order Date</mat-label>
+                  <mat-date-range-input [formGroup]="range" [rangePicker]="picker">
+                    <input matStartDate formControlName="start" placeholder="Start date">
+                    <input matEndDate formControlName="end" placeholder="End date" (dateChange)="getOrderList(null)">
+                  </mat-date-range-input>
+                  <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+                  <mat-date-range-picker #picker></mat-date-range-picker>
+                  
+                  <mat-error *ngIf="range.controls.start.hasError('matStartDateInvalid')">Invalid start date</mat-error>
+                  <mat-error *ngIf="range.controls.end.hasError('matEndDateInvalid')">Invalid end date</mat-error>
+                </mat-form-field>
+              </div>
+              <div class="col-md-4">
+                <mat-form-field>
+                  <mat-label>Status</mat-label>
+                  <mat-select [(ngModel)]="status" (selectionChange)="getOrderList(null)">
+                    <mat-option value="">
+                      All
+                    </mat-option>
+                    <mat-option value="Not Confirmed">
+                      Not Confirmed
+                    </mat-option>
+                    <mat-option value="Packed">
+                      Packed
+                    </mat-option>
+                    <mat-option value="Additional Packed">
+                      Additional Packed
+                    </mat-option>
+                    <mat-option value="Not Packed">
+                      Not Packed
+                    </mat-option>
+                    <mat-option value="Delivered">
+                      Delivered
+                    </mat-option>
+                    <mat-option value="Returned">
+                      Returned
+                    </mat-option>
+                  </mat-select>
+                </mat-form-field>
+              </div>
+            </div>
+            <mat-paginator [length]="length" [pageSize]="pageSize" [pageSizeOptions]="pageSizeOptions" (page)="getPage($event)" [disabled]="clicked"></mat-paginator>
+            <table class="table table-hover">
+              <thead class="text-warning">
+                <tr>
+                  <th scope="col" style="cursor: pointer;" (click)="checkAll();">Check All</th>
+                  <th scope="col">Date</th>
+                  <th scope="col">Brand</th>
+                  <th scope="col">Market</th>
+                  <th scope="col">Order No</th>
+                  <th scope="col">Sku</th>
+                  <th scope="col">Code</th>
+                  <th scope="col">Item</th>
+                  <th scope="col">Name</th>
+                  <th scope="col">Hp</th>
+                  <th scope="col">Status</th>
+                  <th scope="col">Type</th>
+                  <th scope="col">Action</th>
+                </tr>
+              </thead>
+              <tbody *ngIf="this.getOrderListResponse.lstTbOrder[0].tboBrand != undefined">
+                <tr *ngFor="let tbOrder of getOrderListResponse.lstTbOrder; let i = index">
+                  <td>
+                    <div class="form-check">
+                      <label class="form-check-label">
+                          <input class="form-check-input" type="checkbox" [(ngModel)]="tbOrder.check">
+                          <span class="form-check-sign">
+                              <span class="check" style="width: 16px; height: 16px;"></span>
+                          </span>
+                      </label>
+                    </div>
+                  </td>
+                  <td>{{tbOrder.tboCreateDate | date: 'M/dd/yyyy'}}</td>
+                  <td>{{tbOrder.tboBrand}}</td>
+                  <td>{{tbOrder.tboMarket}}</td>
+                  <td>{{tbOrder.tboOrderNo}}</td>
+                  <td>{{tbOrder.tboSku}}</td>
+                  <td>{{tbOrder.tboCode}}</td>
+                  <td title="{{tbOrder.tboItem}}">{{tbOrder.tboItemShort}}</td>
+                  <td title="{{tbOrder.tboName}}">{{tbOrder.tboNameShort}}</td>
+                  <td>{{tbOrder.tboHp}}</td>
+                  <td>{{tbOrder.tboStatus}}</td>
+                  <td>{{tbOrder.tboType}}</td>
+                  <td>
+                    <input type="button" style="padding: 2px 15px;" class="btn btn-warning" value="view" [disabled]="clicked" [routerLink]="['/order-edit', tbOrder.tboId]"/>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+            <mat-paginator [length]="length" [pageSize]="pageSize" [pageSizeOptions]="pageSizeOptions" (page)="getPage($event)" [disabled]="clicked"></mat-paginator>
+            <input type="button" class="btn btn-success pull-right" value="Download Packing List" [disabled]="clicked || !download" (click)="downloadFilePacking();" />
+            <input type="button" class="btn btn-success pull-right" value="Confirm" [disabled]="clicked" (click)="confirm();" />
+            <input type="button" class="btn btn-success pull-right" value="Manual Stock Out" [disabled]="clicked" (click)="orderManual();" />
+            <input type="button" class="btn btn-success pull-right" value="Upload File" [disabled]="clicked" (click)="uploadFile();" />
+            <input type="button" class="btn btn-success pull-right" value="Download File" [disabled]="clicked || !download" (click)="downloadFileOrder();" />
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
