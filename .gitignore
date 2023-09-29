@@ -1,11 +1,17 @@
 # See http://help.github.com/ignore-files/ for more about ignoring files.
 
+# other
+bsd-front-dms-material/.angular
+bsd-front-dms-material/bin
+bsd-front-dms-material/dist
+bsd-front-dms-material/node_modules
+
 # compiled output
 /tmp
 /out-tsc
 
 # dependencies
-bsd-front-dms-material/node_modules
+node_modules
 
 # IDEs and editors
 /.idea
