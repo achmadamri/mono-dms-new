@@ -157,6 +157,8 @@ public class OrderService {
 			String dataExistsString = "";
 			
 			List<TbOrder> lstTbOrder = new ArrayList<TbOrder>();
+			List<TbOrderPack> lstTbOrderPack = new ArrayList<TbOrderPack>();
+			List<TbOrderPackDetail> lstTbOrderPackDetail = new ArrayList<TbOrderPackDetail>();
 			
 			for (Row row : sheet) {
 				if (rowNum == 0) {
@@ -318,7 +320,7 @@ public class OrderService {
 							tbOrder.setTboAwb(map.get(tbOrder.getTboOrderNo()));
 							//tbOrder.setTboAwb((String) getData(row, column, "AWB"));
 							
-							tbOrder.setTboStatus(TbOrderRepository.StatusNotConfirmed);
+							tbOrder.setTboStatus(TbOrderRepository.StatusPacked);
 							
 							tbOrder.setTboCheck(TbOrderRepository.CheckNotOk);
 							
@@ -348,6 +350,41 @@ public class OrderService {
 				responseModel.setMessage(dataExistsString + " already exists");
 			} else {
 				tbOrderRepository.saveAll(lstTbOrder);
+
+				for (TbOrder tbOrder : lstTbOrder) {
+					TbOrderPack tbOrderPack = new TbOrderPack();
+					tbOrderPack.setTbopCreateDate(Date.from(LocalDateTime.now(ZoneOffset.UTC).toInstant(ZoneOffset.UTC)));
+					tbOrderPack.setTbopCreateId(optTbUser.get().getTbuId());
+					tbOrderPack.setTbopQcId(tbOrder.getTboQcId());
+					tbOrderPack.setTbopAwb(tbOrder.getTboAwb());
+					tbOrderPack.setTbopBrand(tbOrder.getTboBrand());
+					tbOrderPack.setTbopMarket(tbOrder.getTboMarket());
+					tbOrderPack.setTbopOrderNo(tbOrder.getTboOrderNo());
+					tbOrderPack.setTbopName(tbOrder.getTboName());
+					tbOrderPack.setTbopStatus(TbOrderPackRepository.StatusPacked);
+					tbOrderPack.setTbopType(TbOrderPackRepository.TypeOrder);
+					lstTbOrderPack.add(tbOrderPack);
+				}
+				tbOrderPackRepository.saveAll(lstTbOrderPack);
+
+				for (TbOrder tbOrder : lstTbOrder) {
+					TbOrderPackDetail tbOrderPackDetail = new TbOrderPackDetail();
+					tbOrderPackDetail.setTbopdCreateDate(Date.from(LocalDateTime.now(ZoneOffset.UTC).toInstant(ZoneOffset.UTC)));
+					tbOrderPackDetail.setTbopdCreateId(optTbUser.get().getTbuId());
+					tbOrderPackDetail.setTbopId(tbOrder.getTboId());
+					tbOrderPackDetail.setTbopdType(TbOrderPackDetailRepository.TypeProduct);
+					tbOrderPackDetail.setTbopdOrderNo(tbOrder.getTboOrderNo());
+					tbOrderPackDetail.setTbopdBrand(tbOrder.getTboBrand());
+					tbOrderPackDetail.setTbopdSku(tbOrder.getTboSku());
+					tbOrderPackDetail.setTbopdCode(tbOrder.getTboCode());
+					tbOrderPackDetail.setTbopdItem(tbOrder.getTboItem());
+					tbOrderPackDetail.setTbopdStatus(TbOrderPackDetailRepository.StatusPacked);
+					tbOrderPackDetail.setTbopdCheck(TbOrderPackDetailRepository.CheckOk);
+					tbOrderPackDetail.setTbopdQty(tbOrder.getTboQty());
+					tbOrderPackDetail.setTbopdQtyPack(tbOrder.getTboQty());
+					lstTbOrderPackDetail.add(tbOrderPackDetail);
+				}
+				tbOrderPackDetailRepository.saveAll(lstTbOrderPackDetail);
 				
 				PostSyncOrderRequestModel postSyncOrderRequestModel = new PostSyncOrderRequestModel();
 				postSyncOrderRequestModel.setRequestDate(requestModel.getRequestDate());

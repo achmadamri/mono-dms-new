@@ -18,7 +18,6 @@ export const ROUTES: RouteInfo[] = [
     { path: '/product', title: 'Product',  icon:'category', class: '' },
     //{ path: '/gwp', title: 'Gwp',  icon:'rate_review', class: '' },
     { path: '/order', title: 'Order',  icon:'shopping_cart', class: '' },
-    { path: '/packing', title: 'Packing',  icon:'assignment', class: '' },
     { path: '/confirm', title: 'Confirm',  icon:'check_box', class: '' },        
     { path: '/report', title: 'Report',  icon:'list', class: '' },        
     { path: '/market', title: 'Market',  icon:'shop', class: '' },
