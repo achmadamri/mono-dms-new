@@ -167,7 +167,7 @@ export class OrderService {
     return this.httpClient.get<GetOrderResponse>(`${this.apiUrl}/getorder`, { headers, params });
   }
 
-  getOrderPack(tboOrderNo: string, tbopAwb: string, tbopQcId: string, getOrderPackRequest: GetOrderPackRequest): Observable<GetOrderPackResponse> {
+  getOrderPack(tbopOrderNo: string, tbopAwb: string, tbopQcId: string, getOrderPackRequest: GetOrderPackRequest): Observable<GetOrderPackResponse> {
     const headers = new HttpHeaders()
       .set('Content-Type', 'application/json');
 
@@ -179,7 +179,7 @@ export class OrderService {
       .set('length', length.toString())
       .set('tbopAwb', tbopAwb)
       .set('tbopQcId', tbopQcId == null ? "" : tbopQcId.toString())
-      .set('tboOrderNo', tboOrderNo)
+      .set('tbopOrderNo', tbopOrderNo)
       ;
 
     return this.httpClient.get<GetOrderPackResponse>(`${this.apiUrl}/getorderpack`, { headers, params });

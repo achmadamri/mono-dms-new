@@ -953,7 +953,7 @@ public class OrderService {
 		return responseModel;
 	}
 	
-	public GetOrderPackResponseModel getOrderPack(String tboOrderNo, String tbopAwb, Integer tbopQcId, GetOrderPackRequestModel requestModel) throws Exception {
+	public GetOrderPackResponseModel getOrderPack(String tbopOrderNo, String tbopAwb, Integer tbopQcId, GetOrderPackRequestModel requestModel) throws Exception {
 		GetOrderPackResponseModel responseModel = new GetOrderPackResponseModel(requestModel);
 		
 		tokenUtil.claims(requestModel);
@@ -966,7 +966,7 @@ public class OrderService {
 		if (optTbUser.isPresent()) {
 			ViewOrderPack exampleViewOrderPack = new ViewOrderPack();
 			exampleViewOrderPack.setTbuId(optTbUser.get().getTbuId());
-			exampleViewOrderPack.setTboOrderNo(tboOrderNo);
+			exampleViewOrderPack.setTboOrderNo(tbopOrderNo);
 			Optional<ViewOrderPack> optViewOrderPack = viewOrderPackRepository.findOne(Example.of(exampleViewOrderPack));
 			
 			if (optViewOrderPack.isPresent() == false) {

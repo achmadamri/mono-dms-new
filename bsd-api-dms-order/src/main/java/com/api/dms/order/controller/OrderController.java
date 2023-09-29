@@ -256,7 +256,7 @@ public class OrderController {
 	
 	@GetMapping("/getorderpack")
 	@Transactional
-	public HttpEntity<?> getOrderPack(@RequestParam String tboOrderNo, @RequestParam String tbopAwb, @RequestParam Integer tbopQcId, @RequestParam String email, @RequestParam String token, @RequestParam String requestId, @RequestParam String requestDate) throws Exception {
+	public HttpEntity<?> getOrderPack(@RequestParam String tbopOrderNo, @RequestParam String tbopAwb, @RequestParam Integer tbopQcId, @RequestParam String email, @RequestParam String token, @RequestParam String requestId, @RequestParam String requestDate) throws Exception {
 		GetOrderPackRequestModel requestModel = new GetOrderPackRequestModel();
 		requestModel.setEmail(email);
 		requestModel.setToken(token);
@@ -266,7 +266,7 @@ public class OrderController {
 		String fid = new Uid().generateString(20);
 		log.info("[fid:" + fid + "] requestModel : " + objectMapper.writeValueAsString(requestModel));
 		
-		GetOrderPackResponseModel responseModel = orderService.getOrderPack(tboOrderNo, tbopAwb, tbopQcId, requestModel);
+		GetOrderPackResponseModel responseModel = orderService.getOrderPack(tbopOrderNo, tbopAwb, tbopQcId, requestModel);
 		
 		ResponseEntity<?> responseEntity = new ResponseEntity<>(responseModel, responseModel.getStatus().equals("200") ? HttpStatus.OK : HttpStatus.NOT_FOUND);
 		log.info("[fid:" + fid + "] responseEntity : " + objectMapper.writeValueAsString(responseEntity));

@@ -17,12 +17,12 @@
                 </div>
                 <div class="col-md-3">
                   <mat-form-field class="example-full-width">
-                    <input matInput placeholder="Awb" type="text" [(ngModel)]="tbopAwb" name="tbopAwb" [disabled]="clicked" (keyup)="tbopQcId=''" (keyup.enter)="getOrderPack()" id="awb">
+                    <input matInput placeholder="Order No" type="text" [(ngModel)]="tbopOrderNo" name="tbopOrderNo" [disabled]="clicked" (keyup)="tbopQcId=''" (keyup.enter)="getOrderPack()" id="orderNo">
                   </mat-form-field>
                 </div>
                 <div class="col-md-3">
                   <mat-form-field class="example-full-width">
-                    <input matInput placeholder="QC ID" type="text" [(ngModel)]="tbopQcId" name="tbopQcId" [disabled]="clicked" (keyup)="tbopAwb=''" (keyup.enter)="tbopAwb = '';getOrderPack()">
+                    <input matInput placeholder="Awb" type="text" [(ngModel)]="tbopAwb" name="tbopAwb" [disabled]="clicked" (keyup)="tbopQcId=''" (keyup.enter)="getOrderPack()" id="awb">
                   </mat-form-field>
                 </div>
                 <div class="col-md-3">

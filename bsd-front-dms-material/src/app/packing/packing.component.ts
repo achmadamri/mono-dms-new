@@ -28,6 +28,7 @@ export class PackingComponent implements OnInit {
   util: Util = new Util();
   dateNow: Date = new Date();
   tbopAwb: string;
+  tbopOrderNo: string;
   tbopQcId: string;
   getProductRequest: GetProductRequest = new GetProductRequest();
   getProductResponse: GetProductResponse = new GetProductResponse();
@@ -56,7 +57,7 @@ export class PackingComponent implements OnInit {
 
   ngAfterViewInit() {
     setTimeout(() => {
-      document.getElementById('awb').focus();
+      document.getElementById('orderNo').focus();
     }, 200);
   }
 
@@ -174,7 +175,7 @@ export class PackingComponent implements OnInit {
     this.tbopQcId = null;
     
     setTimeout(() => {
-      document.getElementById('awb').focus();
+      document.getElementById('orderNo').focus();
     }, 200);
 
     this.getOrderPackResponse.tbOrderPack = new TbOrderPack();
@@ -223,7 +224,7 @@ export class PackingComponent implements OnInit {
   getOrderPack() {
     this.clicked = !this.clicked;
 
-    this.orderService.getOrderPack('', this.tbopAwb, this.tbopQcId, this.getOrderPackRequest)
+    this.orderService.getOrderPack(this.tbopOrderNo, this.tbopAwb, this.tbopQcId, this.getOrderPackRequest)
       .subscribe(
         successResponse => {
           this.clicked = !this.clicked;
@@ -240,6 +241,7 @@ export class PackingComponent implements OnInit {
           });
 
           this.tbopAwb = this.getOrderPackResponse.tbOrderPack.tbopAwb;
+          this.tbopOrderNo = this.getOrderPackResponse.tbOrderPack.tbopOrderNo;
           this.tbopQcId = this.getOrderPackResponse.tbOrderPack.tbopQcId.toString();
           
           this.postScanBarcodeRequest.tboOrderNo = this.getOrderPackResponse.tbOrderPack.tbopOrderNo;
