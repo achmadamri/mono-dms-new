@@ -6,6 +6,8 @@ bsd-front-dms-material/bin
 bsd-front-dms-material/dist
 bsd-front-dms-material/node_modules
 *.log
+Temp*.xlsx
+~$*.xlsx
 
 # compiled output
 /tmp

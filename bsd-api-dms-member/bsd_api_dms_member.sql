@@ -113,7 +113,7 @@ CREATE TABLE `tb_user_brand` (
   KEY `tb_user_brand_tbb_brand_index` (`tbb_brand`),
   KEY `tb_user_brand_tbb_brand_id_index` (`tbb_brand_id`),
   KEY `tb_user_brand_tbb_brand_check_index` (`tbb_brand_check`)
-) ENGINE=InnoDB AUTO_INCREMENT=19 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -122,7 +122,7 @@ CREATE TABLE `tb_user_brand` (
 
 LOCK TABLES `tb_user_brand` WRITE;
 /*!40000 ALTER TABLE `tb_user_brand` DISABLE KEYS */;
-INSERT INTO `tb_user_brand` VALUES (4,NULL,NULL,NULL,NULL,2,'DIAMOND','DIAMO',1),(5,NULL,NULL,NULL,NULL,2,'OVALTINE','OVALT',1),(6,NULL,NULL,NULL,NULL,2,'BIGGY','BIGGY',1),(7,NULL,NULL,NULL,NULL,3,'DIAMOND','DIAMO',1),(8,NULL,NULL,NULL,NULL,3,'OVALTINE','OVALT',1),(9,NULL,NULL,NULL,NULL,3,'BIGGY','BIGGY',1),(16,'2023-09-26 15:05:34',1,NULL,NULL,1,'BIGGY','BIGGY',1),(17,'2023-09-26 15:05:34',1,NULL,NULL,1,'DIAMOND','DIAMO',1),(18,'2023-09-26 15:05:34',1,NULL,NULL,1,'OVALTINE','OVALT',1);
+INSERT INTO `tb_user_brand` VALUES (1,NULL,1,NULL,NULL,1,'Mamasuka','MAMAS',1),(2,NULL,1,NULL,NULL,2,'Mamasuka','MAMAS',1),(3,NULL,1,NULL,NULL,3,'Mamasuka','MAMAS',1);
 /*!40000 ALTER TABLE `tb_user_brand` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -281,4 +281,4 @@ SET character_set_client = @saved_cs_client;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2023-09-26 23:15:42
+-- Dump completed on 2023-09-29 11:23:57

@@ -332,7 +332,11 @@ public class ProductService {
 						if (getData(row, column, "Sku") == null || getData(row, column, "Sku").equals("")) {
 							exampleTbProduct.setTbpSku(uid.generateString(10));
 						} else {
-							exampleTbProduct.setTbpSku((String) getData(row, column, "Sku"));
+							if (getData(row, column, "Sku").getClass().equals(Double.valueOf(0).getClass())) {
+								exampleTbProduct.setTbpSku(new BigDecimal((Double) getData(row, column, "Sku")).toString());								
+							} else if (getData(row, column, "Sku").getClass().equals("".getClass())) {
+								exampleTbProduct.setTbpSku((String) getData(row, column, "Sku"));
+							}
 						}
 						
 						Optional<TbProduct> optTbProduct = tbProductRepository.findOne(Example.of(exampleTbProduct));
@@ -534,14 +538,14 @@ public class ProductService {
 		exampleTbUser.setTbuEmail(requestModel.getEmail());
 		exampleTbUser.setTbuStatus(TbUserRepository.Active);
 		Optional<TbUser> optTbUser = tbUserRepository.findOne(Example.of(exampleTbUser));
-		
-		optTbUser.ifPresentOrElse(tbUser -> {			
-			List<ViewBrandProduct> lstViewBrandProduct = viewBrandProductRepository.findAllByTbuId(tbUser.getTbuId(), brand, sku, item, code, type, PageRequest.of(Integer.valueOf(pageIndex), Integer.valueOf(pageSize), Sort.by("tbbId", "tbpId").ascending()));
+
+		if (optTbUser.isPresent()) {
+			List<ViewBrandProduct> lstViewBrandProduct = viewBrandProductRepository.findAllByTbuId(optTbUser.get().getTbuId(), brand, sku, item, code, type, PageRequest.of(Integer.valueOf(pageIndex), Integer.valueOf(pageSize), Sort.by("tbbId", "tbpId").ascending()));
 			
 			if (lstViewBrandProduct.size() > 0) {
 				responseModel.setLstViewBrandProduct(lstViewBrandProduct);
 				
-				responseModel.setLength(viewBrandProductRepository.countAllByTbuId(tbUser.getTbuId(), brand, sku, item, code, type));
+				responseModel.setLength(viewBrandProductRepository.countAllByTbuId(optTbUser.get().getTbuId(), brand, sku, item, code, type));
 				
 				responseModel.setStatus("200");
 				responseModel.setMessage("Get Product List ok");
@@ -549,10 +553,10 @@ public class ProductService {
 				responseModel.setStatus("404");
 				responseModel.setMessage("Not found");
 			}
-		}, () -> {
+		} else {
 			responseModel.setStatus("404");
 			responseModel.setMessage("Not found");
-		});
+		}
 		
 		return responseModel;
 	}
