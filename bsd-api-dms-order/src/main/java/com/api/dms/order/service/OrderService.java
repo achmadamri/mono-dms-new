@@ -1637,7 +1637,7 @@ public class OrderService {
 
 					if (getProductResponseModel.getTbProduct().getTbpQty() < totalQtyNeeded) {
 						ok = false;
-						message = "Product quantity is not enough. Quantity available is " + getProductResponseModel.getTbProduct().getTbpQty() + " and quantity needed is " + totalQtyNeeded;
+						message = message + "Product quantity is not enough for sku " + requestModel.getSku()[i] + ". Quantity available is " + getProductResponseModel.getTbProduct().getTbpQty() + " and quantity needed is " + totalQtyNeeded + "<br>";
 					}
 				}
 			}
@@ -1658,7 +1658,7 @@ public class OrderService {
 					
 					if (optTbOrderPackDetail.isPresent() == false) {
 						ok = false;
-						message = "Product not found";
+						message = message + "Product not found<br>";
 					}
 				}
 			}
@@ -1757,7 +1757,7 @@ public class OrderService {
 				responseModel.setMessage("Confirm ok");
 			} else {
 				responseModel.setStatus("404");
-				responseModel.setMessage("Confirm failed. " + message);
+				responseModel.setMessage("Confirm failed.<br>" + message);
 			}
 		} else {
 			responseModel.setStatus("404");
