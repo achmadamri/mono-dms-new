@@ -830,9 +830,9 @@ public class OrderService {
 		
 		if (optTbUser.isPresent()) {
 			boolean check = true;
-			int i = 0;
-			for (TbOrder tbOrder : requestModel.getTbOrder()) {
-				i++;
+			int maxSeq = 0;
+			for (int i = 0; i < requestModel.getTbOrder().length; i++) {
+				maxSeq++;
 				TbOrder exampleTbOrder = new TbOrder();
 				exampleTbOrder.setTboOrderNo(requestModel.getDetails());
 				exampleTbOrder.setTboOrderSq(String.valueOf(i));
@@ -842,16 +842,15 @@ public class OrderService {
 			}
 			
 			if (check) {
-				int ii = 0;
-				for (TbOrder tbOrder : requestModel.getTbOrder()) {
-					ii++;
+				for (int i = 0; i < requestModel.getTbOrder().length; i++) {
+					TbOrder tbOrder = requestModel.getTbOrder()[i];
 					tbOrder.setTboCreateDate(new Date());
 					tbOrder.setTboCreateId(optTbUser.get().getTbuId());
 					tbOrder.setTboBrand(requestModel.getTboBrand());
 					tbOrder.setTboOrderNo(requestModel.getDetails());
-					tbOrder.setTboSeq(ii);
-					tbOrder.setTboMaxSeq(i);
-					tbOrder.setTboOrderSq(String.valueOf(ii));
+					tbOrder.setTboSeq(i);
+					tbOrder.setTboMaxSeq(maxSeq);
+					tbOrder.setTboOrderSq(String.valueOf(i));
 					
 					RestTemplate restTemplate = new RestTemplate();
 					String requestParam = "" + 
@@ -1609,7 +1608,37 @@ public class OrderService {
 		
 		if (optTbUser.isPresent()) {
 			boolean ok = true;
-			
+			String message = "";
+			int totalQtyNeeded = 0;
+
+			for (int i = 0; i < requestModel.getOrderNo().length; i++) {
+				RestTemplate restTemplate = new RestTemplate();
+				String requestParam = "" + 
+						"email=" + requestModel.getEmail() +
+						"&token=" + requestModel.getToken() +
+						"&requestDate=" + requestModel.getRequestDate() +
+						"&requestId=" + requestModel.getRequestId() +
+						"&tbpIdSkuCode=" + requestModel.getSku()[i];
+				ResponseEntity<String> response = restTemplate.getForEntity(env.getProperty("services.bsd.api.dms.product") + "/getproduct?" + requestParam, String.class);
+
+				ObjectMapper mapper = new ObjectMapper();
+				GetProductResponseModel getProductResponseModel = mapper.readValue(response.getBody(), GetProductResponseModel.class);
+
+				TbOrderPackDetail exampleTbOrderPackDetail = new TbOrderPackDetail();
+				exampleTbOrderPackDetail.setTbopdOrderNo(requestModel.getOrderNo()[i]);
+				exampleTbOrderPackDetail.setTbopdSku(requestModel.getSku()[i]);
+				exampleTbOrderPackDetail.setTbopdStatus(TbOrderPackDetailRepository.StatusPacked);
+				Optional<TbOrderPackDetail> optTbOrderPackDetail = tbOrderPackDetailRepository.findOne(Example.of(exampleTbOrderPackDetail));
+				
+				if (optTbOrderPackDetail.isPresent()) {
+					totalQtyNeeded = totalQtyNeeded + optTbOrderPackDetail.get().getTbopdQty();
+					if (getProductResponseModel.getTbProduct().getTbpQty() < totalQtyNeeded) {
+						ok = false;
+						message = "Product quantity is not enough. Quantity available is " + getProductResponseModel.getTbProduct().getTbpQty() + " and quantity needed is " + totalQtyNeeded;
+					}
+				}
+			}
+
 			for (int i = 0; i < requestModel.getOrderNo().length; i++) {
 				TbOrderPackDetail exampleTbOrderPackDetail = new TbOrderPackDetail();
 				exampleTbOrderPackDetail.setTbopdOrderNo(requestModel.getOrderNo()[i]);
@@ -1626,6 +1655,7 @@ public class OrderService {
 					
 					if (optTbOrderPackDetail.isPresent() == false) {
 						ok = false;
+						message = "Product not found";
 					}
 				}
 			}
@@ -1693,7 +1723,7 @@ public class OrderService {
 						postProductConfirmRequestModel.setTbpcSku(optTbOrder.get().getTboSku());
 						postProductConfirmRequestModel.setTbpcQty(optTbOrder.get().getTboQty());
 						HttpEntity<PostProductConfirmRequestModel> requestPostProductConfirmRequestModel = new HttpEntity<>(postProductConfirmRequestModel);
-						ResponseEntity<String> response = restTemplate.postForEntity(env.getProperty("services.bsd.api.dms.product") + "/postproductconfirm?", requestPostProductConfirmRequestModel, String.class);
+						restTemplate.postForEntity(env.getProperty("services.bsd.api.dms.product") + "/postproductconfirm?", requestPostProductConfirmRequestModel, String.class);
 					}
 				}
 				
@@ -1724,7 +1754,7 @@ public class OrderService {
 				responseModel.setMessage("Confirm ok");
 			} else {
 				responseModel.setStatus("404");
-				responseModel.setMessage("Confirm failed");
+				responseModel.setMessage("Confirm failed. " + message);
 			}
 		} else {
 			responseModel.setStatus("404");
