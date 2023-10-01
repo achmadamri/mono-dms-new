@@ -27,8 +27,6 @@ public interface TbOrderRepository extends JpaRepository<TbOrder, Integer> {
 	
 	public final static String CheckOk = "OK";
 	public final static String CheckNotOk = "NOT OK";
-	
-
 
 	@Query("select t1 from TbOrder t1 join TbUserMarket t2 on t2.tbmMarket = t1.tboMarket and t2.tbmMarketCheck = 1 and t2.tbuId = :tbuId where t1.tboOrderNo = :tboOrderNo and t1.tboStatus <> 'Not Confirmed'")
 	List<TbOrder> findPack(@Param("tbuId") Integer tbuId, @Param("tboOrderNo") String tboOrderNo);

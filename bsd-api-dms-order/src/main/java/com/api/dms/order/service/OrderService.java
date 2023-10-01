@@ -43,6 +43,7 @@ import com.api.dms.order.db.entity.TbBrand;
 import com.api.dms.order.db.entity.TbOrder;
 import com.api.dms.order.db.entity.TbOrderPack;
 import com.api.dms.order.db.entity.TbOrderPackDetail;
+import com.api.dms.order.db.entity.TbOrderStatus;
 import com.api.dms.order.db.entity.TbUser;
 import com.api.dms.order.db.entity.ViewOrderConfirm;
 import com.api.dms.order.db.entity.ViewOrderPack;
@@ -50,6 +51,7 @@ import com.api.dms.order.db.repository.TbBrandRepository;
 import com.api.dms.order.db.repository.TbOrderPackDetailRepository;
 import com.api.dms.order.db.repository.TbOrderPackRepository;
 import com.api.dms.order.db.repository.TbOrderRepository;
+import com.api.dms.order.db.repository.TbOrderStatusRepository;
 import com.api.dms.order.db.repository.TbUserRepository;
 import com.api.dms.order.db.repository.ViewOrderConfirmRepository;
 import com.api.dms.order.db.repository.ViewOrderPackRepository;
@@ -95,6 +97,7 @@ import com.api.dms.order.model.product.GetProductResponseModel;
 import com.api.dms.order.model.product.LstViewGwpSkuProduct;
 import com.api.dms.order.model.product.PostProductConfirmRequestModel;
 import com.api.dms.order.model.report.PostSyncOrderRequestModel;
+import com.api.dms.order.model.report.PostSyncOrderStatusRequestModel;
 import com.api.dms.order.util.SimpleMapper;
 import com.api.dms.order.util.TokenUtil;
 import com.api.dms.order.util.Uid;
@@ -131,6 +134,9 @@ public class OrderService {
 	@Autowired
 	private TbBrandRepository tbBrandRepository;
 	
+	@Autowired
+	private TbOrderStatusRepository tbOrderStatusRepository;
+	
 	public PostUploadOrderResponseModel postUploadOrder(PostUploadOrderRequestModel requestModel, MultipartFile file) throws Exception {
 		PostUploadOrderResponseModel responseModel = new PostUploadOrderResponseModel(requestModel);
 
@@ -159,6 +165,7 @@ public class OrderService {
 			String dataExistsString = "";
 			
 			List<TbOrder> lstTbOrder = new ArrayList<TbOrder>();
+			List<TbOrderStatus> lstTbOrderStatus = new ArrayList<TbOrderStatus>();
 			List<TbOrderPack> lstTbOrderPack = new ArrayList<TbOrderPack>();
 			List<TbOrderPackDetail> lstTbOrderPackDetail = new ArrayList<TbOrderPackDetail>();
 			
@@ -174,10 +181,12 @@ public class OrderService {
 				} else {
 					if (row.getCell(0) != null) {
 						TbOrder exampleTbOrder = new TbOrder();
-						
-						if (getData(row, column, "Order No").getClass().equals(Double.valueOf(0).getClass())) {
-							exampleTbOrder.setTboOrderNo(String.format("%.0f", (Double) getData(row, column, "Order No")));								
-						} else if (getData(row, column, "Order No").getClass().equals("".getClass())) {
+						Object getData = null;
+
+						getData = getData(row, column, "Order No");
+						if (getData.getClass().equals(Double.valueOf(0).getClass())) {
+							exampleTbOrder.setTboOrderNo(String.format("%.0f", (Double) getData));								
+						} else if (getData.getClass().equals("".getClass())) {
 							exampleTbOrder.setTboOrderNo((String) getData(row, column, "Order No"));
 						}
 						
@@ -202,120 +211,137 @@ public class OrderService {
 							tbOrder.setTboMaxSeq(((Double) getData(row, column, "Max SEQ")).intValue());
 							tbOrder.setTboOrderSq((String) getData(row, column, "Order SQ"));
 							
-							if (getData(row, column, "Order No").getClass().equals(Double.valueOf(0).getClass())) {
-								tbOrder.setTboOrderNo(String.format("%.0f", (Double) getData(row, column, "Order No")));								
-							} else if (getData(row, column, "Order No").getClass().equals("".getClass())) {
-								tbOrder.setTboOrderNo((String) getData(row, column, "Order No"));
+							getData = getData(row, column, "Order No");
+							if (getData.getClass().equals(Double.valueOf(0).getClass())) {
+								tbOrder.setTboOrderNo(String.format("%.0f", (Double) getData));								
+							} else if (getData.getClass().equals("".getClass())) {
+								tbOrder.setTboOrderNo((String) getData);
 							}
 							
-							if (getData(row, column, "SKU").getClass().equals(Double.valueOf(0).getClass())) {
-								tbOrder.setTboSku(String.format("%.0f", (Double) getData(row, column, "SKU")));								
-							} else if (getData(row, column, "SKU").getClass().equals("".getClass())) {
-								tbOrder.setTboSku((String) getData(row, column, "SKU"));
+							getData = getData(row, column, "SKU");
+							if (getData.getClass().equals(Double.valueOf(0).getClass())) {
+								tbOrder.setTboSku(String.format("%.0f", (Double) getData));								
+							} else if (getData.getClass().equals("".getClass())) {
+								tbOrder.setTboSku((String) getData);
 							}
 							
 							tbOrder.setTboItem((String) getData(row, column, "ITEM"));
 							
-							if (getData(row, column, "Code").getClass().equals(Double.valueOf(0).getClass())) {
-								tbOrder.setTboCode(String.format("%.0f", (Double) getData(row, column, "Code")));								
-							} else if (getData(row, column, "Code").getClass().equals("".getClass())) {
-								tbOrder.setTboCode((String) getData(row, column, "Code"));
+							getData = getData(row, column, "Code");
+							if (getData.getClass().equals(Double.valueOf(0).getClass())) {
+								tbOrder.setTboCode(String.format("%.0f", (Double) getData));								
+							} else if (getData.getClass().equals("".getClass())) {
+								tbOrder.setTboCode((String) getData);
 							}
 							
-							if (getData(row, column, "LOC").getClass().equals(Double.valueOf(0).getClass())) {
-								tbOrder.setTboLoc(String.format("%.0f", (Double) getData(row, column, "LOC")));								
-							} else if (getData(row, column, "LOC").getClass().equals("".getClass())) {
-								tbOrder.setTboLoc((String) getData(row, column, "LOC"));
+							getData = getData(row, column, "LOC");
+							if (getData.getClass().equals(Double.valueOf(0).getClass())) {
+								tbOrder.setTboLoc(String.format("%.0f", (Double) getData));								
+							} else if (getData.getClass().equals("".getClass())) {
+								tbOrder.setTboLoc((String) getData);
 							}							
 							
 							tbOrder.setTboQty(((Double) getData(row, column, "Qty")).intValue());
 							
-							if (getData(row, column, "Diskon from Market") != null) {
-								if (getData(row, column, "Diskon from Market").getClass().equals(Double.valueOf(0).getClass())) {
-									tbOrder.setTboDiskonFromMarket(new BigDecimal((Double) getData(row, column, "Diskon from Market")));								
-								} else if (getData(row, column, "Diskon from Market").getClass().equals("".getClass())) {
+							getData = getData(row, column, "Diskon from Market");
+							if (getData != null) {
+								if (getData.getClass().equals(Double.valueOf(0).getClass())) {
+									tbOrder.setTboDiskonFromMarket(new BigDecimal((Double) getData));								
+								} else if (getData.getClass().equals("".getClass())) {
 									tbOrder.setTboDiskonFromMarket(null);
 								}
 							}
 							
-							if (getData(row, column, "Unit Price") != null) {
-								if (getData(row, column, "Unit Price").getClass().equals(Double.valueOf(0).getClass())) {
-									tbOrder.setTboUnitPrice(new BigDecimal((Double) getData(row, column, "Unit Price")));								
-								} else if (getData(row, column, "Unit Price").getClass().equals("".getClass())) {
+							getData = getData(row, column, "Unit Price");
+							if (getData != null) {
+								if (getData.getClass().equals(Double.valueOf(0).getClass())) {
+									tbOrder.setTboUnitPrice(new BigDecimal((Double) getData));								
+								} else if (getData.getClass().equals("".getClass())) {
 									tbOrder.setTboUnitPrice(null);
 								}								
 							}
 							
-							if (getData(row, column, "Diskon Total") != null) {
-								if (getData(row, column, "Diskon Total").getClass().equals(Double.valueOf(0).getClass())) {
-									tbOrder.setTboDiskonTotal(new BigDecimal((Double) getData(row, column, "Diskon Total")));								
-								} else if (getData(row, column, "Diskon Total").getClass().equals("".getClass())) {
+							getData = getData(row, column, "Diskon Total");
+							if (getData != null) {
+								if (getData.getClass().equals(Double.valueOf(0).getClass())) {
+									tbOrder.setTboDiskonTotal(new BigDecimal((Double) getData));								
+								} else if (getData.getClass().equals("".getClass())) {
 									tbOrder.setTboDiskonTotal(null);
 								}
 							}
 							
-							if (getData(row, column, "PAID Total") != null) {
-								if (getData(row, column, "PAID Total").getClass().equals(Double.valueOf(0).getClass())) {
-									tbOrder.setTboPaidTotal(new BigDecimal((Double) getData(row, column, "PAID Total")));								
-								} else if (getData(row, column, "PAID Total").getClass().equals("".getClass())) {
+							getData = getData(row, column, "PAID Total");
+							if (getData != null) {
+								if (getData.getClass().equals(Double.valueOf(0).getClass())) {
+									tbOrder.setTboPaidTotal(new BigDecimal((Double) getData));								
+								} else if (getData.getClass().equals("".getClass())) {
 									tbOrder.setTboPaidTotal(null);
 								}
 							}
 							
-							if (getData(row, column, "Order SUM") != null) {
-								if (getData(row, column, "Order SUM").getClass().equals(Double.valueOf(0).getClass())) {
-									tbOrder.setTboOrderSum(new BigDecimal((Double) getData(row, column, "Order SUM")));								
-								} else if (getData(row, column, "Order SUM").getClass().equals("".getClass())) {
+							getData = getData(row, column, "Order SUM");
+							if (getData != null) {
+								if (getData.getClass().equals(Double.valueOf(0).getClass())) {
+									tbOrder.setTboOrderSum(new BigDecimal((Double) getData));								
+								} else if (getData.getClass().equals("".getClass())) {
 									tbOrder.setTboOrderSum(null);
 								}
 							}
 							
-							if (getData(row, column, "Name").getClass().equals(Double.valueOf(0).getClass())) {
-								tbOrder.setTboName(String.format("%.0f", (Double) getData(row, column, "Name")));								
-							} else if (getData(row, column, "Name").getClass().equals("".getClass())) {
-								tbOrder.setTboName((String) getData(row, column, "Name"));
+							getData = getData(row, column, "Name");
+							if (getData.getClass().equals(Double.valueOf(0).getClass())) {
+								tbOrder.setTboName(String.format("%.0f", (Double) getData));								
+							} else if (getData.getClass().equals("".getClass())) {
+								tbOrder.setTboName((String) getData);
 							}
 							
-							if (getData(row, column, "HP").getClass().equals(Double.valueOf(0).getClass())) {
-								tbOrder.setTboHp(String.format("%.0f", (Double) getData(row, column, "HP")));								
-							} else if (getData(row, column, "HP").getClass().equals("".getClass())) {
-								tbOrder.setTboHp((String) getData(row, column, "HP"));
+							getData = getData(row, column, "HP");
+							if (getData.getClass().equals(Double.valueOf(0).getClass())) {
+								tbOrder.setTboHp(String.format("%.0f", (Double) getData));								
+							} else if (getData.getClass().equals("".getClass())) {
+								tbOrder.setTboHp((String) getData);
 							}
 							
-							if (getData(row, column, "Address1").getClass().equals(Double.valueOf(0).getClass())) {
-								tbOrder.setTboAddress1(String.format("%.0f", (Double) getData(row, column, "Address1")));								
-							} else if (getData(row, column, "Address1").getClass().equals("".getClass())) {
-								tbOrder.setTboAddress1((String) getData(row, column, "Address1"));
+							getData = getData(row, column, "Address1");
+							if (getData.getClass().equals(Double.valueOf(0).getClass())) {
+								tbOrder.setTboAddress1(String.format("%.0f", (Double) getData));								
+							} else if (getData.getClass().equals("".getClass())) {
+								tbOrder.setTboAddress1((String) getData);
 							}
 							
-							if (getData(row, column, "Address2").getClass().equals(Double.valueOf(0).getClass())) {
-								tbOrder.setTboAddress2(String.format("%.0f", (Double) getData(row, column, "Address2")));								
-							} else if (getData(row, column, "Address2").getClass().equals("".getClass())) {
-								tbOrder.setTboAddress2((String) getData(row, column, "Address2"));
+							getData = getData(row, column, "Address2");
+							if (getData.getClass().equals(Double.valueOf(0).getClass())) {
+								tbOrder.setTboAddress2(String.format("%.0f", (Double) getData));								
+							} else if (getData.getClass().equals("".getClass())) {
+								tbOrder.setTboAddress2((String) getData);
 							}
 							
-							if (getData(row, column, "Address3").getClass().equals(Double.valueOf(0).getClass())) {
-								tbOrder.setTboAddress3(String.format("%.0f", (Double) getData(row, column, "Address3")));								
-							} else if (getData(row, column, "Address3").getClass().equals("".getClass())) {
-								tbOrder.setTboAddress3((String) getData(row, column, "Address3"));
+							getData = getData(row, column, "Address3");
+							if (getData.getClass().equals(Double.valueOf(0).getClass())) {
+								tbOrder.setTboAddress3(String.format("%.0f", (Double) getData));								
+							} else if (getData.getClass().equals("".getClass())) {
+								tbOrder.setTboAddress3((String) getData);
 							}
 							
-							if (getData(row, column, "Address4").getClass().equals(Double.valueOf(0).getClass())) {
-								tbOrder.setTboAddress4(String.format("%.0f", (Double) getData(row, column, "Address4")));								
-							} else if (getData(row, column, "Address4").getClass().equals("".getClass())) {
-								tbOrder.setTboAddress4((String) getData(row, column, "Address4"));
+							getData = getData(row, column, "Address4");
+							if (getData.getClass().equals(Double.valueOf(0).getClass())) {
+								tbOrder.setTboAddress4(String.format("%.0f", (Double) getData));								
+							} else if (getData.getClass().equals("".getClass())) {
+								tbOrder.setTboAddress4((String) getData);
 							}
 							
-							if (getData(row, column, "Address5").getClass().equals(Double.valueOf(0).getClass())) {
-								tbOrder.setTboAddress5(String.format("%.0f", (Double) getData(row, column, "Address5")));								
-							} else if (getData(row, column, "Address5").getClass().equals("".getClass())) {
-								tbOrder.setTboAddress5((String) getData(row, column, "Address5"));
+							getData = getData(row, column, "Address5");
+							if (getData.getClass().equals(Double.valueOf(0).getClass())) {
+								tbOrder.setTboAddress5(String.format("%.0f", (Double) getData));								
+							} else if (getData.getClass().equals("".getClass())) {
+								tbOrder.setTboAddress5((String) getData);
 							}
 							
-							if (getData(row, column, "Full Address").getClass().equals(Double.valueOf(0).getClass())) {
-								tbOrder.setTboFullAddress(String.format("%.0f", (Double) getData(row, column, "Full Address")));								
-							} else if (getData(row, column, "Full Address").getClass().equals("".getClass())) {
-								tbOrder.setTboFullAddress((String) getData(row, column, "Full Address"));
+							getData = getData(row, column, "Full Address");
+							if (getData.getClass().equals(Double.valueOf(0).getClass())) {
+								tbOrder.setTboFullAddress(String.format("%.0f", (Double) getData));								
+							} else if (getData.getClass().equals("".getClass())) {
+								tbOrder.setTboFullAddress((String) getData);
 							}
 							
 							if (map.get(tbOrder.getTboOrderNo()) == null) map.put(tbOrder.getTboOrderNo(), uid.generateString(15).toUpperCase());
@@ -352,6 +378,16 @@ public class OrderService {
 				responseModel.setMessage(dataExistsString + " already exists");
 			} else {
 				tbOrderRepository.saveAll(lstTbOrder);
+				
+				for (TbOrder tbOrder : lstTbOrder) {
+					TbOrderStatus tbOrderStatus = new TbOrderStatus();
+					tbOrderStatus.setTbosCreateDate(Date.from(LocalDateTime.now(ZoneOffset.UTC).toInstant(ZoneOffset.UTC)));
+					tbOrderStatus.setTbosCreateId(optTbUser.get().getTbuId());
+					tbOrderStatus.setTboId(tbOrder.getTboId());
+					tbOrderStatus.setTbosStatus(tbOrder.getTboStatus());
+					lstTbOrderStatus.add(tbOrderStatus);
+				}
+				tbOrderStatusRepository.saveAll(lstTbOrderStatus);
 
 				for (TbOrder tbOrder : lstTbOrder) {
 					TbOrderPack tbOrderPack = new TbOrderPack();
@@ -394,10 +430,20 @@ public class OrderService {
 				postSyncOrderRequestModel.setEmail(requestModel.getEmail());
 				postSyncOrderRequestModel.setLstTbOrder(lstTbOrder);
 				
-				HttpEntity<PostSyncOrderRequestModel> request = new HttpEntity<>(postSyncOrderRequestModel);
 				RestTemplate restTemplate = new RestTemplate();
-				restTemplate.postForEntity(env.getProperty("services.bsd.api.dms.report.postsyncorder"), request, String.class);
+
+				HttpEntity<PostSyncOrderRequestModel> requestPostsyncorder = new HttpEntity<>(postSyncOrderRequestModel);				
+				restTemplate.postForEntity(env.getProperty("services.bsd.api.dms.report.postsyncorder"), requestPostsyncorder, String.class);
+
+				PostSyncOrderStatusRequestModel PostSyncOrderStatusRequestModel = new PostSyncOrderStatusRequestModel();
+				PostSyncOrderStatusRequestModel.setRequestDate(requestModel.getRequestDate());
+				PostSyncOrderStatusRequestModel.setRequestId(requestModel.getRequestId());
+				PostSyncOrderStatusRequestModel.setEmail(requestModel.getEmail());
+				PostSyncOrderStatusRequestModel.setLstTbOrderStatus(lstTbOrderStatus);
 				
+				HttpEntity<PostSyncOrderStatusRequestModel> requestPostsyncorderstatus = new HttpEntity<>(PostSyncOrderStatusRequestModel);
+				restTemplate.postForEntity(env.getProperty("services.bsd.api.dms.report.postsyncorderstatus"), requestPostsyncorderstatus, String.class);
+
 				responseModel.setStatus("200");
 				responseModel.setMessage("Upload ok");				
 			}
@@ -1703,20 +1749,40 @@ public class OrderService {
 						
 						optTbOrder.get().setTboStatus(TbOrderRepository.StatusDelivered);
 						tbOrderRepository.save(optTbOrder.get());
+
+						TbOrderStatus tbOrderStatus = new TbOrderStatus();
+						tbOrderStatus.setTbosCreateDate(Date.from(LocalDateTime.now(ZoneOffset.UTC).toInstant(ZoneOffset.UTC)));
+						tbOrderStatus.setTbosCreateId(optTbUser.get().getTbuId());
+						tbOrderStatus.setTboId(optTbOrder.get().getTboId());
+						tbOrderStatus.setTbosStatus(optTbOrder.get().getTboStatus());
+						tbOrderStatusRepository.save(tbOrderStatus);					
 						
 						RestTemplate restTemplate = new RestTemplate();
-						
+
 						List<TbOrder> lstTbOrder = new ArrayList<TbOrder>();
 						lstTbOrder.add(optTbOrder.get());
+
 						PostSyncOrderRequestModel postSyncOrderRequestModel = new PostSyncOrderRequestModel();
 						postSyncOrderRequestModel.setRequestDate(requestModel.getRequestDate());
 						postSyncOrderRequestModel.setRequestId(requestModel.getRequestId());
 						postSyncOrderRequestModel.setEmail(requestModel.getEmail());
-						postSyncOrderRequestModel.setLstTbOrder(lstTbOrder);
-						
-						HttpEntity<PostSyncOrderRequestModel> request = new HttpEntity<>(postSyncOrderRequestModel);
-						restTemplate.postForEntity(env.getProperty("services.bsd.api.dms.report.postsyncorder"), request, String.class);
-						
+						postSyncOrderRequestModel.setLstTbOrder(lstTbOrder);						
+
+						HttpEntity<PostSyncOrderRequestModel> requestPostsyncorder = new HttpEntity<>(postSyncOrderRequestModel);
+						restTemplate.postForEntity(env.getProperty("services.bsd.api.dms.report.postsyncorder"), requestPostsyncorder, String.class);
+
+						List<TbOrderStatus> lstTbOrderStatus = new ArrayList<TbOrderStatus>();
+						lstTbOrderStatus.add(tbOrderStatus);
+
+						PostSyncOrderStatusRequestModel postSyncOrderStatusRequestModel = new PostSyncOrderStatusRequestModel();
+						postSyncOrderStatusRequestModel.setRequestDate(requestModel.getRequestDate());
+						postSyncOrderStatusRequestModel.setRequestId(requestModel.getRequestId());
+						postSyncOrderStatusRequestModel.setEmail(requestModel.getEmail());
+						postSyncOrderStatusRequestModel.setLstTbOrderStatus(lstTbOrderStatus);
+
+						HttpEntity<PostSyncOrderStatusRequestModel> requestPostsyncorderstatus = new HttpEntity<>(postSyncOrderStatusRequestModel);
+						restTemplate.postForEntity(env.getProperty("services.bsd.api.dms.report.postsyncorderstatus"), requestPostsyncorderstatus, String.class);
+
 						PostProductConfirmRequestModel postProductConfirmRequestModel = new PostProductConfirmRequestModel();
 						postProductConfirmRequestModel.setEmail(requestModel.getEmail());
 						postProductConfirmRequestModel.setRequestDate(requestModel.getRequestDate());

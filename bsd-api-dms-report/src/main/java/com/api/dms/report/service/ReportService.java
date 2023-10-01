@@ -28,6 +28,7 @@ import com.api.dms.report.db.entity.ViewOrder;
 import com.api.dms.report.db.entity.ViewSales;
 import com.api.dms.report.db.entity.ViewStock;
 import com.api.dms.report.db.repository.TbOrderRepository;
+import com.api.dms.report.db.repository.TbOrderStatusRepository;
 import com.api.dms.report.db.repository.TbProductMarketRepository;
 import com.api.dms.report.db.repository.TbProductRepository;
 import com.api.dms.report.db.repository.TbUserRepository;
@@ -42,6 +43,8 @@ import com.api.dms.report.model.report.GetStockListRequestModel;
 import com.api.dms.report.model.report.GetStockListResponseModel;
 import com.api.dms.report.model.report.PostSyncOrderRequestModel;
 import com.api.dms.report.model.report.PostSyncOrderResponseModel;
+import com.api.dms.report.model.report.PostSyncOrderStatusRequestModel;
+import com.api.dms.report.model.report.PostSyncOrderStatusResponseModel;
 import com.api.dms.report.model.report.PostSyncProductRequestModel;
 import com.api.dms.report.model.report.PostSyncProductResponseModel;
 import com.api.dms.report.util.SimpleMapper;
@@ -78,6 +81,9 @@ public class ReportService {
 	@Autowired
 	private ViewSalesRepository viewSalesRepository;
 	
+	@Autowired
+	private TbOrderStatusRepository tbOrderStatusRepository;
+	
 	public PostSyncOrderResponseModel postSyncOrder(PostSyncOrderRequestModel requestModel) throws Exception {
 		PostSyncOrderResponseModel responseModel = new PostSyncOrderResponseModel(requestModel);
 		
@@ -91,6 +97,27 @@ public class ReportService {
 			
 			responseModel.setStatus("200");
 			responseModel.setMessage("Sync Order ok");
+		}, () -> {
+			responseModel.setStatus("404");
+			responseModel.setMessage("Not found");
+		});
+		
+		return responseModel;
+	}
+	
+	public PostSyncOrderStatusResponseModel PostSyncOrderStatus(PostSyncOrderStatusRequestModel requestModel) throws Exception {
+		PostSyncOrderStatusResponseModel responseModel = new PostSyncOrderStatusResponseModel(requestModel);
+		
+		TbUser exampleTbUser = new TbUser();
+		exampleTbUser.setTbuEmail(requestModel.getEmail());
+		exampleTbUser.setTbuStatus(TbUserRepository.Active);
+		Optional<TbUser> optTbUser = tbUserRepository.findOne(Example.of(exampleTbUser));
+		
+		optTbUser.ifPresentOrElse(tbUser -> {
+			tbOrderStatusRepository.saveAll(requestModel.getLstTbOrderStatus());
+			
+			responseModel.setStatus("200");
+			responseModel.setMessage("Sync Order Status ok");
 		}, () -> {
 			responseModel.setStatus("404");
 			responseModel.setMessage("Not found");

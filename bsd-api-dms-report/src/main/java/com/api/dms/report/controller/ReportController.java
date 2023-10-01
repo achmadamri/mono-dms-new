@@ -33,6 +33,8 @@ import com.api.dms.report.model.report.GetStockListRequestModel;
 import com.api.dms.report.model.report.GetStockListResponseModel;
 import com.api.dms.report.model.report.PostSyncOrderRequestModel;
 import com.api.dms.report.model.report.PostSyncOrderResponseModel;
+import com.api.dms.report.model.report.PostSyncOrderStatusRequestModel;
+import com.api.dms.report.model.report.PostSyncOrderStatusResponseModel;
 import com.api.dms.report.model.report.PostSyncProductRequestModel;
 import com.api.dms.report.model.report.PostSyncProductResponseModel;
 import com.api.dms.report.service.ReportService;
@@ -59,6 +61,20 @@ public class ReportController {
 		log.info(request.getRequestURL().toString() + " [fid" + fid + "] requestModel : " + objectMapper.writeValueAsString(requestModel));
 		
 		PostSyncOrderResponseModel responseModel = reportService.postSyncOrder(requestModel);
+		
+		ResponseEntity<?> responseEntity = new ResponseEntity<>(responseModel, responseModel.getStatus().equals("200") ? HttpStatus.OK : HttpStatus.NOT_FOUND);
+		log.info(request.getRequestURL().toString() + " [fid" + fid + "] responseEntity : " + objectMapper.writeValueAsString(responseEntity));
+
+		return responseEntity;
+	}
+	
+	@PostMapping("/postsyncorderstatus")
+	@Transactional
+	public HttpEntity<?> PostSyncOrderStatusStatus(HttpServletRequest request, @Valid @RequestBody PostSyncOrderStatusRequestModel requestModel) throws Exception {
+		String fid = new Uid().generateString(20);
+		log.info(request.getRequestURL().toString() + " [fid" + fid + "] requestModel : " + objectMapper.writeValueAsString(requestModel));
+		
+		PostSyncOrderStatusResponseModel responseModel = reportService.PostSyncOrderStatus(requestModel);
 		
 		ResponseEntity<?> responseEntity = new ResponseEntity<>(responseModel, responseModel.getStatus().equals("200") ? HttpStatus.OK : HttpStatus.NOT_FOUND);
 		log.info(request.getRequestURL().toString() + " [fid" + fid + "] responseEntity : " + objectMapper.writeValueAsString(responseEntity));
