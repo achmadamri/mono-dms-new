@@ -6,6 +6,8 @@ import { Title } from '@angular/platform-browser';
 import { Router } from '@angular/router';
 import { GetOrderConfirmListRequest } from 'app/services/order/getorderconfirmlistrequest';
 import { GetOrderConfirmListResponse } from 'app/services/order/getorderconfirmlistresponse';
+import { GetOrderConfirmSumRequest } from 'app/services/order/getorderconfirmsumrequest';
+import { GetOrderConfirmSumResponse } from 'app/services/order/getorderconfirmsumresponse';
 import { OrderService } from 'app/services/order/order.service';
 import { PostConfirmRequest } from 'app/services/order/postconfirmrequest';
 import { PostConfirmResponse } from 'app/services/order/postconfirmresponse';
@@ -35,6 +37,8 @@ export class ConfirmComponent implements OnInit {
   pageDisabled: boolean = false;
   getOrderConfirmListRequest: GetOrderConfirmListRequest = new GetOrderConfirmListRequest();
   getOrderConfirmListResponse: GetOrderConfirmListResponse = new GetOrderConfirmListResponse();
+  getOrderConfirmSumRequest: GetOrderConfirmSumRequest = new GetOrderConfirmSumRequest();
+  getOrderConfirmSumResponse: GetOrderConfirmSumResponse = new GetOrderConfirmSumResponse();
   postConfirmRequest: PostConfirmRequest = new PostConfirmRequest();
   postConfirmResponse: PostConfirmResponse = new PostConfirmResponse();
   orderNo = "";
@@ -50,8 +54,8 @@ export class ConfirmComponent implements OnInit {
   sumNotConfirmed = 0;
 
   range = new FormGroup({
-    start: new FormControl(new Date(new Date().getFullYear(), new Date().getMonth(), 1)), // Start of the current month
-    end: new FormControl(new Date(new Date().getFullYear(), new Date().getMonth() + 1, 0)) // End of the current month
+    start: new FormControl(new Date()),
+    end: new FormControl(new Date())
   });
 
   constructor(
@@ -63,6 +67,14 @@ export class ConfirmComponent implements OnInit {
   ) { }
 
   ngOnInit() {
+    const thirtyDaysAgo = new Date();
+    thirtyDaysAgo.setDate(thirtyDaysAgo.getDate() - 30);
+
+    this.range = new FormGroup({
+      start: new FormControl(thirtyDaysAgo), // 30 days ago from the current date
+      end: new FormControl(new Date()) // Current date
+    });
+    
     this.titleService.setTitle('DMS - Confirm');
 
     this.productService.getBrand(this.getBrandRequest)
@@ -77,6 +89,8 @@ export class ConfirmComponent implements OnInit {
     );
 
     this.getOrderConfirmList(null);
+
+    this.getOrderConfirmSum(null);
     
     this.url = (isDevMode() ? 'http://localhost:2083' : 'https://dms.id-trec.com/2083') + '/order/getorderconfirmlistreportexcel?' +
       'requestId=' + this.util.randomString(10) +
@@ -138,12 +152,6 @@ export class ConfirmComponent implements OnInit {
           });
 
           this.length = this.getOrderConfirmListResponse.length;
-          this.sumAll = this.getOrderConfirmListResponse.sumAll;
-          this.sumPacked = this.getOrderConfirmListResponse.sumPacked;
-          this.sumAdditionalPacked = this.getOrderConfirmListResponse.sumAdditionalPacked;
-          this.sumNotPacked = this.getOrderConfirmListResponse.sumNotPacked;
-          this.sumDelivered = this.getOrderConfirmListResponse.sumDelivered;
-          this.sumNotConfirmed = this.getOrderConfirmListResponse.sumNotConfirmed;
 
           if (pageEvent != null) {
             this.length = pageEvent.length;
@@ -155,6 +163,35 @@ export class ConfirmComponent implements OnInit {
           this.clicked = !this.clicked;
           
           this.getOrderConfirmListResponse = new GetOrderConfirmListResponse();
+
+          this.download = false;
+        }
+      );
+  }
+
+  getOrderConfirmSum(pageEvent: PageEvent) {
+    this.clicked = !this.clicked;
+    
+    this.orderService.getOrderConfirmSum(this.orderNo, this.sku, this.status, this.type, this.brand, this.datepipe.transform(this.range.controls.start.value, 'yyyy-MM-dd'), this.datepipe.transform(this.range.controls.end.value, 'yyyy-MM-dd'), pageEvent != null ? pageEvent.length : this.length, pageEvent != null ? pageEvent.pageSize : this.pageSize, pageEvent != null ? pageEvent.pageIndex : this.pageIndex, this.getOrderConfirmSumRequest)
+      .subscribe(
+        successResponse => {
+          this.clicked = !this.clicked;
+
+          this.getOrderConfirmSumResponse = successResponse;
+
+          this.download = true;
+
+          this.sumAll = this.getOrderConfirmSumResponse.sumAll;
+          this.sumPacked = this.getOrderConfirmSumResponse.sumPacked;
+          this.sumAdditionalPacked = this.getOrderConfirmSumResponse.sumAdditionalPacked;
+          this.sumNotPacked = this.getOrderConfirmSumResponse.sumNotPacked;
+          this.sumDelivered = this.getOrderConfirmSumResponse.sumDelivered;
+          this.sumNotConfirmed = this.getOrderConfirmSumResponse.sumNotConfirmed;
+        },
+        errorResponse => {
+          this.clicked = !this.clicked;
+          
+          this.getOrderConfirmSumResponse = new GetOrderConfirmSumResponse();
 
           this.download = false;
         }
@@ -187,6 +224,8 @@ export class ConfirmComponent implements OnInit {
           this.util.showNotification('info', 'top', 'center', this.postConfirmResponse.message);
 
           this.getOrderConfirmList(null);
+
+          this.getOrderConfirmSum(null);
         },
         errorResponse => {
           this.clicked = !this.clicked;
@@ -199,6 +238,8 @@ export class ConfirmComponent implements OnInit {
             this.util.showNotification('danger', 'top', 'center', errorResponse.error.message);
 
             this.getOrderConfirmList(null);
+
+            this.getOrderConfirmSum(null);
           }
         }
       );

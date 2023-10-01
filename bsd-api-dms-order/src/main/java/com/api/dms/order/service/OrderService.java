@@ -55,6 +55,8 @@ import com.api.dms.order.db.repository.ViewOrderConfirmRepository;
 import com.api.dms.order.db.repository.ViewOrderPackRepository;
 import com.api.dms.order.model.order.GetOrderConfirmListRequestModel;
 import com.api.dms.order.model.order.GetOrderConfirmListResponseModel;
+import com.api.dms.order.model.order.GetOrderConfirmSumRequestModel;
+import com.api.dms.order.model.order.GetOrderConfirmSumResponseModel;
 import com.api.dms.order.model.order.GetOrderListRequestModel;
 import com.api.dms.order.model.order.GetOrderListResponseModel;
 import com.api.dms.order.model.order.GetOrderPackRequestModel;
@@ -322,7 +324,7 @@ public class OrderService {
 							
 							tbOrder.setTboStatus(TbOrderRepository.StatusPacked);
 							
-							tbOrder.setTboCheck(TbOrderRepository.CheckNotOk);
+							tbOrder.setTboCheck(TbOrderRepository.CheckOk);
 							
 							tbOrder.setTboTypeNotPacked(TbOrderRepository.TypeNotPackedOrder);
 							
@@ -539,6 +541,34 @@ public class OrderService {
 				responseModel.setLength(viewOrderConfirmRepository.count(optTbUser.get().getTbuId(), orderNo, sku, status, type, brand, new SimpleDateFormat("yyyy-MM-dd hh:mm:ss").parse(startDate + " 00:00:00"), new SimpleDateFormat("yyyy-MM-dd hh:mm:ss").parse(endDate + " 23:59:50")));
 				responseModel.setLstViewOrderConfirm(lstViewOrderConfirm);
 				
+				responseModel.setStatus("200");
+				responseModel.setMessage("Get Order List ok");
+			} else {
+				responseModel.setStatus("404");
+				responseModel.setMessage("Not found");
+			}
+		} else {
+			responseModel.setStatus("404");
+			responseModel.setMessage("Not found");
+		}
+		
+		return responseModel;
+	}
+
+	public GetOrderConfirmSumResponseModel getOrderConfirmSum(String orderNo, String sku, String status, String type, String brand, String startDate, String endDate, String length, String pageSize, String pageIndex, GetOrderConfirmSumRequestModel requestModel) throws Exception {
+		GetOrderConfirmSumResponseModel responseModel = new GetOrderConfirmSumResponseModel(requestModel);
+		
+		tokenUtil.claims(requestModel);
+		
+		TbUser exampleTbUser = new TbUser();
+		exampleTbUser.setTbuEmail(requestModel.getEmail());
+		exampleTbUser.setTbuStatus(TbUserRepository.Active);
+		Optional<TbUser> optTbUser = tbUserRepository.findOne(Example.of(exampleTbUser));
+		
+		if (optTbUser.isPresent()) {
+			List<ViewOrderConfirm> lstViewOrderConfirm = viewOrderConfirmRepository.find(optTbUser.get().getTbuId(), orderNo, sku, status, type, brand, new SimpleDateFormat("yyyy-MM-dd hh:mm:ss").parse(startDate + " 00:00:00"), new SimpleDateFormat("yyyy-MM-dd hh:mm:ss").parse(endDate + " 23:59:50"), PageRequest.of(Integer.valueOf(pageIndex), Integer.valueOf(pageSize), Sort.by("tboId").ascending()));
+			
+			if (lstViewOrderConfirm.size() > 0) {
 				responseModel.setSumAll(viewOrderConfirmRepository.count(optTbUser.get().getTbuId(), orderNo, sku, "", type, brand, new SimpleDateFormat("yyyy-MM-dd hh:mm:ss").parse(startDate + " 00:00:00"), new SimpleDateFormat("yyyy-MM-dd hh:mm:ss").parse(endDate + " 23:59:50")));
 				responseModel.setSumPacked(viewOrderConfirmRepository.count(optTbUser.get().getTbuId(), orderNo, sku, "Packed", type, brand, new SimpleDateFormat("yyyy-MM-dd hh:mm:ss").parse(startDate + " 00:00:00"), new SimpleDateFormat("yyyy-MM-dd hh:mm:ss").parse(endDate + " 23:59:50")));
 				responseModel.setSumAdditionalPacked(viewOrderConfirmRepository.count(optTbUser.get().getTbuId(), orderNo, sku, "Additional Packed", type, brand, new SimpleDateFormat("yyyy-MM-dd hh:mm:ss").parse(startDate + " 00:00:00"), new SimpleDateFormat("yyyy-MM-dd hh:mm:ss").parse(endDate + " 23:59:50")));
@@ -547,7 +577,7 @@ public class OrderService {
 				responseModel.setSumNotConfirmed(viewOrderConfirmRepository.count(optTbUser.get().getTbuId(), orderNo, sku, "Not Confirmed", type, brand, new SimpleDateFormat("yyyy-MM-dd hh:mm:ss").parse(startDate + " 00:00:00"), new SimpleDateFormat("yyyy-MM-dd hh:mm:ss").parse(endDate + " 23:59:50")));
 				
 				responseModel.setStatus("200");
-				responseModel.setMessage("Get Order List ok");
+				responseModel.setMessage("Get Order Sum ok");
 			} else {
 				responseModel.setStatus("404");
 				responseModel.setMessage("Not found");

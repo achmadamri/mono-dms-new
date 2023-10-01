@@ -35,10 +35,10 @@ export class OrderComponent implements OnInit {
   postConfirmOrderResponse: PostConfirmOrderResponse = new PostConfirmOrderResponse();
   orderNo = "";
   status = "";
-
+  
   range = new FormGroup({
-    start: new FormControl(new Date(new Date().getFullYear(), new Date().getMonth(), 1)), // Start of the current month
-    end: new FormControl(new Date(new Date().getFullYear(), new Date().getMonth() + 1, 0)) // End of the current month
+    start: new FormControl(new Date()),
+    end: new FormControl(new Date())
   });
 
   constructor(
@@ -49,6 +49,14 @@ export class OrderComponent implements OnInit {
   ) { }
 
   ngOnInit() {
+    const thirtyDaysAgo = new Date();
+    thirtyDaysAgo.setDate(thirtyDaysAgo.getDate() - 30);
+
+    this.range = new FormGroup({
+      start: new FormControl(thirtyDaysAgo), // 30 days ago from the current date
+      end: new FormControl(new Date()) // Current date
+    });
+
     this.titleService.setTitle('DMS - Order');
     this.getOrderList(null);
     this.urlOrder = (isDevMode() ? 'http://localhost:2083' : 'https://dms.id-trec.com/2083') + '/order/getorderlistreportexcel?' +

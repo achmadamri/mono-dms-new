@@ -91,6 +91,24 @@ export class ReportComponent implements OnInit {
   ) { }
 
   ngOnInit() {
+    const thirtyDaysAgo = new Date();
+    thirtyDaysAgo.setDate(thirtyDaysAgo.getDate() - 30);
+
+    this.rangeOrder = new FormGroup({
+      start: new FormControl(thirtyDaysAgo), // 30 days ago from the current date
+      end: new FormControl(new Date()) // Current date
+    });
+
+    this.rangeStock = new FormGroup({
+      start: new FormControl(thirtyDaysAgo), // 30 days ago from the current date
+      end: new FormControl(new Date()) // Current date
+    });
+
+    this.rangeSales = new FormGroup({
+      start: new FormControl(thirtyDaysAgo), // 30 days ago from the current date
+      end: new FormControl(new Date()) // Current date
+    });
+
     this.titleService.setTitle('DMS - Report');
     this.productService.getBrand(this.getBrandRequest)
     .subscribe(

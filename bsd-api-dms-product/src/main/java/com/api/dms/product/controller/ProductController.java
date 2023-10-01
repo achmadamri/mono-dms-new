@@ -2,6 +2,7 @@ package com.api.dms.product.controller;
 
 import java.util.List;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 
 import org.slf4j.Logger;
@@ -58,34 +59,34 @@ public class ProductController {
 	
 	@PostMapping("/postuploadproductbundle")
 	@Transactional
-	public HttpEntity<?> postUploadProductBundle(PostUploadProductBundleRequestModel requestModel, @RequestParam("file") MultipartFile file) throws Exception {
+	public HttpEntity<?> postUploadProductBundle(HttpServletRequest request, PostUploadProductBundleRequestModel requestModel, @RequestParam("file") MultipartFile file) throws Exception {
 		String fid = new Uid().generateString(20);
-		log.info("[fid:" + fid + "] requestModel : " + file.toString());
+		log.info(request.getRequestURL().toString() + " [fid:" + fid + "] requestModel : " + file.toString());
 		
 		PostUploadProductBundleResponseModel responseModel = productService.postUploadProductBundle(requestModel, file);
 		
 		ResponseEntity<?> responseEntity = new ResponseEntity<>(responseModel, responseModel.getStatus().equals("200") ? HttpStatus.OK : HttpStatus.NOT_FOUND);
-		log.info("[fid:" + fid + "] responseEntity : " + objectMapper.writeValueAsString(responseEntity));
+		log.info(request.getRequestURL().toString() + " [fid:" + fid + "] responseEntity : " + objectMapper.writeValueAsString(responseEntity));
 
 		return responseEntity;
 	}
 	
 	@PostMapping("/postuploadproduct")
 	@Transactional
-	public HttpEntity<?> postUploadProduct(PostUploadProductRequestModel requestModel, @RequestParam("file") MultipartFile file) throws Exception {
+	public HttpEntity<?> postUploadProduct(HttpServletRequest request, PostUploadProductRequestModel requestModel, @RequestParam("file") MultipartFile file) throws Exception {
 		String fid = new Uid().generateString(20);
-		log.info("[fid:" + fid + "] requestModel : " + file.toString());
+		log.info(request.getRequestURL().toString() + " [fid:" + fid + "] requestModel : " + file.toString());
 		
 		PostUploadProductResponseModel responseModel = productService.postUploadProduct(requestModel, file);
 		
 		ResponseEntity<?> responseEntity = new ResponseEntity<>(responseModel, responseModel.getStatus().equals("200") ? HttpStatus.OK : HttpStatus.NOT_FOUND);
-		log.info("[fid:" + fid + "] responseEntity : " + objectMapper.writeValueAsString(responseEntity));
+		log.info(request.getRequestURL().toString() + " [fid:" + fid + "] responseEntity : " + objectMapper.writeValueAsString(responseEntity));
 
 		return responseEntity;
 	}
 	
 	@GetMapping("/getproductlist")
-	public HttpEntity<?> getProductList(@RequestParam String brand, @RequestParam String sku, @RequestParam String item, @RequestParam String code, @RequestParam String type, @RequestParam String length, @RequestParam String pageSize, @RequestParam String pageIndex, @RequestParam String email, @RequestParam String token, @RequestParam String requestId, @RequestParam String requestDate) throws Exception {
+	public HttpEntity<?> getProductList(HttpServletRequest request, @RequestParam String brand, @RequestParam String sku, @RequestParam String item, @RequestParam String code, @RequestParam String type, @RequestParam String length, @RequestParam String pageSize, @RequestParam String pageIndex, @RequestParam String email, @RequestParam String token, @RequestParam String requestId, @RequestParam String requestDate) throws Exception {
 		GetProductListRequestModel requestModel = new GetProductListRequestModel();
 		requestModel.setEmail(email);
 		requestModel.setToken(token);
@@ -93,32 +94,32 @@ public class ProductController {
 		requestModel.setRequestDate(requestDate);
 		
 		String fid = new Uid().generateString(20);
-		log.info("[fid:" + fid + "] requestModel : " + objectMapper.writeValueAsString(requestModel));
+		log.info(request.getRequestURL().toString() + " [fid:" + fid + "] requestModel : " + objectMapper.writeValueAsString(requestModel));
 		
 		GetProductListResponseModel responseModel = productService.getProductList(brand, sku, item, code, type, length, pageSize, pageIndex, requestModel);
 		
 		ResponseEntity<?> responseEntity = new ResponseEntity<>(responseModel, responseModel.getStatus().equals("200") ? HttpStatus.OK : HttpStatus.NOT_FOUND);
-		log.info("[fid:" + fid + "] responseEntity : " + objectMapper.writeValueAsString(responseEntity));
+		log.info(request.getRequestURL().toString() + " [fid:" + fid + "] responseEntity : " + objectMapper.writeValueAsString(responseEntity));
 
 		return responseEntity;
 	}
 	
 	@PostMapping("/postproductadd")
 	@Transactional
-	public HttpEntity<?> postProductAdd(@Valid @RequestBody PostProductAddRequestModel requestModel) throws Exception {
+	public HttpEntity<?> postProductAdd(HttpServletRequest request, @Valid @RequestBody PostProductAddRequestModel requestModel) throws Exception {
 		String fid = new Uid().generateString(20);
-		log.info("[fid:" + fid + "] requestModel : " + objectMapper.writeValueAsString(requestModel));
+		log.info(request.getRequestURL().toString() + " [fid:" + fid + "] requestModel : " + objectMapper.writeValueAsString(requestModel));
 		
 		PostProductAddResponseModel responseModel = productService.postProductAdd(requestModel);
 		
 		ResponseEntity<?> responseEntity = new ResponseEntity<>(responseModel, responseModel.getStatus().equals("403") ? HttpStatus.FORBIDDEN : (responseModel.getStatus().equals("200") ? HttpStatus.OK : HttpStatus.NOT_FOUND));
-		log.info("[fid:" + fid + "] responseEntity : " + objectMapper.writeValueAsString(responseEntity));
+		log.info(request.getRequestURL().toString() + " [fid:" + fid + "] responseEntity : " + objectMapper.writeValueAsString(responseEntity));
 
 		return responseEntity;
 	}
 	
 	@GetMapping("/getbrand")
-	public HttpEntity<?> getBrand(@RequestParam String email, @RequestParam String token, @RequestParam String requestId, @RequestParam String requestDate) throws Exception {
+	public HttpEntity<?> getBrand(HttpServletRequest request, @RequestParam String email, @RequestParam String token, @RequestParam String requestId, @RequestParam String requestDate) throws Exception {
 		GetBrandRequestModel requestModel = new GetBrandRequestModel();
 		requestModel.setEmail(email);
 		requestModel.setToken(token);
@@ -126,18 +127,18 @@ public class ProductController {
 		requestModel.setRequestDate(requestDate);
 		
 		String fid = new Uid().generateString(20);
-		log.info("[fid:" + fid + "] requestModel : " + objectMapper.writeValueAsString(requestModel));
+		log.info(request.getRequestURL().toString() + " [fid:" + fid + "] requestModel : " + objectMapper.writeValueAsString(requestModel));
 		
 		GetBrandResponseModel responseModel = productService.getBrand(requestModel);
 		
 		ResponseEntity<?> responseEntity = new ResponseEntity<>(responseModel, responseModel.getStatus().equals("200") ? HttpStatus.OK : HttpStatus.NOT_FOUND);
-		log.info("[fid:" + fid + "] responseEntity : " + objectMapper.writeValueAsString(responseEntity));
+		log.info(request.getRequestURL().toString() + " [fid:" + fid + "] responseEntity : " + objectMapper.writeValueAsString(responseEntity));
 
 		return responseEntity;
 	}
 	
 	@GetMapping("/getproduct")
-	public HttpEntity<?> getProduct(@RequestParam String tbpIdSkuCode, @RequestParam String email, @RequestParam String token, @RequestParam String requestId, @RequestParam String requestDate) throws Exception {
+	public HttpEntity<?> getProduct(HttpServletRequest request, @RequestParam String tbpIdSkuCode, @RequestParam String email, @RequestParam String token, @RequestParam String requestId, @RequestParam String requestDate) throws Exception {
 		GetProductRequestModel requestModel = new GetProductRequestModel();
 		requestModel.setEmail(email);
 		requestModel.setToken(token);
@@ -145,18 +146,18 @@ public class ProductController {
 		requestModel.setRequestDate(requestDate);
 		
 		String fid = new Uid().generateString(20);
-		log.info("[fid:" + fid + "] requestModel : " + objectMapper.writeValueAsString(requestModel));
+		log.info(request.getRequestURL().toString() + " [fid:" + fid + "] requestModel : " + objectMapper.writeValueAsString(requestModel));
 		
 		GetProductResponseModel responseModel = productService.getProduct(tbpIdSkuCode, requestModel);
 		
 		ResponseEntity<?> responseEntity = new ResponseEntity<>(responseModel, responseModel.getStatus().equals("200") ? HttpStatus.OK : HttpStatus.NOT_FOUND);
-		log.info("[fid:" + fid + "] responseEntity : " + objectMapper.writeValueAsString(responseEntity));
+		log.info(request.getRequestURL().toString() + " [fid:" + fid + "] responseEntity : " + objectMapper.writeValueAsString(responseEntity));
 
 		return responseEntity;
 	}
 	
 	@GetMapping("/getproducts")
-	public HttpEntity<?> getProducts(@RequestParam List<String> lstTbpIdSkuCode, @RequestParam String email, @RequestParam String token, @RequestParam String requestId, @RequestParam String requestDate) throws Exception {
+	public HttpEntity<?> getProducts(HttpServletRequest request, @RequestParam List<String> lstTbpIdSkuCode, @RequestParam String email, @RequestParam String token, @RequestParam String requestId, @RequestParam String requestDate) throws Exception {
 		GetProductRequestModel requestModel = new GetProductRequestModel();
 		requestModel.setEmail(email);
 		requestModel.setToken(token);
@@ -164,54 +165,54 @@ public class ProductController {
 		requestModel.setRequestDate(requestDate);
 		
 		String fid = new Uid().generateString(20);
-		log.info("[fid:" + fid + "] requestModel : " + objectMapper.writeValueAsString(requestModel));
+		log.info(request.getRequestURL().toString() + " [fid:" + fid + "] requestModel : " + objectMapper.writeValueAsString(requestModel));
 		
 		GetProductsResponseModel responseModel = productService.getProducts(lstTbpIdSkuCode, requestModel);
 		
 		ResponseEntity<?> responseEntity = new ResponseEntity<>(responseModel, responseModel.getStatus().equals("200") ? HttpStatus.OK : HttpStatus.NOT_FOUND);
-		log.info("[fid:" + fid + "] responseEntity : " + objectMapper.writeValueAsString(responseEntity));
+		log.info(request.getRequestURL().toString() + " [fid:" + fid + "] responseEntity : " + objectMapper.writeValueAsString(responseEntity));
 
 		return responseEntity;
 	}
 	
 	@PostMapping("/postproductedit")
 	@Transactional
-	public HttpEntity<?> postProductEdit(@Valid @RequestBody PostProductEditRequestModel requestModel) throws Exception {
+	public HttpEntity<?> postProductEdit(HttpServletRequest request, @Valid @RequestBody PostProductEditRequestModel requestModel) throws Exception {
 		String fid = new Uid().generateString(20);
-		log.info("[fid:" + fid + "] requestModel : " + objectMapper.writeValueAsString(requestModel));
+		log.info(request.getRequestURL().toString() + " [fid:" + fid + "] requestModel : " + objectMapper.writeValueAsString(requestModel));
 		
 		PostProductEditResponseModel responseModel = productService.postProductEdit(requestModel);
 		
 		ResponseEntity<?> responseEntity = new ResponseEntity<>(responseModel, responseModel.getStatus().equals("403") ? HttpStatus.FORBIDDEN : (responseModel.getStatus().equals("200") ? HttpStatus.OK : HttpStatus.NOT_FOUND));
-		log.info("[fid:" + fid + "] responseEntity : " + objectMapper.writeValueAsString(responseEntity));
+		log.info(request.getRequestURL().toString() + " [fid:" + fid + "] responseEntity : " + objectMapper.writeValueAsString(responseEntity));
 
 		return responseEntity;
 	}
 	
 	@PostMapping("/postproductdelete")
 	@Transactional
-	public HttpEntity<?> postProductDelete(@Valid @RequestBody PostProductDeleteRequestModel requestModel) throws Exception {
+	public HttpEntity<?> postProductDelete(HttpServletRequest request, @Valid @RequestBody PostProductDeleteRequestModel requestModel) throws Exception {
 		String fid = new Uid().generateString(20);
-		log.info("[fid:" + fid + "] requestModel : " + objectMapper.writeValueAsString(requestModel));
+		log.info(request.getRequestURL().toString() + " [fid:" + fid + "] requestModel : " + objectMapper.writeValueAsString(requestModel));
 		
 		PostProductDeleteResponseModel responseModel = productService.postProductDelete(requestModel);
 		
 		ResponseEntity<?> responseEntity = new ResponseEntity<>(responseModel, responseModel.getStatus().equals("403") ? HttpStatus.FORBIDDEN : (responseModel.getStatus().equals("200") ? HttpStatus.OK : HttpStatus.NOT_FOUND));
-		log.info("[fid:" + fid + "] responseEntity : " + objectMapper.writeValueAsString(responseEntity));
+		log.info(request.getRequestURL().toString() + " [fid:" + fid + "] responseEntity : " + objectMapper.writeValueAsString(responseEntity));
 
 		return responseEntity;
 	}
 	
 	@PostMapping("/postproductconfirm")
 	@Transactional
-	public HttpEntity<?> postProductConfirm(@Valid @RequestBody PostProductConfirmRequestModel requestModel) throws Exception {
+	public HttpEntity<?> postProductConfirm(HttpServletRequest request, @Valid @RequestBody PostProductConfirmRequestModel requestModel) throws Exception {
 		String fid = new Uid().generateString(20);
-		log.info("[fid:" + fid + "] requestModel : " + objectMapper.writeValueAsString(requestModel));
+		log.info(request.getRequestURL().toString() + " [fid:" + fid + "] requestModel : " + objectMapper.writeValueAsString(requestModel));
 		
 		PostProductConfirmResponseModel responseModel = productService.postProductConfirm(requestModel);
 		
 		ResponseEntity<?> responseEntity = new ResponseEntity<>(responseModel, responseModel.getStatus().equals("403") ? HttpStatus.FORBIDDEN : (responseModel.getStatus().equals("200") ? HttpStatus.OK : HttpStatus.NOT_FOUND));
-		log.info("[fid:" + fid + "] responseEntity : " + objectMapper.writeValueAsString(responseEntity));
+		log.info(request.getRequestURL().toString() + " [fid:" + fid + "] responseEntity : " + objectMapper.writeValueAsString(responseEntity));
 
 		return responseEntity;
 	}
