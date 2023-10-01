@@ -1609,7 +1609,7 @@ public class OrderService {
 		if (optTbUser.isPresent()) {
 			boolean ok = true;
 			String message = "";
-			int totalQtyNeeded = 0;
+			Map<String, Integer> totalQty = new HashMap<String, Integer>();
 
 			for (int i = 0; i < requestModel.getOrderNo().length; i++) {
 				RestTemplate restTemplate = new RestTemplate();
@@ -1631,7 +1631,10 @@ public class OrderService {
 				Optional<TbOrderPackDetail> optTbOrderPackDetail = tbOrderPackDetailRepository.findOne(Example.of(exampleTbOrderPackDetail));
 				
 				if (optTbOrderPackDetail.isPresent()) {
+					Integer totalQtyNeeded = totalQty.get(requestModel.getSku()[i]) == null ? 0 : totalQty.get(requestModel.getSku()[i]);
 					totalQtyNeeded = totalQtyNeeded + optTbOrderPackDetail.get().getTbopdQty();
+					totalQty.put(requestModel.getSku()[i], totalQtyNeeded);
+
 					if (getProductResponseModel.getTbProduct().getTbpQty() < totalQtyNeeded) {
 						ok = false;
 						message = "Product quantity is not enough. Quantity available is " + getProductResponseModel.getTbProduct().getTbpQty() + " and quantity needed is " + totalQtyNeeded;
