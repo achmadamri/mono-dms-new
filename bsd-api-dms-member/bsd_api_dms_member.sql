@@ -87,7 +87,7 @@ CREATE TABLE `tb_user` (
 
 LOCK TABLES `tb_user` WRITE;
 /*!40000 ALTER TABLE `tb_user` DISABLE KEYS */;
-INSERT INTO `tb_user` VALUES (1,NULL,NULL,'2023-10-01 11:52:13',1,'admin@mail.com','202cb962ac59075b964b07152d234b70','admin','admin',NULL,NULL,NULL,'active',NULL,NULL,'e4zsozcucatt2rxjzoas5valt3kszoe8rpa5','ADMIN'),(2,NULL,NULL,'2023-10-01 11:48:31',1,'pic1@mail.com','202cb962ac59075b964b07152d234b70','pic','one',NULL,NULL,NULL,'active',NULL,NULL,'ng843n6ocg719kklqklb5814t9n2ahilj9zv','PRINCIPAL'),(3,NULL,NULL,'2023-10-01 11:48:54',1,'pic2@mail.com','202cb962ac59075b964b07152d234b70','pic','pic',NULL,NULL,NULL,'active',NULL,NULL,'b3n95p03tsdpm9fya84cnelibj9u34xffz6j','DISTRIBUTOR'),(4,'2023-10-01 11:49:59',1,'2023-10-01 12:51:19',4,'pic3@mail.com','202cb962ac59075b964b07152d234b70','pic','three',NULL,NULL,NULL,'active',NULL,NULL,'4s78n55qd3i9xshe750au20m6nh6edgmik6v','SUBDIST');
+INSERT INTO `tb_user` VALUES (1,NULL,NULL,'2023-10-01 11:52:13',1,'admin@mail.com','202cb962ac59075b964b07152d234b70','admin','admin',NULL,NULL,NULL,'active',NULL,NULL,'e4zsozcucatt2rxjzoas5valt3kszoe8rpa5','ADMIN'),(2,NULL,NULL,'2023-10-01 11:48:31',1,'pic1@mail.com','202cb962ac59075b964b07152d234b70','pic','one',NULL,NULL,NULL,'active',NULL,NULL,'ng843n6ocg719kklqklb5814t9n2ahilj9zv','PRINCIPAL'),(3,NULL,NULL,'2023-10-01 11:48:54',1,'pic2@mail.com','202cb962ac59075b964b07152d234b70','pic','pic',NULL,NULL,NULL,'active',NULL,NULL,'b3n95p03tsdpm9fya84cnelibj9u34xffz6j','DISTRIBUTOR'),(4,'2023-10-01 11:49:59',1,'2023-10-05 14:59:55',4,'pic3@mail.com','202cb962ac59075b964b07152d234b70','pic','three',NULL,NULL,NULL,'active',NULL,NULL,'hf9510opo6mwa5c8faxffsxhao5wzdktawev','SUBDIST');
 /*!40000 ALTER TABLE `tb_user` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -281,4 +281,4 @@ SET character_set_client = @saved_cs_client;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2023-10-01 21:08:05
+-- Dump completed on 2023-10-05 22:32:37
