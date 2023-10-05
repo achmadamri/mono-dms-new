@@ -11,7 +11,6 @@ import { Title } from '@angular/platform-browser';
 @Component({
   selector: 'app-product-add',
   templateUrl: './product-add.component.html',
-  styleUrls: ['./product-add.component.css']
 })
 export class ProductAddComponent implements OnInit {
   clicked = false;

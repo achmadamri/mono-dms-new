@@ -15,7 +15,6 @@ import { Util } from 'app/util';
 @Component({
   selector: 'app-order-edit',
   templateUrl: './order-edit.component.html',
-  styleUrls: ['./order-edit.component.css']
 })
 export class OrderEditComponent implements OnInit {
   clicked = false;

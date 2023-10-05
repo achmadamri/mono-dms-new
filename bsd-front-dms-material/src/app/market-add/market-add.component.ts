@@ -11,7 +11,6 @@ import { GetMarketListResponse } from 'app/services/market/getmarketlistresponse
 @Component({
   selector: 'app-market-add',
   templateUrl: './market-add.component.html',
-  styleUrls: ['./market-add.component.css']
 })
 export class MarketAddComponent implements OnInit {
   clicked = false;

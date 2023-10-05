@@ -21,7 +21,6 @@ import { Util } from 'app/util';
 @Component({
   selector: 'app-packing',
   templateUrl: './packing.component.html',
-  styleUrls: ['./packing.component.css']
 })
 export class PackingComponent implements OnInit {
   clicked = false;

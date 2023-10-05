@@ -19,7 +19,6 @@ import { Util } from 'app/util';
 @Component({
   selector: 'app-confirm',
   templateUrl: './confirm.component.html',
-  styleUrls: ['./confirm.component.css'],
   providers: [ DatePipe ]
 })
 export class ConfirmComponent implements OnInit {

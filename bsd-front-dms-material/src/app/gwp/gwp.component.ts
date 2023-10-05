@@ -13,7 +13,6 @@ import { Util } from 'app/util';
 @Component({
   selector: 'app-gwp',
   templateUrl: './gwp.component.html',
-  styleUrls: ['./gwp.component.css']
 })
 export class GwpComponent implements OnInit {
   clicked = false;

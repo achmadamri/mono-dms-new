@@ -19,7 +19,6 @@ import { Util } from 'app/util';
 @Component({
   selector: 'app-confirm-details',
   templateUrl: './confirm-details.component.html',
-  styleUrls: ['./confirm-details.component.css']
 })
 export class ConfirmDetailsComponent implements OnInit {
   clicked = false;

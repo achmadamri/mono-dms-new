@@ -19,7 +19,6 @@ export interface Country {
 @Component({
   selector: 'app-gwp-add',
   templateUrl: './gwp-add.component.html',
-  styleUrls: ['./gwp-add.component.css']
 })
 export class GwpAddComponent implements OnInit {
   clicked = false;

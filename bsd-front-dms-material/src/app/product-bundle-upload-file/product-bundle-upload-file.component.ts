@@ -10,7 +10,6 @@ import { Util } from 'app/util';
 @Component({
   selector: 'app-product-bundle-upload-file',
   templateUrl: './product-bundle-upload-file.component.html',
-  styleUrls: ['./product-bundle-upload-file.component.css']
 })
 export class ProductBundleUploadFileComponent implements OnInit {
   clicked = false;

@@ -17,7 +17,6 @@ import { PostOrderManualResponse } from 'app/services/order/postordermanualrespo
 @Component({
   selector: 'app-order-manual',
   templateUrl: './order-manual.component.html',
-  styleUrls: ['./order-manual.component.css']
 })
 export class OrderManualComponent implements OnInit {
   clicked = false;

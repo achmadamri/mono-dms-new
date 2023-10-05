@@ -14,7 +14,6 @@ import { Util } from 'app/util';
 @Component({
   selector: 'app-order',
   templateUrl: './order.component.html',
-  styleUrls: ['./order.component.css'],
   providers: [ DatePipe ]
 })
 export class OrderComponent implements OnInit {

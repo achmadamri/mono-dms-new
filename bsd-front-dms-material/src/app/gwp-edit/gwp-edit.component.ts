@@ -20,7 +20,6 @@ import { Title } from '@angular/platform-browser';
 @Component({
   selector: 'app-gwp-edit',
   templateUrl: './gwp-edit.component.html',
-  styleUrls: ['./gwp-edit.component.css']
 })
 export class GwpEditComponent implements OnInit {
   clicked = false;

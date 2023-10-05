@@ -22,7 +22,6 @@ export interface Country {
 @Component({
   selector: 'app-user-add',
   templateUrl: './user-add.component.html',
-  styleUrls: ['./user-add.component.css']
 })
 export class UserAddComponent implements OnInit {
   clicked = false;

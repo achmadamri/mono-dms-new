@@ -9,7 +9,6 @@ import { Util } from 'app/util';
 @Component({
   selector: 'app-order-add',
   templateUrl: './order-add.component.html',
-  styleUrls: ['./order-add.component.css']
 })
 export class OrderAddComponent implements OnInit {
   clicked = false;
