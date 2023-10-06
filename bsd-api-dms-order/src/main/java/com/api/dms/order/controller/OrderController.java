@@ -387,7 +387,7 @@ public class OrderController {
 	
 	@PostMapping("/postconfirm")
 	@Transactional
-	public HttpEntity<?> postConfirm(HttpServletRequest request, @Valid @RequestBody PostConfirmRequestModel requestModel) throws Exception {
+	public synchronized HttpEntity<?> postConfirm(HttpServletRequest request, @Valid @RequestBody PostConfirmRequestModel requestModel) throws Exception {
 		String fid = new Uid().generateString(20);
 		log.info(request.getRequestURL().toString() + " [fid:" + fid + "] requestModel : " + objectMapper.writeValueAsString(requestModel));
 		

@@ -147,6 +147,8 @@ export class OrderComponent implements OnInit {
           }          
         },
         errorResponse => {
+          this.length = 0;
+
           this.clicked = !this.clicked;
           
           this.getOrderListResponse = new GetOrderListResponse();

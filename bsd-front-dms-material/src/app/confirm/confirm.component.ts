@@ -159,6 +159,8 @@ export class ConfirmComponent implements OnInit {
           }
         },
         errorResponse => {
+          this.length = 0;
+
           this.clicked = !this.clicked;
           
           this.getOrderConfirmListResponse = new GetOrderConfirmListResponse();

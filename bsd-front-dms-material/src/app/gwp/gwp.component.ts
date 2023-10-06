@@ -74,6 +74,8 @@ export class GwpComponent implements OnInit {
           }          
         },
         errorResponse => {
+          this.length = 0;
+
           this.clicked = !this.clicked;
           
           this.getGwpListResponse = new GetGwpListResponse();

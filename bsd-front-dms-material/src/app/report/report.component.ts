@@ -210,6 +210,8 @@ export class ReportComponent implements OnInit {
           }          
         },
         errorResponse => {
+          this.lengthOrder = 0;
+
           this.clicked = !this.clicked;
           
           this.getOrderListResponse = new GetOrderListResponse();
@@ -254,6 +256,8 @@ export class ReportComponent implements OnInit {
           }          
         },
         errorResponse => {
+          this.lengthStock = 0;
+
           this.clicked = !this.clicked;
           
           this.getStockListResponse = new GetStockListResponse();
@@ -298,6 +302,8 @@ export class ReportComponent implements OnInit {
           }          
         },
         errorResponse => {
+          this.lengthSales = 0;
+
           this.clicked = !this.clicked;
           
           this.getSalesListResponse = new GetSalesListResponse();
