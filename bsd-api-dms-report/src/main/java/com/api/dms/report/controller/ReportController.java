@@ -25,6 +25,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.api.dms.report.model.report.GetDashboardRequestModel;
+import com.api.dms.report.model.report.GetDashboardResponseModel;
 import com.api.dms.report.model.report.GetOrderListRequestModel;
 import com.api.dms.report.model.report.GetOrderListResponseModel;
 import com.api.dms.report.model.report.GetSalesListRequestModel;
@@ -214,5 +216,24 @@ public class ReportController {
         headers.add("Content-Disposition", "attachment; filename=report_sales_" + simpleDateFormat.format(new Date()) + ".xlsx");
 
         return ResponseEntity.ok().headers(headers).body(new InputStreamResource(in));
+	}
+	
+	@GetMapping("/getdashboard")
+	public HttpEntity<?> getDashboard(HttpServletRequest request, @RequestParam String brand, @RequestParam String orderNo, @RequestParam String start, @RequestParam String end, @RequestParam String length, @RequestParam String pageSize, @RequestParam String pageIndex, @RequestParam String email, @RequestParam String token, @RequestParam String requestId, @RequestParam String requestDate) throws Exception {
+		GetDashboardRequestModel requestModel = new GetDashboardRequestModel();
+		requestModel.setEmail(email);
+		requestModel.setToken(token);
+		requestModel.setRequestId(requestId);
+		requestModel.setRequestDate(requestDate);
+		
+		String fid = new Uid().generateString(20);
+		log.info(request.getRequestURL().toString() + " [fid" + fid + "] requestModel : " + objectMapper.writeValueAsString(requestModel));
+		
+		GetDashboardResponseModel responseModel = reportService.getDashboard(brand, orderNo, start, end, length, pageSize, pageIndex, requestModel);
+		
+		ResponseEntity<?> responseEntity = new ResponseEntity<>(responseModel, responseModel.getStatus().equals("200") ? HttpStatus.OK : HttpStatus.NOT_FOUND);
+		log.info(request.getRequestURL().toString() + " [fid" + fid + "] responseEntity : " + objectMapper.writeValueAsString(responseEntity));
+
+		return responseEntity;
 	}
 }

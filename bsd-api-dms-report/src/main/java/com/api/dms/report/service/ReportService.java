@@ -35,6 +35,8 @@ import com.api.dms.report.db.repository.TbUserRepository;
 import com.api.dms.report.db.repository.ViewOrderRepository;
 import com.api.dms.report.db.repository.ViewSalesRepository;
 import com.api.dms.report.db.repository.ViewStockRepository;
+import com.api.dms.report.model.report.GetDashboardRequestModel;
+import com.api.dms.report.model.report.GetDashboardResponseModel;
 import com.api.dms.report.model.report.GetOrderListRequestModel;
 import com.api.dms.report.model.report.GetOrderListResponseModel;
 import com.api.dms.report.model.report.GetSalesListRequestModel;
@@ -476,5 +478,41 @@ public class ReportService {
 		workbook.close();
 		
 		return new ByteArrayInputStream(out.toByteArray());
+	}
+
+	public GetDashboardResponseModel getDashboard(String brand, String orderNo, String startDate, String endDate, String length, String pageSize, String pageIndex, GetDashboardRequestModel requestModel) throws Exception {
+		GetDashboardResponseModel responseModel = new GetDashboardResponseModel(requestModel);
+		
+		tokenUtil.claims(requestModel);
+		
+		TbUser exampleTbUser = new TbUser();
+		exampleTbUser.setTbuEmail(requestModel.getEmail());
+		exampleTbUser.setTbuStatus(TbUserRepository.Active);
+		Optional<TbUser> optTbUser = tbUserRepository.findOne(Example.of(exampleTbUser));
+		
+		if (optTbUser.isPresent()) {
+			List<ViewOrder> lstViewOrder = viewOrderRepository.find(optTbUser.get().getTbuId(), brand, orderNo, new SimpleDateFormat("yyyy-MM-dd hh:mm:ss").parse(startDate + " 00:00:00"), new SimpleDateFormat("yyyy-MM-dd hh:mm:ss").parse(endDate + " 23:59:50"), PageRequest.of(Integer.valueOf(pageIndex), Integer.valueOf(pageSize), Sort.by("tboCreateDate").ascending()));
+			
+			if (lstViewOrder.size() > 0) {
+				responseModel.setSku(
+					tbProductRepository.countByTbpQtyLessThan(5)
+					+ "/" +
+					tbProductRepository.count()
+				);
+
+				// responseModel.setLstViewOrder(lstViewOrder);
+				
+				responseModel.setStatus("200");
+				responseModel.setMessage("Get Dashboard ok");
+			} else {
+				responseModel.setStatus("404");
+				responseModel.setMessage("Not found");
+			}
+		} else {
+			responseModel.setStatus("404");
+			responseModel.setMessage("Not found");
+		}
+		
+		return responseModel;
 	}
 }
