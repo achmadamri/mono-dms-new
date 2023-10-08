@@ -1,8 +1,5 @@
 package com.api.dms.order.model.order;
 
-import java.util.List;
-
-import com.api.dms.order.db.entity.ViewOrderConfirm;
 import com.api.dms.order.model.ResponseModel;
 
 public class GetOrderConfirmSumResponseModel extends ResponseModel {

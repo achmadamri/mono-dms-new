@@ -32,9 +32,9 @@ export class OrderComponent implements OnInit {
   getOrderListResponse: GetOrderListResponse = new GetOrderListResponse();
   postConfirmOrderRequest: PostConfirmOrderRequest = new PostConfirmOrderRequest();
   postConfirmOrderResponse: PostConfirmOrderResponse = new PostConfirmOrderResponse();
-  orderNo = "";
+    orderNo = "";
   status = "";
-  
+    
   range = new FormGroup({
     start: new FormControl(new Date()),
     end: new FormControl(new Date())
@@ -219,4 +219,4 @@ export class OrderComponent implements OnInit {
       );
   }
 
-}
+  }

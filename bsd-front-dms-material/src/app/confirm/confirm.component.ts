@@ -173,7 +173,7 @@ export class ConfirmComponent implements OnInit {
   getOrderConfirmSum(pageEvent: PageEvent) {
     this.clicked = !this.clicked;
     
-    this.orderService.getOrderConfirmSum(this.orderNo, this.sku, this.status, this.type, this.brand, this.datepipe.transform(this.range.controls.start.value, 'yyyy-MM-dd'), this.datepipe.transform(this.range.controls.end.value, 'yyyy-MM-dd'), pageEvent != null ? pageEvent.length : this.length, pageEvent != null ? pageEvent.pageSize : this.pageSize, pageEvent != null ? pageEvent.pageIndex : this.pageIndex, this.getOrderConfirmSumRequest)
+    this.orderService.getOrderConfirmSum('', '', '', '', '', this.datepipe.transform(this.range.controls.start.value, 'yyyy-MM-dd'), this.datepipe.transform(this.range.controls.end.value, 'yyyy-MM-dd'), pageEvent != null ? pageEvent.length : this.length, pageEvent != null ? pageEvent.pageSize : this.pageSize, pageEvent != null ? pageEvent.pageIndex : this.pageIndex, this.getOrderConfirmSumRequest)
       .subscribe(
         successResponse => {
           this.clicked = !this.clicked;
