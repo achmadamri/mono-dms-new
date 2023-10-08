@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { Title } from '@angular/platform-browser';
 import * as Chartist from 'chartist';
 
 @Component({
@@ -7,7 +8,9 @@ import * as Chartist from 'chartist';
 })
 export class DashboardComponent implements OnInit {
 
-  constructor() { }
+  constructor(    
+    private titleService: Title,
+  ) { }
   startAnimationForLineChart(chart) {
     let seq: any, delays: any, durations: any;
     seq = 0;
@@ -64,7 +67,10 @@ export class DashboardComponent implements OnInit {
 
     seq2 = 0;
   };
+  
   ngOnInit() {
+    this.titleService.setTitle('DMS - Dashboard');
+
     /* ----------==========     Daily Sales Chart initialization For Documentation    ==========---------- */
 
     const dataDailySalesChart: any = {
