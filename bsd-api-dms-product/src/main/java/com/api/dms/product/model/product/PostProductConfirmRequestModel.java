@@ -5,6 +5,9 @@ import javax.validation.constraints.NotNull;
 import com.api.dms.product.model.RequestModel;
 
 public class PostProductConfirmRequestModel extends RequestModel {
+	@NotNull(message = "Market is not null")
+	private String tbpmMarket;
+
 	@NotNull(message = "Order No is not null")
 	private String tbpcOrderNo;
 	
@@ -13,6 +16,14 @@ public class PostProductConfirmRequestModel extends RequestModel {
 	
 	@NotNull(message = "Quantity is not null")
 	private Integer tbpcQty;
+
+	public String getTbpmMarket() {
+		return tbpmMarket;
+	}
+
+	public void setTbpmMarket(String tbpmMarket) {
+		this.tbpmMarket = tbpmMarket;
+	}
 
 	public String getTbpcOrderNo() {
 		return tbpcOrderNo;

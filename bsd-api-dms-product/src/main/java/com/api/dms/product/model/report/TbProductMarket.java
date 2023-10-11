@@ -24,6 +24,8 @@ public class TbProductMarket implements Serializable {
 
 	private Integer tbpmUpdateId;
 
+	private Integer tbpmQty;
+
 	public TbProductMarket() {
 	}
 
@@ -97,6 +99,14 @@ public class TbProductMarket implements Serializable {
 
 	public void setTbpmUpdateId(Integer tbpmUpdateId) {
 		this.tbpmUpdateId = tbpmUpdateId;
+	}
+
+	public Integer getTbpmQty() {
+		return tbpmQty;
+	}
+
+	public void setTbpmQty(Integer tbpmQty) {
+		this.tbpmQty = tbpmQty;
 	}
 
 }

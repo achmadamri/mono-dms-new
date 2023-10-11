@@ -47,6 +47,8 @@ import com.api.dms.report.model.report.PostSyncOrderRequestModel;
 import com.api.dms.report.model.report.PostSyncOrderResponseModel;
 import com.api.dms.report.model.report.PostSyncOrderStatusRequestModel;
 import com.api.dms.report.model.report.PostSyncOrderStatusResponseModel;
+import com.api.dms.report.model.report.PostSyncProductMarketRequestModel;
+import com.api.dms.report.model.report.PostSyncProductMarketResponseModel;
 import com.api.dms.report.model.report.PostSyncProductRequestModel;
 import com.api.dms.report.model.report.PostSyncProductResponseModel;
 import com.api.dms.report.util.SimpleMapper;
@@ -176,6 +178,46 @@ public class ReportService {
 		
 		return responseModel;
 	}
+
+	public PostSyncProductMarketResponseModel postSyncProductMarket(PostSyncProductMarketRequestModel requestModel) throws Exception {
+		PostSyncProductMarketResponseModel responseModel = new PostSyncProductMarketResponseModel(requestModel);
+		
+		TbUser exampleTbUser = new TbUser();
+		exampleTbUser.setTbuEmail(requestModel.getEmail());
+		exampleTbUser.setTbuStatus(TbUserRepository.Active);
+		Optional<TbUser> optTbUser = tbUserRepository.findOne(Example.of(exampleTbUser));
+		
+		if (optTbUser.isPresent()) {
+			SimpleMapper simpleMapper = new SimpleMapper();
+			
+			for (com.api.dms.report.model.report.TbProductMarket tbProductMarketReport : requestModel.getLstTbProductMarket()) {
+				TbProductMarket tbProductMarket = new TbProductMarket();
+				
+				tbProductMarket = (TbProductMarket) simpleMapper.assign(tbProductMarketReport, tbProductMarket);
+				
+				TbProductMarket exampleTbProductMarket = new TbProductMarket();
+				exampleTbProductMarket.setTbpSku(tbProductMarket.getTbpSku());
+				Optional<TbProductMarket> optTbProductMarket = tbProductMarketRepository.findOne(Example.of(exampleTbProductMarket));
+				
+				if (optTbProductMarket.isPresent()) {
+					tbProductMarket.setTbpId(optTbProductMarket.get().getTbpId());
+				} else {
+					tbProductMarket.setTbpId(null);
+				}
+				
+				tbProductMarketRepository.save(tbProductMarket);
+			}
+			
+			responseModel.setStatus("200");
+			responseModel.setMessage("Sync Product ok");
+		} else {
+			responseModel.setStatus("404");
+			responseModel.setMessage("Not found");
+		}
+		
+		return responseModel;
+	}
+	
 	
 	public GetOrderListResponseModel getOrderList(String brand, String orderNo, String startDate, String endDate, String length, String pageSize, String pageIndex, GetOrderListRequestModel requestModel) throws Exception {
 		GetOrderListResponseModel responseModel = new GetOrderListResponseModel(requestModel);

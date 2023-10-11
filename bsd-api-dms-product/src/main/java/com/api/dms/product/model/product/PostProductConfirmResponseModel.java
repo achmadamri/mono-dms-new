@@ -1,6 +1,6 @@
 package com.api.dms.product.model.product;
 
-import com.api.dms.product.db.entity.TbProduct;
+import com.api.dms.product.db.entity.TbProductMarket;
 import com.api.dms.product.model.ResponseModel;
 
 public class PostProductConfirmResponseModel extends ResponseModel {
@@ -9,13 +9,13 @@ public class PostProductConfirmResponseModel extends ResponseModel {
 		super(requestModel);
 	}
 
-	private TbProduct tbProduct;
+	private TbProductMarket tbProductMarket;
 
-	public TbProduct getTbProduct() {
-		return tbProduct;
+	public TbProductMarket getTbProductMarket() {
+		return tbProductMarket;
 	}
 
-	public void setTbProduct(TbProduct tbProduct) {
-		this.tbProduct = tbProduct;
+	public void setTbProductMarket(TbProductMarket tbProductMarket) {
+		this.tbProductMarket = tbProductMarket;
 	}
 }

@@ -37,6 +37,8 @@ import com.api.dms.report.model.report.PostSyncOrderRequestModel;
 import com.api.dms.report.model.report.PostSyncOrderResponseModel;
 import com.api.dms.report.model.report.PostSyncOrderStatusRequestModel;
 import com.api.dms.report.model.report.PostSyncOrderStatusResponseModel;
+import com.api.dms.report.model.report.PostSyncProductMarketRequestModel;
+import com.api.dms.report.model.report.PostSyncProductMarketResponseModel;
 import com.api.dms.report.model.report.PostSyncProductRequestModel;
 import com.api.dms.report.model.report.PostSyncProductResponseModel;
 import com.api.dms.report.service.ReportService;
@@ -91,6 +93,20 @@ public class ReportController {
 		log.info(request.getRequestURL().toString() + " [fid" + fid + "] requestModel : " + objectMapper.writeValueAsString(requestModel));
 		
 		PostSyncProductResponseModel responseModel = reportService.postSyncProduct(requestModel);
+		
+		ResponseEntity<?> responseEntity = new ResponseEntity<>(responseModel, responseModel.getStatus().equals("200") ? HttpStatus.OK : HttpStatus.NOT_FOUND);
+		log.info(request.getRequestURL().toString() + " [fid" + fid + "] responseEntity : " + objectMapper.writeValueAsString(responseEntity));
+
+		return responseEntity;
+	}
+	
+	@PostMapping("/postsyncproductmarket")
+	@Transactional
+	public HttpEntity<?> postSyncProductMarket(HttpServletRequest request, @Valid @RequestBody PostSyncProductMarketRequestModel requestModel) throws Exception {
+		String fid = new Uid().generateString(20);
+		log.info(request.getRequestURL().toString() + " [fid" + fid + "] requestModel : " + objectMapper.writeValueAsString(requestModel));
+		
+		PostSyncProductMarketResponseModel responseModel = reportService.postSyncProductMarket(requestModel);
 		
 		ResponseEntity<?> responseEntity = new ResponseEntity<>(responseModel, responseModel.getStatus().equals("200") ? HttpStatus.OK : HttpStatus.NOT_FOUND);
 		log.info(request.getRequestURL().toString() + " [fid" + fid + "] responseEntity : " + objectMapper.writeValueAsString(responseEntity));
