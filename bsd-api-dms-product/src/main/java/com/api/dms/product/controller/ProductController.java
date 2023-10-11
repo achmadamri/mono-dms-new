@@ -25,6 +25,8 @@ import com.api.dms.product.model.product.GetBrandRequestModel;
 import com.api.dms.product.model.product.GetBrandResponseModel;
 import com.api.dms.product.model.product.GetProductListRequestModel;
 import com.api.dms.product.model.product.GetProductListResponseModel;
+import com.api.dms.product.model.product.GetProductMarketListRequestModel;
+import com.api.dms.product.model.product.GetProductMarketListResponseModel;
 import com.api.dms.product.model.product.GetProductRequestModel;
 import com.api.dms.product.model.product.GetProductResponseModel;
 import com.api.dms.product.model.product.GetProductsResponseModel;
@@ -97,6 +99,25 @@ public class ProductController {
 		log.info(request.getRequestURL().toString() + " [fid:" + fid + "] requestModel : " + objectMapper.writeValueAsString(requestModel));
 		
 		GetProductListResponseModel responseModel = productService.getProductList(brand, sku, item, code, type, length, pageSize, pageIndex, requestModel);
+		
+		ResponseEntity<?> responseEntity = new ResponseEntity<>(responseModel, responseModel.getStatus().equals("200") ? HttpStatus.OK : HttpStatus.NOT_FOUND);
+		log.info(request.getRequestURL().toString() + " [fid:" + fid + "] responseEntity : " + objectMapper.writeValueAsString(responseEntity));
+
+		return responseEntity;
+	}
+	
+	@GetMapping("/getproductmarketlist")
+	public HttpEntity<?> getProductMarketList(HttpServletRequest request, @RequestParam Integer tbpId, @RequestParam String length, @RequestParam String pageSize, @RequestParam String pageIndex, @RequestParam String email, @RequestParam String token, @RequestParam String requestId, @RequestParam String requestDate) throws Exception {
+		GetProductMarketListRequestModel requestModel = new GetProductMarketListRequestModel();
+		requestModel.setEmail(email);
+		requestModel.setToken(token);
+		requestModel.setRequestId(requestId);
+		requestModel.setRequestDate(requestDate);
+		
+		String fid = new Uid().generateString(20);
+		log.info(request.getRequestURL().toString() + " [fid:" + fid + "] requestModel : " + objectMapper.writeValueAsString(requestModel));
+		
+		GetProductMarketListResponseModel responseModel = productService.getProductMarketList(tbpId, length, pageSize, pageIndex, requestModel);
 		
 		ResponseEntity<?> responseEntity = new ResponseEntity<>(responseModel, responseModel.getStatus().equals("200") ? HttpStatus.OK : HttpStatus.NOT_FOUND);
 		log.info(request.getRequestURL().toString() + " [fid:" + fid + "] responseEntity : " + objectMapper.writeValueAsString(responseEntity));

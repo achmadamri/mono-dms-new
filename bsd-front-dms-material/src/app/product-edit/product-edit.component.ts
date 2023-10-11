@@ -13,6 +13,9 @@ import { Util } from 'app/util';
 import { GetBrandRequest } from 'app/services/product/getbrandrequest';
 import { GetBrandResponse } from 'app/services/product/getbrandresponse';
 import { Title } from '@angular/platform-browser';
+import { GetProductMarketListRequest } from 'app/services/product/getproductmarketlistrequest';
+import { GetProductMarketListResponse } from 'app/services/product/getproductmarketlistresponse';
+import { PageEvent } from '@angular/material/paginator';
 
 @Component({
   selector: 'app-product-edit',
@@ -27,8 +30,15 @@ export class ProductEditComponent implements OnInit {
   postProductDeleteResponse: PostProductDeleteResponse = new PostProductDeleteResponse();
   getProductRequest: GetProductRequest = new GetProductRequest();
   getProductResponse: GetProductResponse = new GetProductResponse();
+  getProductMarketListRequest: GetProductMarketListRequest = new GetProductMarketListRequest();
+  getProductMarketListResponse: GetProductMarketListResponse = new GetProductMarketListResponse();
   getBrandRequest: GetBrandRequest = new GetBrandRequest();
   getBrandResponse: GetBrandResponse = new GetBrandResponse();
+  length = 100;
+  pageSize = 10;
+  pageIndex = 0;
+  pageSizeOptions: number[] = [5, 10, 25, 100];
+  pageEvent: PageEvent;
 
   constructor(
     private router: Router,
@@ -104,6 +114,8 @@ export class ProductEditComponent implements OnInit {
 
           this.postProductDeleteRequest.tbpId = this.getProductResponse.tbProduct.tbpId;
 
+          this.getProductMarketList(this.postProductEditRequest.tbpId, null);
+
           this.productService.getBrand(this.getBrandRequest)
             .subscribe(
               successResponse => {
@@ -125,6 +137,34 @@ export class ProductEditComponent implements OnInit {
           } else {
             this.util.showNotification('danger', 'top', 'center', errorResponse.error.message);
           }
+        }
+      );
+  }
+
+  getProductMarketList(tbpId: string, pageEvent: PageEvent) {
+    this.clicked = !this.clicked;
+
+    this.productService.getProductMarketList(tbpId, pageEvent != null ? pageEvent.length : this.length, pageEvent != null ? pageEvent.pageSize : this.pageSize, pageEvent != null ? pageEvent.pageIndex : this.pageIndex, this.getProductMarketListRequest)
+      .subscribe(
+        successResponse => {
+          this.clicked = !this.clicked;
+
+          this.getProductMarketListResponse = successResponse;
+
+          this.length = this.getProductMarketListResponse.length;
+
+          if (pageEvent != null) {
+            this.length = pageEvent.length;
+            this.pageSize = pageEvent.pageSize;
+            this.pageIndex = pageEvent.pageIndex;
+          }          
+        },
+        errorResponse => {
+          this.length = 0;
+
+          this.clicked = !this.clicked;
+          
+          this.getProductMarketListResponse = new GetProductMarketListResponse();
         }
       );
   }

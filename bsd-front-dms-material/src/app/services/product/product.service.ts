@@ -18,6 +18,8 @@ import { PostUploadProductRequest } from './postuploadproductrequest';
 import { PostUploadProductResponse } from './postuploadproductresponse';
 import { PostUploadProductBundleRequest } from './postuploadproductbundlerequest';
 import { PostUploadProductBundleResponse } from './postuploadproductbundleresponse';
+import { GetProductMarketListRequest } from './getproductmarketlistrequest';
+import { GetProductMarketListResponse } from './getproductmarketlistresponse';
 
 @Injectable({
   providedIn: 'root'
@@ -80,6 +82,24 @@ export class ProductService {
       ;
 
     return this.httpClient.get<GetProductListResponse>(`${this.apiUrl}/getproductlist`, { headers, params });
+  }
+
+  getProductMarketList(tbpId: string, length: number, pageSize: number, pageIndex: number, getProductMarketListRequest: GetProductMarketListRequest): Observable<GetProductMarketListResponse> {
+    const headers = new HttpHeaders()
+      .set('Content-Type', 'application/json');
+
+    const params = new HttpParams()
+      .set('requestId', this.util.randomString(10))
+      .set('requestDate', ((new Date(Date.now() - ((new Date()).getTimezoneOffset() * 60000))).toISOString().slice(0, -1)) + '000')
+      .set('email', localStorage.getItem('email'))
+      .set('token', localStorage.getItem('token'))
+      .set('length', length.toString())
+      .set('pageSize', pageSize.toString())
+      .set('pageIndex', pageIndex.toString())
+      .set('tbpId', Number(tbpId))
+      ;
+
+    return this.httpClient.get<GetProductMarketListResponse>(`${this.apiUrl}/getproductmarketlist`, { headers, params });
   }
 
   postProductAdd(postProductAddRequest: PostProductAddRequest): Observable<PostProductAddResponse> {

@@ -43,6 +43,7 @@ import com.api.dms.product.db.entity.TbUserBrand;
 import com.api.dms.product.db.entity.TbUserMarket;
 import com.api.dms.product.db.entity.ViewBrandProduct;
 import com.api.dms.product.db.entity.ViewGwpSkuProduct;
+import com.api.dms.product.db.entity.ViewProductMarket;
 import com.api.dms.product.db.repository.TbBrandRepository;
 import com.api.dms.product.db.repository.TbGwpRepository;
 import com.api.dms.product.db.repository.TbProductBundleRepository;
@@ -54,11 +55,14 @@ import com.api.dms.product.db.repository.TbUserMarketRepository;
 import com.api.dms.product.db.repository.TbUserRepository;
 import com.api.dms.product.db.repository.ViewBrandProductRepository;
 import com.api.dms.product.db.repository.ViewGwpSkuProductRepository;
+import com.api.dms.product.db.repository.ViewProductMarketRepository;
 import com.api.dms.product.model.order.PostSyncBrandRequestModel;
 import com.api.dms.product.model.product.GetBrandRequestModel;
 import com.api.dms.product.model.product.GetBrandResponseModel;
 import com.api.dms.product.model.product.GetProductListRequestModel;
 import com.api.dms.product.model.product.GetProductListResponseModel;
+import com.api.dms.product.model.product.GetProductMarketListRequestModel;
+import com.api.dms.product.model.product.GetProductMarketListResponseModel;
 import com.api.dms.product.model.product.GetProductRequestModel;
 import com.api.dms.product.model.product.GetProductResponseModel;
 import com.api.dms.product.model.product.GetProductsResponseModel;
@@ -121,6 +125,9 @@ public class ProductService {
 	
 	@Autowired
 	private TbProductMarketRepository tbProductMarketRepository;
+	
+	@Autowired
+	private ViewProductMarketRepository viewProductMarketRepository;
 	
 	public PostUploadProductBundleResponseModel postUploadProductBundle(PostUploadProductBundleRequestModel requestModel, MultipartFile file) throws Exception {
 		PostUploadProductBundleResponseModel responseModel = new PostUploadProductBundleResponseModel(requestModel);
@@ -250,7 +257,8 @@ public class ProductService {
 			for (TbProduct tbProduct : lstTbProduct) {					
 				com.api.dms.product.model.report.TbProduct tbProductReport = new com.api.dms.product.model.report.TbProduct();
 				tbProductReport = (com.api.dms.product.model.report.TbProduct) simpleMapper.assign(tbProduct, tbProductReport);
-				lstTbProductReport.add(tbProductReport);
+
+				List<com.api.dms.product.model.report.TbProductMarket> lstTbProductMarketReport = new ArrayList<com.api.dms.product.model.report.TbProductMarket>();
 				
 				for (TbUserMarket tbUserMarket : lstTbUserMarket) {
 					TbProductMarket tbProductMarket = new TbProductMarket();
@@ -262,12 +270,15 @@ public class ProductService {
 					tbProductMarket.setTbmMarketCheck(tbUserMarket.getTbmMarketCheck());
 					
 					tbProductMarketRepository.save(tbProductMarket);
-					
-					List<com.api.dms.product.model.report.TbProductMarket> lstTbProductMarketReport = new ArrayList<com.api.dms.product.model.report.TbProductMarket>();
+										
 					com.api.dms.product.model.report.TbProductMarket tbProductMarketReport = new com.api.dms.product.model.report.TbProductMarket();
 					tbProductMarketReport = (com.api.dms.product.model.report.TbProductMarket) simpleMapper.assign(tbProductMarket, tbProductMarketReport);
 					lstTbProductMarketReport.add(tbProductMarketReport);
 				}
+
+				tbProductReport.setLstTbProductMarket(lstTbProductMarketReport);
+	
+				lstTbProductReport.add(tbProductReport);
 			}
 			
 			PostSyncProductRequestModel postSyncProductRequestModel = new PostSyncProductRequestModel();
@@ -546,6 +557,38 @@ public class ProductService {
 				responseModel.setLstViewBrandProduct(lstViewBrandProduct);
 				
 				responseModel.setLength(viewBrandProductRepository.countAllByTbuId(optTbUser.get().getTbuId(), brand, sku, item, code, type));
+				
+				responseModel.setStatus("200");
+				responseModel.setMessage("Get Product List ok");
+			} else {
+				responseModel.setStatus("404");
+				responseModel.setMessage("Not found");
+			}
+		} else {
+			responseModel.setStatus("404");
+			responseModel.setMessage("Not found");
+		}
+		
+		return responseModel;
+	}
+
+	public GetProductMarketListResponseModel getProductMarketList(Integer tbpId, String length, String pageSize, String pageIndex, GetProductMarketListRequestModel requestModel) throws Exception {
+		GetProductMarketListResponseModel responseModel = new GetProductMarketListResponseModel(requestModel);
+		
+		tokenUtil.claims(requestModel);
+		
+		TbUser exampleTbUser = new TbUser();
+		exampleTbUser.setTbuEmail(requestModel.getEmail());
+		exampleTbUser.setTbuStatus(TbUserRepository.Active);
+		Optional<TbUser> optTbUser = tbUserRepository.findOne(Example.of(exampleTbUser));
+
+		if (optTbUser.isPresent()) {
+			List<ViewProductMarket> lstViewProductMarket = viewProductMarketRepository.findAllByTbpSku(tbpId, PageRequest.of(Integer.valueOf(pageIndex), Integer.valueOf(pageSize), Sort.by("tbpmId", "tbpmId").ascending()));
+			
+			if (lstViewProductMarket.size() > 0) {
+				responseModel.setLstViewProductMarket(lstViewProductMarket);
+				
+				responseModel.setLength(viewProductMarketRepository.countAllByTbpSku(tbpId));
 				
 				responseModel.setStatus("200");
 				responseModel.setMessage("Get Product List ok");
