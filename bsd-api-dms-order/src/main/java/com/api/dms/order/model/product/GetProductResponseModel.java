@@ -35,6 +35,8 @@ public class GetProductResponseModel {
 	private TbProduct tbProduct;
 	@JsonProperty("lstViewGwpSkuProduct")
 	private List<LstViewGwpSkuProduct> lstViewGwpSkuProduct = null;
+	@JsonProperty("lstViewProductMarket")
+	private List<ViewProductMarket> lstViewProductMarket = null;
 	@JsonIgnore
 	private Map<String, Object> additionalProperties = new HashMap<String, Object>();
 
@@ -126,6 +128,16 @@ public class GetProductResponseModel {
 	@JsonProperty("lstViewGwpSkuProduct")
 	public void setLstViewGwpSkuProduct(List<LstViewGwpSkuProduct> lstViewGwpSkuProduct) {
 		this.lstViewGwpSkuProduct = lstViewGwpSkuProduct;
+	}
+
+	@JsonProperty("lstViewProductMarket")
+	public List<ViewProductMarket> getLstViewProductMarket() {
+		return lstViewProductMarket;
+	}
+
+	@JsonProperty("lstViewProductMarket")
+	public void setLstViewProductMarket(List<ViewProductMarket> lstViewProductMarket) {
+		this.lstViewProductMarket = lstViewProductMarket;
 	}
 
 	@JsonAnyGetter

@@ -46,6 +46,9 @@ public class TbProductMarket implements Serializable {
 	@Column(name="tbpm_update_id")
 	private Integer tbpmUpdateId;
 
+	@Column(name="tbpm_qty")
+	private Integer tbpmQty;
+
 	public TbProductMarket() {
 	}
 
@@ -119,6 +122,14 @@ public class TbProductMarket implements Serializable {
 
 	public void setTbpmUpdateId(Integer tbpmUpdateId) {
 		this.tbpmUpdateId = tbpmUpdateId;
+	}
+
+	public Integer getTbpmQty() {
+		return tbpmQty;
+	}
+
+	public void setTbpmQty(Integer tbpmQty) {
+		this.tbpmQty = tbpmQty;
 	}
 
 }

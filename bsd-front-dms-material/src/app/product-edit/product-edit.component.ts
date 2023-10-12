@@ -151,6 +151,8 @@ export class ProductEditComponent implements OnInit {
 
           this.getProductMarketListResponse = successResponse;
 
+          this.postProductEditRequest.lstViewProductMarket = this.getProductMarketListResponse.lstViewProductMarket;
+
           this.length = this.getProductMarketListResponse.length;
 
           if (pageEvent != null) {

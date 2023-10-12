@@ -9,6 +9,8 @@ public class PostProductConfirmRequestModel extends RequestModel {
 	
 	private Integer tbpcQty;
 
+	private String tbpcMarket;
+
 	public String getTbpcOrderNo() {
 		return tbpcOrderNo;
 	}
@@ -31,5 +33,13 @@ public class PostProductConfirmRequestModel extends RequestModel {
 
 	public void setTbpcQty(Integer tbpcQty) {
 		this.tbpcQty = tbpcQty;
+	}
+
+	public String getTbpcMarket() {
+		return tbpcMarket;
+	}
+
+	public void setTbpcMarket(String tbpcMarket) {
+		this.tbpcMarket = tbpcMarket;
 	}
 }

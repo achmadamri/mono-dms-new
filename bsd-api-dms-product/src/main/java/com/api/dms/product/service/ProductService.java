@@ -388,7 +388,7 @@ public class ProductService {
 						
 						tbProduct.setTbpUnitPrice(new BigDecimal((Double) getData(row, column, "Unit Price")));
 						tbProduct.setTbpType((String) getData(row, column, "Type"));
-						tbProduct.setTbpStatus(null);
+						tbProduct.setTbpStatus(TbProductRepository.Sellable);
 						
 						lstTbProduct.add(tbProduct);						
 					}
@@ -633,6 +633,22 @@ public class ProductService {
 				tbProduct.setTbpStatus(TbProductRepository.Sellable);
 				
 				tbProductRepository.save(tbProduct);
+
+				TbUserMarket exampleTbUserMarket = new TbUserMarket();
+				exampleTbUserMarket.setTbuId(optTbUser.get().getTbuId());				
+				List<TbUserMarket> lstTbUserMarket = tbUserMarketRepository.findAll(Example.of(exampleTbUserMarket));
+
+				for (TbUserMarket tbUserMarket : lstTbUserMarket) {
+					TbProductMarket tbProductMarket = new TbProductMarket();
+					tbProductMarket.setTbpmCreateDate(new Date());
+					tbProductMarket.setTbpmCreateId(optTbUser.get().getTbuId());
+					tbProductMarket.setTbpId(tbProduct.getTbpId());
+					tbProductMarket.setTbpSku(tbProduct.getTbpSku());
+					tbProductMarket.setTbmMarket(tbUserMarket.getTbmMarket());
+					tbProductMarket.setTbmMarketCheck(tbUserMarket.getTbmMarketCheck());
+					
+					tbProductMarketRepository.save(tbProductMarket);
+				}	
 				
 				List<TbProduct> lstTbProduct = new ArrayList<TbProduct>();
 				
@@ -729,7 +745,12 @@ public class ProductService {
 				TbProductBundle exampleTbProductBundle = new TbProductBundle();
 				exampleTbProductBundle.setTbpbSku(optTbProduct.get().getTbpSku());
 				List<TbProductBundle> lstTbProductBundle = tbProductBundleRepository.findAll(Example.of(exampleTbProductBundle), Sort.by("tbpSku").ascending());
-				responseModel.setLstTbProductBundle(lstTbProductBundle);				
+				responseModel.setLstTbProductBundle(lstTbProductBundle);
+				
+				ViewProductMarket exampleViewProductMarket = new ViewProductMarket();
+				exampleViewProductMarket.setTbpSku(optTbProduct.get().getTbpSku());
+				List<ViewProductMarket> lstViewProductMarket = viewProductMarketRepository.findAll(Example.of(exampleViewProductMarket), Sort.by("tbpmId").ascending());
+				responseModel.setLstViewProductMarket(lstViewProductMarket);
 
 				responseModel.setTbProduct(tbProduct);
 				responseModel.setStatus("200");
@@ -784,37 +805,56 @@ public class ProductService {
 					responseModel.setStatus("404");
 					responseModel.setMessage("Can not update because this product is having gwp");
 				} else {
-					SimpleMapper simpleMapper = new SimpleMapper();
-					tbProduct = (TbProduct) simpleMapper.assign(requestModel, tbProduct);
+					int productMarketTotalQty = 0;
 
-					tbProduct.setTbpUpdateDate(new Date());
-					tbProduct.setTbpUpdateId(tbUser.getTbuId());
-					
-					tbProductRepository.save(tbProduct);
-					
-					List<TbProduct> lstTbProduct = new ArrayList<TbProduct>();
-					
-					lstTbProduct.add(tbProduct);
-					
-					List<com.api.dms.product.model.report.TbProduct> lstTbProductReport = new ArrayList<com.api.dms.product.model.report.TbProduct>();
-					
-					com.api.dms.product.model.report.TbProduct tbProductReport = new com.api.dms.product.model.report.TbProduct();
-					tbProductReport = (com.api.dms.product.model.report.TbProduct) simpleMapper.assign(tbProduct, tbProductReport);
-					lstTbProductReport.add(tbProductReport);
-					
-					PostSyncProductRequestModel postSyncProductRequestModel = new PostSyncProductRequestModel();
-					postSyncProductRequestModel.setRequestDate(requestModel.getRequestDate());
-					postSyncProductRequestModel.setRequestId(requestModel.getRequestId());
-					postSyncProductRequestModel.setEmail(requestModel.getEmail());
-					postSyncProductRequestModel.setLstTbProduct(lstTbProductReport);
-					
-					HttpEntity<PostSyncProductRequestModel> request = new HttpEntity<>(postSyncProductRequestModel);
-					RestTemplate restTemplate = new RestTemplate();
-					restTemplate.postForEntity(env.getProperty("services.bsd.api.dms.report.postsyncproduct"), request, String.class);
+					for (ViewProductMarket viewProductMarket : requestModel.getLstViewProductMarket()) {
+						 productMarketTotalQty += viewProductMarket.getTbpmQty();				
+					}
 
-					responseModel.setTbProduct(tbProduct);
-					responseModel.setStatus("200");
-					responseModel.setMessage("Product updated");
+					if (productMarketTotalQty != tbProduct.getTbpQty()) {
+						responseModel.setStatus("404");
+						responseModel.setMessage("Can not update because total qty is not equal");
+					} else {
+						SimpleMapper simpleMapper = new SimpleMapper();
+						tbProduct = (TbProduct) simpleMapper.assign(requestModel, tbProduct);
+
+						tbProduct.setTbpUpdateDate(new Date());
+						tbProduct.setTbpUpdateId(tbUser.getTbuId());
+						
+						tbProductRepository.save(tbProduct);
+
+						for (ViewProductMarket viewProductMarket : requestModel.getLstViewProductMarket()) {
+							TbProductMarket tbProductMarket = tbProductMarketRepository.findById(viewProductMarket.getTbpmId()).get();
+							tbProductMarket.setTbpmUpdateDate(new Date());
+							tbProductMarket.setTbpmUpdateId(tbUser.getTbuId());
+							tbProductMarket.setTbpmQty(viewProductMarket.getTbpmQty());
+							tbProductMarketRepository.save(tbProductMarket);					
+						}
+						
+						List<TbProduct> lstTbProduct = new ArrayList<TbProduct>();
+						
+						lstTbProduct.add(tbProduct);
+						
+						List<com.api.dms.product.model.report.TbProduct> lstTbProductReport = new ArrayList<com.api.dms.product.model.report.TbProduct>();
+						
+						com.api.dms.product.model.report.TbProduct tbProductReport = new com.api.dms.product.model.report.TbProduct();
+						tbProductReport = (com.api.dms.product.model.report.TbProduct) simpleMapper.assign(tbProduct, tbProductReport);
+						lstTbProductReport.add(tbProductReport);
+						
+						PostSyncProductRequestModel postSyncProductRequestModel = new PostSyncProductRequestModel();
+						postSyncProductRequestModel.setRequestDate(requestModel.getRequestDate());
+						postSyncProductRequestModel.setRequestId(requestModel.getRequestId());
+						postSyncProductRequestModel.setEmail(requestModel.getEmail());
+						postSyncProductRequestModel.setLstTbProduct(lstTbProductReport);
+						
+						HttpEntity<PostSyncProductRequestModel> request = new HttpEntity<>(postSyncProductRequestModel);
+						RestTemplate restTemplate = new RestTemplate();
+						restTemplate.postForEntity(env.getProperty("services.bsd.api.dms.report.postsyncproduct"), request, String.class);
+
+						responseModel.setTbProduct(tbProduct);
+						responseModel.setStatus("200");
+						responseModel.setMessage("Product updated");
+					}					
 				}
 			}, () -> {
 				responseModel.setStatus("404");
@@ -895,6 +935,17 @@ public class ProductService {
 					optTbProduct.get().setTbpQty(optTbProduct.get().getTbpQty() - requestModel.getTbpcQty());					
 				}
 				tbProductRepository.save(optTbProduct.get());
+
+				TbProductMarket exampleTbProductMarket = new TbProductMarket();
+				exampleTbProductMarket.setTbpSku(requestModel.getTbpcSku());
+				exampleTbProductMarket.setTbmMarket(requestModel.getTbpcMarket());
+				Optional<TbProductMarket> optTbProductMarket = tbProductMarketRepository.findOne(Example.of(exampleTbProductMarket));
+				optTbProductMarket.get().setTbpmUpdateDate(new Date());
+				optTbProductMarket.get().setTbpmUpdateId(optTbUser.get().getTbuId());
+				if (optTbProductMarket.get().getTbpmQty() != null) {
+					optTbProductMarket.get().setTbpmQty(optTbProductMarket.get().getTbpmQty() - requestModel.getTbpcQty());					
+				}
+				tbProductMarketRepository.save(optTbProductMarket.get());
 				
 				TbProductConfirm tbProductConfirm = new TbProductConfirm();
 				tbProductConfirm.setTbpCreateDate(new Date());
@@ -902,6 +953,7 @@ public class ProductService {
 				tbProductConfirm.setTbpcOrderNo(requestModel.getTbpcOrderNo());
 				tbProductConfirm.setTbpSku(requestModel.getTbpcSku());
 				tbProductConfirm.setTbpQty(requestModel.getTbpcQty());
+				tbProductConfirm.setTbpcMarket(requestModel.getTbpcMarket());
 				tbProductConfirmRepository.save(tbProductConfirm);
 				
 				List<TbProduct> lstTbProduct = new ArrayList<TbProduct>();
