@@ -43,6 +43,7 @@ import com.api.dms.product.db.entity.TbUserBrand;
 import com.api.dms.product.db.entity.TbUserMarket;
 import com.api.dms.product.db.entity.ViewBrandProduct;
 import com.api.dms.product.db.entity.ViewGwpSkuProduct;
+import com.api.dms.product.db.entity.ViewProductMarket;
 import com.api.dms.product.db.repository.TbBrandRepository;
 import com.api.dms.product.db.repository.TbGwpRepository;
 import com.api.dms.product.db.repository.TbProductBundleRepository;
@@ -54,11 +55,14 @@ import com.api.dms.product.db.repository.TbUserMarketRepository;
 import com.api.dms.product.db.repository.TbUserRepository;
 import com.api.dms.product.db.repository.ViewBrandProductRepository;
 import com.api.dms.product.db.repository.ViewGwpSkuProductRepository;
+import com.api.dms.product.db.repository.ViewProductMarketRepository;
 import com.api.dms.product.model.order.PostSyncBrandRequestModel;
 import com.api.dms.product.model.product.GetBrandRequestModel;
 import com.api.dms.product.model.product.GetBrandResponseModel;
 import com.api.dms.product.model.product.GetProductListRequestModel;
 import com.api.dms.product.model.product.GetProductListResponseModel;
+import com.api.dms.product.model.product.GetProductMarketListRequestModel;
+import com.api.dms.product.model.product.GetProductMarketListResponseModel;
 import com.api.dms.product.model.product.GetProductRequestModel;
 import com.api.dms.product.model.product.GetProductResponseModel;
 import com.api.dms.product.model.product.GetProductsResponseModel;
@@ -121,6 +125,9 @@ public class ProductService {
 	
 	@Autowired
 	private TbProductMarketRepository tbProductMarketRepository;
+	
+	@Autowired
+	private ViewProductMarketRepository viewProductMarketRepository;
 	
 	public PostUploadProductBundleResponseModel postUploadProductBundle(PostUploadProductBundleRequestModel requestModel, MultipartFile file) throws Exception {
 		PostUploadProductBundleResponseModel responseModel = new PostUploadProductBundleResponseModel(requestModel);
@@ -250,7 +257,8 @@ public class ProductService {
 			for (TbProduct tbProduct : lstTbProduct) {					
 				com.api.dms.product.model.report.TbProduct tbProductReport = new com.api.dms.product.model.report.TbProduct();
 				tbProductReport = (com.api.dms.product.model.report.TbProduct) simpleMapper.assign(tbProduct, tbProductReport);
-				lstTbProductReport.add(tbProductReport);
+
+				List<com.api.dms.product.model.report.TbProductMarket> lstTbProductMarketReport = new ArrayList<com.api.dms.product.model.report.TbProductMarket>();
 				
 				for (TbUserMarket tbUserMarket : lstTbUserMarket) {
 					TbProductMarket tbProductMarket = new TbProductMarket();
@@ -262,12 +270,15 @@ public class ProductService {
 					tbProductMarket.setTbmMarketCheck(tbUserMarket.getTbmMarketCheck());
 					
 					tbProductMarketRepository.save(tbProductMarket);
-					
-					List<com.api.dms.product.model.report.TbProductMarket> lstTbProductMarketReport = new ArrayList<com.api.dms.product.model.report.TbProductMarket>();
+										
 					com.api.dms.product.model.report.TbProductMarket tbProductMarketReport = new com.api.dms.product.model.report.TbProductMarket();
 					tbProductMarketReport = (com.api.dms.product.model.report.TbProductMarket) simpleMapper.assign(tbProductMarket, tbProductMarketReport);
 					lstTbProductMarketReport.add(tbProductMarketReport);
 				}
+
+				tbProductReport.setLstTbProductMarket(lstTbProductMarketReport);
+	
+				lstTbProductReport.add(tbProductReport);
 			}
 			
 			PostSyncProductRequestModel postSyncProductRequestModel = new PostSyncProductRequestModel();
@@ -377,7 +388,7 @@ public class ProductService {
 						
 						tbProduct.setTbpUnitPrice(new BigDecimal((Double) getData(row, column, "Unit Price")));
 						tbProduct.setTbpType((String) getData(row, column, "Type"));
-						tbProduct.setTbpStatus(null);
+						tbProduct.setTbpStatus(TbProductRepository.Sellable);
 						
 						lstTbProduct.add(tbProduct);						
 					}
@@ -560,6 +571,38 @@ public class ProductService {
 		
 		return responseModel;
 	}
+
+	public GetProductMarketListResponseModel getProductMarketList(Integer tbpId, String length, String pageSize, String pageIndex, GetProductMarketListRequestModel requestModel) throws Exception {
+		GetProductMarketListResponseModel responseModel = new GetProductMarketListResponseModel(requestModel);
+		
+		tokenUtil.claims(requestModel);
+		
+		TbUser exampleTbUser = new TbUser();
+		exampleTbUser.setTbuEmail(requestModel.getEmail());
+		exampleTbUser.setTbuStatus(TbUserRepository.Active);
+		Optional<TbUser> optTbUser = tbUserRepository.findOne(Example.of(exampleTbUser));
+
+		if (optTbUser.isPresent()) {
+			List<ViewProductMarket> lstViewProductMarket = viewProductMarketRepository.findAllByTbpSku(tbpId, PageRequest.of(Integer.valueOf(pageIndex), Integer.valueOf(pageSize), Sort.by("tbpmId", "tbpmId").ascending()));
+			
+			if (lstViewProductMarket.size() > 0) {
+				responseModel.setLstViewProductMarket(lstViewProductMarket);
+				
+				responseModel.setLength(viewProductMarketRepository.countAllByTbpSku(tbpId));
+				
+				responseModel.setStatus("200");
+				responseModel.setMessage("Get Product List ok");
+			} else {
+				responseModel.setStatus("404");
+				responseModel.setMessage("Not found");
+			}
+		} else {
+			responseModel.setStatus("404");
+			responseModel.setMessage("Not found");
+		}
+		
+		return responseModel;
+	}
 	
 	public PostProductAddResponseModel postProductAdd(PostProductAddRequestModel requestModel) throws Exception {
 		PostProductAddResponseModel responseModel = new PostProductAddResponseModel(requestModel);
@@ -590,6 +633,22 @@ public class ProductService {
 				tbProduct.setTbpStatus(TbProductRepository.Sellable);
 				
 				tbProductRepository.save(tbProduct);
+
+				TbUserMarket exampleTbUserMarket = new TbUserMarket();
+				exampleTbUserMarket.setTbuId(optTbUser.get().getTbuId());				
+				List<TbUserMarket> lstTbUserMarket = tbUserMarketRepository.findAll(Example.of(exampleTbUserMarket));
+
+				for (TbUserMarket tbUserMarket : lstTbUserMarket) {
+					TbProductMarket tbProductMarket = new TbProductMarket();
+					tbProductMarket.setTbpmCreateDate(new Date());
+					tbProductMarket.setTbpmCreateId(optTbUser.get().getTbuId());
+					tbProductMarket.setTbpId(tbProduct.getTbpId());
+					tbProductMarket.setTbpSku(tbProduct.getTbpSku());
+					tbProductMarket.setTbmMarket(tbUserMarket.getTbmMarket());
+					tbProductMarket.setTbmMarketCheck(tbUserMarket.getTbmMarketCheck());
+					
+					tbProductMarketRepository.save(tbProductMarket);
+				}	
 				
 				List<TbProduct> lstTbProduct = new ArrayList<TbProduct>();
 				
@@ -686,7 +745,12 @@ public class ProductService {
 				TbProductBundle exampleTbProductBundle = new TbProductBundle();
 				exampleTbProductBundle.setTbpbSku(optTbProduct.get().getTbpSku());
 				List<TbProductBundle> lstTbProductBundle = tbProductBundleRepository.findAll(Example.of(exampleTbProductBundle), Sort.by("tbpSku").ascending());
-				responseModel.setLstTbProductBundle(lstTbProductBundle);				
+				responseModel.setLstTbProductBundle(lstTbProductBundle);
+				
+				ViewProductMarket exampleViewProductMarket = new ViewProductMarket();
+				exampleViewProductMarket.setTbpSku(optTbProduct.get().getTbpSku());
+				List<ViewProductMarket> lstViewProductMarket = viewProductMarketRepository.findAll(Example.of(exampleViewProductMarket), Sort.by("tbpmId").ascending());
+				responseModel.setLstViewProductMarket(lstViewProductMarket);
 
 				responseModel.setTbProduct(tbProduct);
 				responseModel.setStatus("200");
@@ -741,37 +805,56 @@ public class ProductService {
 					responseModel.setStatus("404");
 					responseModel.setMessage("Can not update because this product is having gwp");
 				} else {
-					SimpleMapper simpleMapper = new SimpleMapper();
-					tbProduct = (TbProduct) simpleMapper.assign(requestModel, tbProduct);
+					int productMarketTotalQty = 0;
 
-					tbProduct.setTbpUpdateDate(new Date());
-					tbProduct.setTbpUpdateId(tbUser.getTbuId());
-					
-					tbProductRepository.save(tbProduct);
-					
-					List<TbProduct> lstTbProduct = new ArrayList<TbProduct>();
-					
-					lstTbProduct.add(tbProduct);
-					
-					List<com.api.dms.product.model.report.TbProduct> lstTbProductReport = new ArrayList<com.api.dms.product.model.report.TbProduct>();
-					
-					com.api.dms.product.model.report.TbProduct tbProductReport = new com.api.dms.product.model.report.TbProduct();
-					tbProductReport = (com.api.dms.product.model.report.TbProduct) simpleMapper.assign(tbProduct, tbProductReport);
-					lstTbProductReport.add(tbProductReport);
-					
-					PostSyncProductRequestModel postSyncProductRequestModel = new PostSyncProductRequestModel();
-					postSyncProductRequestModel.setRequestDate(requestModel.getRequestDate());
-					postSyncProductRequestModel.setRequestId(requestModel.getRequestId());
-					postSyncProductRequestModel.setEmail(requestModel.getEmail());
-					postSyncProductRequestModel.setLstTbProduct(lstTbProductReport);
-					
-					HttpEntity<PostSyncProductRequestModel> request = new HttpEntity<>(postSyncProductRequestModel);
-					RestTemplate restTemplate = new RestTemplate();
-					restTemplate.postForEntity(env.getProperty("services.bsd.api.dms.report.postsyncproduct"), request, String.class);
+					for (ViewProductMarket viewProductMarket : requestModel.getLstViewProductMarket()) {
+						 productMarketTotalQty += viewProductMarket.getTbpmQty();				
+					}
 
-					responseModel.setTbProduct(tbProduct);
-					responseModel.setStatus("200");
-					responseModel.setMessage("Product updated");
+					if (productMarketTotalQty != tbProduct.getTbpQty()) {
+						responseModel.setStatus("404");
+						responseModel.setMessage("Can not update because total qty is not equal");
+					} else {
+						SimpleMapper simpleMapper = new SimpleMapper();
+						tbProduct = (TbProduct) simpleMapper.assign(requestModel, tbProduct);
+
+						tbProduct.setTbpUpdateDate(new Date());
+						tbProduct.setTbpUpdateId(tbUser.getTbuId());
+						
+						tbProductRepository.save(tbProduct);
+
+						for (ViewProductMarket viewProductMarket : requestModel.getLstViewProductMarket()) {
+							TbProductMarket tbProductMarket = tbProductMarketRepository.findById(viewProductMarket.getTbpmId()).get();
+							tbProductMarket.setTbpmUpdateDate(new Date());
+							tbProductMarket.setTbpmUpdateId(tbUser.getTbuId());
+							tbProductMarket.setTbpmQty(viewProductMarket.getTbpmQty());
+							tbProductMarketRepository.save(tbProductMarket);					
+						}
+						
+						List<TbProduct> lstTbProduct = new ArrayList<TbProduct>();
+						
+						lstTbProduct.add(tbProduct);
+						
+						List<com.api.dms.product.model.report.TbProduct> lstTbProductReport = new ArrayList<com.api.dms.product.model.report.TbProduct>();
+						
+						com.api.dms.product.model.report.TbProduct tbProductReport = new com.api.dms.product.model.report.TbProduct();
+						tbProductReport = (com.api.dms.product.model.report.TbProduct) simpleMapper.assign(tbProduct, tbProductReport);
+						lstTbProductReport.add(tbProductReport);
+						
+						PostSyncProductRequestModel postSyncProductRequestModel = new PostSyncProductRequestModel();
+						postSyncProductRequestModel.setRequestDate(requestModel.getRequestDate());
+						postSyncProductRequestModel.setRequestId(requestModel.getRequestId());
+						postSyncProductRequestModel.setEmail(requestModel.getEmail());
+						postSyncProductRequestModel.setLstTbProduct(lstTbProductReport);
+						
+						HttpEntity<PostSyncProductRequestModel> request = new HttpEntity<>(postSyncProductRequestModel);
+						RestTemplate restTemplate = new RestTemplate();
+						restTemplate.postForEntity(env.getProperty("services.bsd.api.dms.report.postsyncproduct"), request, String.class);
+
+						responseModel.setTbProduct(tbProduct);
+						responseModel.setStatus("200");
+						responseModel.setMessage("Product updated");
+					}					
 				}
 			}, () -> {
 				responseModel.setStatus("404");
@@ -852,6 +935,17 @@ public class ProductService {
 					optTbProduct.get().setTbpQty(optTbProduct.get().getTbpQty() - requestModel.getTbpcQty());					
 				}
 				tbProductRepository.save(optTbProduct.get());
+
+				TbProductMarket exampleTbProductMarket = new TbProductMarket();
+				exampleTbProductMarket.setTbpSku(requestModel.getTbpcSku());
+				exampleTbProductMarket.setTbmMarket(requestModel.getTbpcMarket());
+				Optional<TbProductMarket> optTbProductMarket = tbProductMarketRepository.findOne(Example.of(exampleTbProductMarket));
+				optTbProductMarket.get().setTbpmUpdateDate(new Date());
+				optTbProductMarket.get().setTbpmUpdateId(optTbUser.get().getTbuId());
+				if (optTbProductMarket.get().getTbpmQty() != null) {
+					optTbProductMarket.get().setTbpmQty(optTbProductMarket.get().getTbpmQty() - requestModel.getTbpcQty());					
+				}
+				tbProductMarketRepository.save(optTbProductMarket.get());
 				
 				TbProductConfirm tbProductConfirm = new TbProductConfirm();
 				tbProductConfirm.setTbpCreateDate(new Date());
@@ -859,6 +953,7 @@ public class ProductService {
 				tbProductConfirm.setTbpcOrderNo(requestModel.getTbpcOrderNo());
 				tbProductConfirm.setTbpSku(requestModel.getTbpcSku());
 				tbProductConfirm.setTbpQty(requestModel.getTbpcQty());
+				tbProductConfirm.setTbpcMarket(requestModel.getTbpcMarket());
 				tbProductConfirmRepository.save(tbProductConfirm);
 				
 				List<TbProduct> lstTbProduct = new ArrayList<TbProduct>();

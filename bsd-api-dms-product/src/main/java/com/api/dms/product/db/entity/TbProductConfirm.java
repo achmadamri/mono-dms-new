@@ -53,6 +53,9 @@ public class TbProductConfirm implements Serializable {
 	@Column(name="tbpc_update_id")
 	private Integer tbpcUpdateId;
 
+	@Column(name="tbpc_market")
+	private String tbpcMarket;
+
 	public TbProductConfirm() {
 	}
 
@@ -118,6 +121,14 @@ public class TbProductConfirm implements Serializable {
 
 	public void setTbpcUpdateId(Integer tbpcUpdateId) {
 		this.tbpcUpdateId = tbpcUpdateId;
+	}
+
+	public String getTbpcMarket() {
+		return tbpcMarket;
+	}
+
+	public void setTbpcMarket(String tbpcMarket) {
+		this.tbpcMarket = tbpcMarket;
 	}
 
 }

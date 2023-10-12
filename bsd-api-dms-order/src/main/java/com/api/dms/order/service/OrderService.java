@@ -96,6 +96,7 @@ import com.api.dms.order.model.order.PostUploadOrderResponseModel;
 import com.api.dms.order.model.product.GetProductResponseModel;
 import com.api.dms.order.model.product.LstViewGwpSkuProduct;
 import com.api.dms.order.model.product.PostProductConfirmRequestModel;
+import com.api.dms.order.model.product.ViewProductMarket;
 import com.api.dms.order.model.report.PostSyncOrderRequestModel;
 import com.api.dms.order.model.report.PostSyncOrderStatusRequestModel;
 import com.api.dms.order.util.SimpleMapper;
@@ -420,6 +421,7 @@ public class OrderService {
 					tbOrderPackDetail.setTbopdCheck(TbOrderPackDetailRepository.CheckOk);
 					tbOrderPackDetail.setTbopdQty(tbOrder.getTboQty());
 					tbOrderPackDetail.setTbopdQtyPack(tbOrder.getTboQty());
+					tbOrderPackDetail.setTbopdMarket(tbOrder.getTboMarket());
 					lstTbOrderPackDetail.add(tbOrderPackDetail);
 				}
 				tbOrderPackDetailRepository.saveAll(lstTbOrderPackDetail);
@@ -955,6 +957,7 @@ public class OrderService {
 					tbOrderPackDetail.setTbopdType(TbOrderPackDetailRepository.TypeProduct);
 					tbOrderPackDetail.setTbopdQty(tbOrder.getTboQty());
 					tbOrderPackDetail.setTbopdQtyPack(tbOrder.getTboQty());
+					tbOrderPackDetail.setTbopdMarket(tbOrder.getTboMarket());
 					
 					tbOrderPackDetailRepository.save(tbOrderPackDetail);
 				}
@@ -1393,6 +1396,7 @@ public class OrderService {
 							tbOrderPackDetail.setTbopdCheck(optTbOrder.get().getTboCheck());
 						}
 					}
+					tbOrderPackDetail.setTbopdMarket(optTbOrder.get().getTboMarket());
 					
 					tbOrderPackDetailRepository.save(tbOrderPackDetail);
 					
@@ -1419,7 +1423,8 @@ public class OrderService {
 					}
 					tbOrderPackGwpBundleDetail.setTbopdCheck(tbOrderPackDetail.getTbopdCheck());
 					tbOrderPackGwpBundleDetail.setTbopdTypeNotPacked(TbOrderPackDetailRepository.TypeNotPackedItem);
-					
+					tbOrderPackGwpBundleDetail.setTbopdMarket(tbOrderPackDetail.getTbopdMarket());
+
 					tbOrderPackDetailRepository.save(tbOrderPackGwpBundleDetail);
 				}
 				
@@ -1661,18 +1666,6 @@ public class OrderService {
 				List<TbOrderStatus> lstTbOrderStatus = new ArrayList<TbOrderStatus>();
 
 				for (int i = 0; i < requestModel.getOrderNo().length; i++) {
-					RestTemplate restTemplateGetproduct = new RestTemplate();
-					String requestParamGetproduct = "" + 
-							"email=" + requestModel.getEmail() +
-							"&token=" + requestModel.getToken() +
-							"&requestDate=" + requestModel.getRequestDate() +
-							"&requestId=" + requestModel.getRequestId() +
-							"&tbpIdSkuCode=" + requestModel.getSku()[i];
-					ResponseEntity<String> responseGetproduct = restTemplateGetproduct.getForEntity(env.getProperty("services.bsd.api.dms.product") + "/getproduct?" + requestParamGetproduct, String.class);
-
-					ObjectMapper mapper = new ObjectMapper();
-					GetProductResponseModel getProductResponseModel = mapper.readValue(responseGetproduct.getBody(), GetProductResponseModel.class);
-
 					TbOrderPackDetail exampleTbOrderPackDetail = new TbOrderPackDetail();
 					exampleTbOrderPackDetail.setTbopdOrderNo(requestModel.getOrderNo()[i]);
 					exampleTbOrderPackDetail.setTbopdSku(requestModel.getSku()[i]);
@@ -1687,8 +1680,27 @@ public class OrderService {
 					if (optTbOrderPackDetail.isPresent() == false) {
 							messageFail = messageFail + requestModel.getOrderNo()[i] + "/" + requestModel.getSku()[i] + " not found<br>";						
 					} else {
-						if (getProductResponseModel.getTbProduct().getTbpQty() < optTbOrderPackDetail.get().getTbopdQty()) {
-							messageFail = messageFail + requestModel.getOrderNo()[i] + "/" + requestModel.getSku()[i] + " no qty (" + optTbOrderPackDetail.get().getTbopdQty() + " / " + getProductResponseModel.getTbProduct().getTbpQty() + ")<br>";
+						RestTemplate restTemplateGetproduct = new RestTemplate();
+						String requestParamGetproduct = "" + 
+								"email=" + requestModel.getEmail() +
+								"&token=" + requestModel.getToken() +
+								"&requestDate=" + requestModel.getRequestDate() +
+								"&requestId=" + requestModel.getRequestId() +
+								"&tbpIdSkuCode=" + requestModel.getSku()[i];
+						ResponseEntity<String> responseGetproduct = restTemplateGetproduct.getForEntity(env.getProperty("services.bsd.api.dms.product") + "/getproduct?" + requestParamGetproduct, String.class);
+
+						ObjectMapper mapper = new ObjectMapper();
+						GetProductResponseModel getProductResponseModel = mapper.readValue(responseGetproduct.getBody(), GetProductResponseModel.class);
+						ViewProductMarket viewProductMarket = new ViewProductMarket();						
+
+						for (ViewProductMarket viewProductMarket_ : getProductResponseModel.getLstViewProductMarket()) {
+							if (viewProductMarket_.getTbmMarket().equals(optTbOrderPackDetail.get().getTbopdMarket())) {
+								viewProductMarket = viewProductMarket_;
+							}
+						}
+
+						if (viewProductMarket.getTbpmQty() < optTbOrderPackDetail.get().getTbopdQty()) {
+							messageFail = messageFail + requestModel.getOrderNo()[i] + "/" + requestModel.getSku()[i] + "/" + optTbOrderPackDetail.get().getTbopdMarket() + " no qty (" + optTbOrderPackDetail.get().getTbopdQty() + " / " + viewProductMarket.getTbpmQty() + ")<br>";
 						} else {
 							TbOrder exampleTbOrder = new TbOrder();
 							exampleTbOrder.setTboOrderNo(requestModel.getOrderNo()[i]);
@@ -1734,6 +1746,7 @@ public class OrderService {
 								postProductConfirmRequestModel.setTbpcOrderNo(optTbOrder.get().getTboOrderNo());
 								postProductConfirmRequestModel.setTbpcSku(optTbOrder.get().getTboSku());
 								postProductConfirmRequestModel.setTbpcQty(optTbOrder.get().getTboQty());
+								postProductConfirmRequestModel.setTbpcMarket(optTbOrder.get().getTboMarket());
 								
 								HttpEntity<PostProductConfirmRequestModel> requestPostProductConfirmRequestModel = new HttpEntity<>(postProductConfirmRequestModel);
 								restTemplatePostproductconfirm.postForEntity(env.getProperty("services.bsd.api.dms.product") + "/postproductconfirm?", requestPostProductConfirmRequestModel, String.class);
@@ -1744,8 +1757,13 @@ public class OrderService {
 					}
 				}
 
-				responseModel.setStatus("200");
-				responseModel.setMessage(messageOk + "<br>" + messageFail);
+				if (messageFail == "") {
+					responseModel.setStatus("200");
+					responseModel.setMessage(messageOk + "<br>" + messageFail);
+				} else {
+					responseModel.setStatus("404");
+					responseModel.setMessage(messageOk + "<br>" + messageFail);
+				}
 			} else {
 				responseModel.setStatus("404");
 				responseModel.setMessage("Not found");

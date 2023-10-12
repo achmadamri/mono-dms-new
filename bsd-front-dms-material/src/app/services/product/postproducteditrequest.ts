@@ -1,3 +1,5 @@
+import { ViewProductMarket } from "./viewproductmarket";
+
 export class PostProductEditRequest {
     email: string;
     token: string;
@@ -12,4 +14,5 @@ export class PostProductEditRequest {
 	tbpQty: number;
 	tbpUnitPrice: number;
 	tbpType: string;
+	lstViewProductMarket: ViewProductMarket[] = Array(new ViewProductMarket());
 }

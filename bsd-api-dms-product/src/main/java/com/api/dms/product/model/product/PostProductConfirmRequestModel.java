@@ -13,6 +13,9 @@ public class PostProductConfirmRequestModel extends RequestModel {
 	
 	@NotNull(message = "Quantity is not null")
 	private Integer tbpcQty;
+	
+	@NotNull(message = "Market is not null")
+	private String tbpcMarket;
 
 	public String getTbpcOrderNo() {
 		return tbpcOrderNo;
@@ -36,5 +39,13 @@ public class PostProductConfirmRequestModel extends RequestModel {
 
 	public void setTbpcQty(Integer tbpcQty) {
 		this.tbpcQty = tbpcQty;
+	}
+
+	public String getTbpcMarket() {
+		return tbpcMarket;
+	}
+
+	public void setTbpcMarket(String tbpcMarket) {
+		this.tbpcMarket = tbpcMarket;
 	}
 }
