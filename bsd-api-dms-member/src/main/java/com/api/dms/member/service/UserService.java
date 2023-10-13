@@ -99,7 +99,7 @@ public class UserService {
 			
 			ViewUserMenu exampleViewUserMenu = new ViewUserMenu();
 			exampleViewUserMenu.setTbuId(optTbUser.get().getTbuId());
-			List<ViewUserMenu> lstViewUserMenu = viewUserMenuRepository.findAll(Example.of(exampleViewUserMenu), Sort.by("tbmName").ascending());
+			List<ViewUserMenu> lstViewUserMenu = viewUserMenuRepository.findAll(Example.of(exampleViewUserMenu), Sort.by("tbmSort").ascending());
 			responseModel.setLstViewUserMenu(lstViewUserMenu);
 			
 			TbUserMarket exampleTbUserMarket = new TbUserMarket();
