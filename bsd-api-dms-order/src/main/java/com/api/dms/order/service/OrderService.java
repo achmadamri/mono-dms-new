@@ -430,6 +430,82 @@ public class OrderService {
 					lstTbOrderPackDetail.add(tbOrderPackDetail);
 				}
 				tbOrderPackDetailRepository.saveAll(lstTbOrderPackDetail);
+
+				for (TbOrder tbOrder : lstTbOrder) {
+					RestTemplate restTemplate = new RestTemplate();
+					String requestParam = "" + 
+							"email=" + requestModel.getEmail() +
+							"&token=" + requestModel.getToken() +
+							"&requestDate=" + requestModel.getRequestDate() +
+							"&requestId=" + requestModel.getRequestId() +
+							"&tbpIdSkuCode=" + tbOrder.getTboSku();
+					ResponseEntity<String> response = restTemplate.getForEntity(env.getProperty("services.bsd.api.dms.product") + "/getproduct?" + requestParam, String.class);
+
+					ObjectMapper mapper = new ObjectMapper();
+					GetProductResponseModel getProductResponseModel = mapper.readValue(response.getBody(), GetProductResponseModel.class);			
+
+					for (LstViewGwpSkuProduct lstViewGwpSkuProduct : getProductResponseModel.getLstViewGwpSkuProduct()) {
+						TbOrder tbOrderGwpBundleDetail = new TbOrder();							
+						tbOrderGwpBundleDetail.setTboCreateDate(Date.from(LocalDateTime.now(ZoneOffset.UTC).toInstant(ZoneOffset.UTC)));
+						tbOrderGwpBundleDetail.setTboCreateId(optTbUser.get().getTbuId());
+						tbOrderGwpBundleDetail.setTboOrderNo(tbOrder.getTboOrderNo());
+						tbOrderGwpBundleDetail.setTboSku(lstViewGwpSkuProduct.getTbgSku());
+						tbOrderGwpBundleDetail.setTboItem(lstViewGwpSkuProduct.getTbpgTbpItem());
+						tbOrderGwpBundleDetail.setTboCode(lstViewGwpSkuProduct.getTbpgTbpCode());
+						tbOrderGwpBundleDetail.setTboLoc(lstViewGwpSkuProduct.getTbpgTbpLoc());
+						tbOrderGwpBundleDetail.setTboQty(lstViewGwpSkuProduct.getTbgsQty());
+						tbOrderGwpBundleDetail.setTboName(tbOrder.getTboName());
+						tbOrderGwpBundleDetail.setTboAwb(tbOrder.getTboAwb());
+						tbOrderGwpBundleDetail.setTboStatus(TbOrderRepository.StatusPacked);
+						tbOrderGwpBundleDetail.setTboCheck(TbOrderRepository.CheckOk);
+						tbOrderGwpBundleDetail.setTboTypeNotPacked(TbOrderRepository.TypeOrder);
+						tbOrderGwpBundleDetail.setTboType(TbOrderRepository.TypeOrder);							
+						tbOrderGwpBundleDetail.setTboBrand(lstViewGwpSkuProduct.getTbpgTbpBrand());						
+						tbOrderGwpBundleDetail.setTboMarket(tbOrder.getTboMarket());
+						tbOrderGwpBundleDetail.setTboRow(tbOrder.getTboRow());
+						tbOrderGwpBundleDetail.setTboBrand(lstViewGwpSkuProduct.getTbpgTbpBrand());
+						tbOrderGwpBundleDetail.setTboQcId(tbOrder.getTboQcId());
+						tbOrderGwpBundleDetail.setTboSeq(tbOrder.getTboSeq());
+						tbOrderGwpBundleDetail.setTboMaxSeq(tbOrder.getTboMaxSeq());
+						tbOrderGwpBundleDetail.setTboOrderSq(tbOrder.getTboOrderSq());
+						tbOrderGwpBundleDetail.setTboHp(tbOrder.getTboHp());
+						tbOrderGwpBundleDetail.setTboAddress1(tbOrder.getTboAddress1());
+						tbOrderGwpBundleDetail.setTboAddress2(tbOrder.getTboAddress2());
+						tbOrderGwpBundleDetail.setTboAddress3(tbOrder.getTboAddress3());
+						tbOrderGwpBundleDetail.setTboAddress4(tbOrder.getTboAddress4());
+						tbOrderGwpBundleDetail.setTboAddress5(tbOrder.getTboAddress5());
+						tbOrderGwpBundleDetail.setTboFullAddress(tbOrder.getTboFullAddress());
+						tbOrderGwpBundleDetail.setTboFile(tbOrder.getTboFile());
+
+						tbOrderRepository.save(tbOrderGwpBundleDetail);
+
+						TbOrderPackDetail tbOrderPackGwpBundleDetail = new TbOrderPackDetail();
+						tbOrderPackGwpBundleDetail.setTbopdCreateDate(Date.from(LocalDateTime.now(ZoneOffset.UTC).toInstant(ZoneOffset.UTC)));
+						tbOrderPackGwpBundleDetail.setTbopdCreateId(optTbUser.get().getTbuId());
+						tbOrderPackGwpBundleDetail.setTbopId(tbOrder.getTboId());
+						tbOrderPackGwpBundleDetail.setTbopdOrderNo(tbOrder.getTboOrderNo());
+						tbOrderPackGwpBundleDetail.setTbopdBrand(lstViewGwpSkuProduct.getTbpgTbpBrand());
+						tbOrderPackGwpBundleDetail.setTbopdSku(lstViewGwpSkuProduct.getTbgSku());
+						tbOrderPackGwpBundleDetail.setTbopdSkuAdditional(lstViewGwpSkuProduct.getTbgsSku());
+						tbOrderPackGwpBundleDetail.setTbopdItem(lstViewGwpSkuProduct.getTbpgTbpItem());
+						tbOrderPackGwpBundleDetail.setTbopdCode(lstViewGwpSkuProduct.getTbpgTbpCode());
+						if (lstViewGwpSkuProduct.getTbgsMin() == 0 || lstViewGwpSkuProduct.getTbgsMinAccu() == 0) {
+							tbOrderPackGwpBundleDetail.setTbopdStatus(TbOrderPackDetailRepository.StatusAdditionalPacked);
+							tbOrderPackGwpBundleDetail.setTbopdType(TbOrderPackDetailRepository.TypeBundle);
+						} else {
+							tbOrderPackGwpBundleDetail.setTbopdStatus(TbOrderPackDetailRepository.StatusAdditionalPacked);
+							tbOrderPackGwpBundleDetail.setTbopdType(TbOrderPackDetailRepository.TypeGwp);
+						}
+						tbOrderPackGwpBundleDetail.setTbopdCheck(TbOrderPackDetailRepository.CheckOk);
+						tbOrderPackGwpBundleDetail.setTbopdTypeNotPacked(TbOrderPackDetailRepository.TypeNotPackedItem);
+						tbOrderPackGwpBundleDetail.setTbopdQty(lstViewGwpSkuProduct.getTbgsQty());
+						tbOrderPackGwpBundleDetail.setTbopdQtyPack(lstViewGwpSkuProduct.getTbgsQty());
+						tbOrderPackGwpBundleDetail.setTbopdMarket(tbOrder.getTboMarket());
+
+						lstTbOrderPackDetail.add(tbOrderPackGwpBundleDetail);
+					}					
+				}
+				tbOrderPackDetailRepository.saveAll(lstTbOrderPackDetail);
 				
 				PostSyncOrderRequestModel postSyncOrderRequestModel = new PostSyncOrderRequestModel();
 				postSyncOrderRequestModel.setRequestDate(requestModel.getRequestDate());
@@ -1779,195 +1855,6 @@ public class OrderService {
 		}		
 		
 		return responseModel;
-
-		// PostConfirmResponseModel responseModel = new PostConfirmResponseModel(requestModel);
-		
-		// tokenUtil.claims(requestModel);
-		
-		// TbUser exampleTbUser = new TbUser();
-		// exampleTbUser.setTbuEmail(requestModel.getEmail());
-		// exampleTbUser.setTbuStatus(TbUserRepository.Active);
-		// Optional<TbUser> optTbUser = tbUserRepository.findOne(Example.of(exampleTbUser));
-		
-		// if (optTbUser.isPresent()) {
-		// 	boolean ok = true;
-		// 	String message = "";
-		// 	Map<String, Integer> totalQty = new HashMap<String, Integer>();
-
-		// 	for (int i = 0; i < requestModel.getOrderNo().length; i++) {
-		// 		RestTemplate restTemplate = new RestTemplate();
-		// 		String requestParam = "" + 
-		// 				"email=" + requestModel.getEmail() +
-		// 				"&token=" + requestModel.getToken() +
-		// 				"&requestDate=" + requestModel.getRequestDate() +
-		// 				"&requestId=" + requestModel.getRequestId() +
-		// 				"&tbpIdSkuCode=" + requestModel.getSku()[i];
-		// 		ResponseEntity<String> response = restTemplate.getForEntity(env.getProperty("services.bsd.api.dms.product") + "/getproduct?" + requestParam, String.class);
-
-		// 		ObjectMapper mapper = new ObjectMapper();
-		// 		GetProductResponseModel getProductResponseModel = mapper.readValue(response.getBody(), GetProductResponseModel.class);
-
-		// 		TbOrderPackDetail exampleTbOrderPackDetail = new TbOrderPackDetail();
-		// 		exampleTbOrderPackDetail.setTbopdOrderNo(requestModel.getOrderNo()[i]);
-		// 		exampleTbOrderPackDetail.setTbopdSku(requestModel.getSku()[i]);
-		// 		exampleTbOrderPackDetail.setTbopdStatus(TbOrderPackDetailRepository.StatusPacked);
-		// 		Optional<TbOrderPackDetail> optTbOrderPackDetail = tbOrderPackDetailRepository.findOne(Example.of(exampleTbOrderPackDetail));
-				
-		// 		if (optTbOrderPackDetail.isPresent()) {
-		// 			Integer totalQtyNeeded = totalQty.get(requestModel.getSku()[i]) == null ? 0 : totalQty.get(requestModel.getSku()[i]);
-		// 			totalQtyNeeded = totalQtyNeeded + optTbOrderPackDetail.get().getTbopdQty();
-		// 			totalQty.put(requestModel.getSku()[i], totalQtyNeeded);
-
-		// 			if (getProductResponseModel.getTbProduct().getTbpQty() < totalQtyNeeded) {
-		// 				ok = false;
-		// 				message = message + "Product quantity is not enough for sku " + requestModel.getSku()[i] + ". Quantity available is " + getProductResponseModel.getTbProduct().getTbpQty() + " and quantity needed is " + totalQtyNeeded + "<br>";
-		// 			}
-		// 		}
-		// 	}
-
-		// 	for (int i = 0; i < requestModel.getOrderNo().length; i++) {
-		// 		TbOrderPackDetail exampleTbOrderPackDetail = new TbOrderPackDetail();
-		// 		exampleTbOrderPackDetail.setTbopdOrderNo(requestModel.getOrderNo()[i]);
-		// 		exampleTbOrderPackDetail.setTbopdSku(requestModel.getSku()[i]);
-		// 		exampleTbOrderPackDetail.setTbopdStatus(TbOrderPackDetailRepository.StatusPacked);
-		// 		Optional<TbOrderPackDetail> optTbOrderPackDetail = tbOrderPackDetailRepository.findOne(Example.of(exampleTbOrderPackDetail));
-				
-		// 		if (optTbOrderPackDetail.isPresent() == false) {
-		// 			exampleTbOrderPackDetail = new TbOrderPackDetail();
-		// 			exampleTbOrderPackDetail.setTbopdOrderNo(requestModel.getOrderNo()[i]);
-		// 			exampleTbOrderPackDetail.setTbopdSku(requestModel.getSku()[i]);
-		// 			exampleTbOrderPackDetail.setTbopdStatus(TbOrderPackDetailRepository.StatusAdditionalPacked);
-		// 			optTbOrderPackDetail = tbOrderPackDetailRepository.findOne(Example.of(exampleTbOrderPackDetail));
-					
-		// 			if (optTbOrderPackDetail.isPresent() == false) {
-		// 				ok = false;
-		// 				message = message + "Product not found<br>";
-		// 			}
-		// 		}
-		// 	}
-			
-		// 	if (ok) {
-		// 		Map<String, String> orderNo = new HashMap<String, String>();
-				
-		// 		for (int i = 0; i < requestModel.getOrderNo().length; i++) {
-		// 			TbOrderPackDetail exampleTbOrderPackDetail = new TbOrderPackDetail();
-		// 			exampleTbOrderPackDetail.setTbopdOrderNo(requestModel.getOrderNo()[i]);
-		// 			exampleTbOrderPackDetail.setTbopdSku(requestModel.getSku()[i]);
-		// 			exampleTbOrderPackDetail.setTbopdStatus(TbOrderPackDetailRepository.StatusPacked);
-		// 			Optional<TbOrderPackDetail> optTbOrderPackDetail = tbOrderPackDetailRepository.findOne(Example.of(exampleTbOrderPackDetail));
-					
-		// 			if (optTbOrderPackDetail.isPresent() == false) {
-		// 				exampleTbOrderPackDetail = new TbOrderPackDetail();
-		// 				exampleTbOrderPackDetail.setTbopdOrderNo(requestModel.getOrderNo()[i]);
-		// 				exampleTbOrderPackDetail.setTbopdSku(requestModel.getSku()[i]);
-		// 				exampleTbOrderPackDetail.setTbopdStatus(TbOrderPackDetailRepository.StatusAdditionalPacked);
-		// 				optTbOrderPackDetail = tbOrderPackDetailRepository.findOne(Example.of(exampleTbOrderPackDetail));
-		// 			}
-					
-		// 			if (optTbOrderPackDetail.isPresent()) {
-		// 				orderNo.put(requestModel.getOrderNo()[i], requestModel.getOrderNo()[i]);
-						
-		// 				optTbOrderPackDetail.get().setTbopdStatus(TbOrderPackDetailRepository.StatusDelivered);
-		// 				tbOrderPackDetailRepository.save(optTbOrderPackDetail.get());
-
-		// 				TbOrder exampleTbOrder = new TbOrder();
-		// 				exampleTbOrder.setTboOrderNo(requestModel.getOrderNo()[i]);
-		// 				exampleTbOrder.setTboSku(requestModel.getSku()[i]);
-		// 				exampleTbOrder.setTboStatus(TbOrderRepository.StatusPacked);
-		// 				Optional<TbOrder> optTbOrder = tbOrderRepository.findOne(Example.of(exampleTbOrder));
-						
-		// 				if (optTbOrder.isPresent() == false) {
-		// 					exampleTbOrder = new TbOrder();
-		// 					exampleTbOrder.setTboOrderNo(requestModel.getOrderNo()[i]);
-		// 					exampleTbOrder.setTboSku(requestModel.getSku()[i]);
-		// 					exampleTbOrder.setTboStatus(TbOrderRepository.StatusAdditionalPacked);
-		// 					optTbOrder = tbOrderRepository.findOne(Example.of(exampleTbOrder));
-		// 				}
-						
-		// 				optTbOrder.get().setTboStatus(TbOrderRepository.StatusDelivered);
-		// 				tbOrderRepository.save(optTbOrder.get());
-
-		// 				TbOrderStatus tbOrderStatus = new TbOrderStatus();
-		// 				tbOrderStatus.setTbosCreateDate(Date.from(LocalDateTime.now(ZoneOffset.UTC).toInstant(ZoneOffset.UTC)));
-		// 				tbOrderStatus.setTbosCreateId(optTbUser.get().getTbuId());
-		// 				tbOrderStatus.setTboId(optTbOrder.get().getTboId());
-		// 				tbOrderStatus.setTbosStatus(optTbOrder.get().getTboStatus());
-		// 				tbOrderStatusRepository.save(tbOrderStatus);					
-						
-		// 				RestTemplate restTemplate = new RestTemplate();
-
-		// 				List<TbOrder> lstTbOrder = new ArrayList<TbOrder>();
-		// 				lstTbOrder.add(optTbOrder.get());
-
-		// 				PostSyncOrderRequestModel postSyncOrderRequestModel = new PostSyncOrderRequestModel();
-		// 				postSyncOrderRequestModel.setRequestDate(requestModel.getRequestDate());
-		// 				postSyncOrderRequestModel.setRequestId(requestModel.getRequestId());
-		// 				postSyncOrderRequestModel.setEmail(requestModel.getEmail());
-		// 				postSyncOrderRequestModel.setLstTbOrder(lstTbOrder);						
-
-		// 				HttpEntity<PostSyncOrderRequestModel> requestPostsyncorder = new HttpEntity<>(postSyncOrderRequestModel);
-		// 				restTemplate.postForEntity(env.getProperty("services.bsd.api.dms.report.postsyncorder"), requestPostsyncorder, String.class);
-
-		// 				List<TbOrderStatus> lstTbOrderStatus = new ArrayList<TbOrderStatus>();
-		// 				lstTbOrderStatus.add(tbOrderStatus);
-
-		// 				PostSyncOrderStatusRequestModel postSyncOrderStatusRequestModel = new PostSyncOrderStatusRequestModel();
-		// 				postSyncOrderStatusRequestModel.setRequestDate(requestModel.getRequestDate());
-		// 				postSyncOrderStatusRequestModel.setRequestId(requestModel.getRequestId());
-		// 				postSyncOrderStatusRequestModel.setEmail(requestModel.getEmail());
-		// 				postSyncOrderStatusRequestModel.setLstTbOrderStatus(lstTbOrderStatus);
-
-		// 				HttpEntity<PostSyncOrderStatusRequestModel> requestPostsyncorderstatus = new HttpEntity<>(postSyncOrderStatusRequestModel);
-		// 				restTemplate.postForEntity(env.getProperty("services.bsd.api.dms.report.postsyncorderstatus"), requestPostsyncorderstatus, String.class);
-
-		// 				PostProductConfirmRequestModel postProductConfirmRequestModel = new PostProductConfirmRequestModel();
-		// 				postProductConfirmRequestModel.setEmail(requestModel.getEmail());
-		// 				postProductConfirmRequestModel.setRequestDate(requestModel.getRequestDate());
-		// 				postProductConfirmRequestModel.setRequestId(requestModel.getRequestId());
-		// 				postProductConfirmRequestModel.setToken(requestModel.getToken());
-		// 				postProductConfirmRequestModel.setTbpcOrderNo(optTbOrder.get().getTboOrderNo());
-		// 				postProductConfirmRequestModel.setTbpcSku(optTbOrder.get().getTboSku());
-		// 				postProductConfirmRequestModel.setTbpcQty(optTbOrder.get().getTboQty());
-		// 				HttpEntity<PostProductConfirmRequestModel> requestPostProductConfirmRequestModel = new HttpEntity<>(postProductConfirmRequestModel);
-		// 				restTemplate.postForEntity(env.getProperty("services.bsd.api.dms.product") + "/postproductconfirm?", requestPostProductConfirmRequestModel, String.class);
-		// 			}
-		// 		}
-				
-		// 		for (Map.Entry<String, String> set : orderNo.entrySet()) {
-		//             TbOrderPackDetail exampleTbOrderPackDetail = new TbOrderPackDetail();
-		// 			exampleTbOrderPackDetail.setTbopdOrderNo(set.getValue());
-		// 			List<TbOrderPackDetail> lstTbOrderPackDetail = tbOrderPackDetailRepository.findAll(Example.of(exampleTbOrderPackDetail));
-					
-		// 			boolean okAll = true;
-					
-		// 			for (TbOrderPackDetail tbOrderPackDetail : lstTbOrderPackDetail) {
-		// 				if (!tbOrderPackDetail.getTbopdStatus().equals(TbOrderPackDetailRepository.StatusDelivered)) {
-		// 					okAll = false;
-		// 				}
-		// 			}
-					
-		// 			if (okAll) {
-		// 				TbOrderPack exampleTbOrderPack = new TbOrderPack();
-		// 				exampleTbOrderPack.setTbopOrderNo(set.getValue());
-		// 				exampleTbOrderPack.setTbopStatus(TbOrderPackRepository.StatusPacked);
-		// 				Optional<TbOrderPack> optTbOrderPack = tbOrderPackRepository.findOne(Example.of(exampleTbOrderPack));
-		// 				optTbOrderPack.get().setTbopStatus(TbOrderPackRepository.StatusDelivered);
-		// 				tbOrderPackRepository.save(optTbOrderPack.get());
-		// 			}
-		//         }
-				
-		// 		responseModel.setStatus("200");
-		// 		responseModel.setMessage("Confirm ok");
-		// 	} else {
-		// 		responseModel.setStatus("404");
-		// 		responseModel.setMessage("Confirm failed.<br>" + message);
-		// 	}
-		// } else {
-		// 	responseModel.setStatus("404");
-		// 	responseModel.setMessage("Not found");
-		// }
-		
-		// return responseModel;
 	}
 	
 	public PostConfirmOrderResponseModel postConfirmOrder(PostConfirmOrderRequestModel requestModel) throws Exception {
