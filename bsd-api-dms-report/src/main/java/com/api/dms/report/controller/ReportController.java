@@ -33,6 +33,8 @@ import com.api.dms.report.model.report.GetSalesListRequestModel;
 import com.api.dms.report.model.report.GetSalesListResponseModel;
 import com.api.dms.report.model.report.GetStockListRequestModel;
 import com.api.dms.report.model.report.GetStockListResponseModel;
+import com.api.dms.report.model.report.PostSyncBrandRequestModel;
+import com.api.dms.report.model.report.PostSyncBrandResponseModel;
 import com.api.dms.report.model.report.PostSyncOrderRequestModel;
 import com.api.dms.report.model.report.PostSyncOrderResponseModel;
 import com.api.dms.report.model.report.PostSyncOrderStatusRequestModel;
@@ -233,6 +235,20 @@ public class ReportController {
 		
 		ResponseEntity<?> responseEntity = new ResponseEntity<>(responseModel, responseModel.getStatus().equals("200") ? HttpStatus.OK : HttpStatus.NOT_FOUND);
 		log.info(request.getRequestURL().toString() + " [fid" + fid + "] responseEntity : " + objectMapper.writeValueAsString(responseEntity));
+
+		return responseEntity;
+	}
+	
+	@PostMapping("/postsyncbrand")
+	@Transactional
+	public HttpEntity<?> postSyncBrand(HttpServletRequest request, @Valid @RequestBody PostSyncBrandRequestModel requestModel) throws Exception {
+		String fid = new Uid().generateString(20);
+		log.info(request.getRequestURL().toString() + " [fid:" + fid + "] requestModel : " + objectMapper.writeValueAsString(requestModel));
+		
+		PostSyncBrandResponseModel responseModel = reportService.postSyncBrand(requestModel);
+		
+		ResponseEntity<?> responseEntity = new ResponseEntity<>(responseModel, responseModel.getStatus().equals("200") ? HttpStatus.OK : HttpStatus.NOT_FOUND);
+		log.info(request.getRequestURL().toString() + " [fid:" + fid + "] responseEntity : " + objectMapper.writeValueAsString(responseEntity));
 
 		return responseEntity;
 	}

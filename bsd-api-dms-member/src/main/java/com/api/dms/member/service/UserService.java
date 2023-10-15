@@ -18,12 +18,14 @@ import org.springframework.http.HttpEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
+import com.api.dms.member.db.entity.TbBrand;
 import com.api.dms.member.db.entity.TbUser;
 import com.api.dms.member.db.entity.TbUserBrand;
 import com.api.dms.member.db.entity.TbUserMarket;
 import com.api.dms.member.db.entity.TbUserMenu;
 import com.api.dms.member.db.entity.ViewUserBrand;
 import com.api.dms.member.db.entity.ViewUserMenu;
+import com.api.dms.member.db.repository.TbBrandRepository;
 import com.api.dms.member.db.repository.TbUserBrandRepository;
 import com.api.dms.member.db.repository.TbUserMarketRepository;
 import com.api.dms.member.db.repository.TbUserMenuRepository;
@@ -38,13 +40,14 @@ import com.api.dms.member.model.user.GetUserMenuListRequestModel;
 import com.api.dms.member.model.user.GetUserMenuListResponseModel;
 import com.api.dms.member.model.user.GetUserRequestModel;
 import com.api.dms.member.model.user.GetUserResponseModel;
+import com.api.dms.member.model.user.PostSyncBrandRequestModel;
+import com.api.dms.member.model.user.PostSyncBrandResponseModel;
 import com.api.dms.member.model.user.PostUserAddRequestModel;
 import com.api.dms.member.model.user.PostUserAddResponseModel;
 import com.api.dms.member.model.user.PostUserChangePasswordRequestModel;
 import com.api.dms.member.model.user.PostUserChangePasswordResponseModel;
 import com.api.dms.member.model.user.PostUserEditRequestModel;
 import com.api.dms.member.model.user.PostUserEditResponseModel;
-import com.api.dms.member.model.user.TbBrand;
 import com.api.dms.member.model.user.TbMarket;
 import com.api.dms.member.util.MD5;
 import com.api.dms.member.util.SimpleMapper;
@@ -78,6 +81,9 @@ public class UserService {
 	
 	@Autowired
 	private TbUserMarketRepository tbUserMarketRepository;
+	
+	@Autowired
+	private TbBrandRepository tbBrandRepository;
 	
 	public GetUserResponseModel getUser(String tbuId, GetUserRequestModel requestModel) throws Exception {
 		GetUserResponseModel responseModel = new GetUserResponseModel(requestModel);
@@ -247,7 +253,7 @@ public class UserService {
 					tbUserMenuRepository.save(tbUserMenu);
 				}
 				
-				for (TbMarket tbMarket : requestModel.getLstTbMarket()) {
+				for (com.api.dms.member.model.user.TbMarket tbMarket : requestModel.getLstTbMarket()) {
 					TbUserMarket tbUserMarket = new TbUserMarket();
 					tbUserMarket.setTbumCreateDate(new Date());
 					tbUserMarket.setTbumCreateId(optTbUser.get().getTbuId());
@@ -257,7 +263,7 @@ public class UserService {
 					tbUserMarketRepository.save(tbUserMarket);
 				}
 				
-				for (TbBrand tbBrand : requestModel.getLstTbBrand()) {
+				for (com.api.dms.member.model.user.TbBrand tbBrand : requestModel.getLstTbBrand()) {
 					TbUserBrand tbUserBrand = new TbUserBrand();
 					tbUserBrand.setTbubCreateDate(new Date());
 					tbUserBrand.setTbubCreateId(optTbUser.get().getTbuId());
@@ -291,7 +297,7 @@ public class UserService {
 				postUserAddOrderTbUser = (com.api.dms.member.model.order.TbUser) simpleMapper.assign(tbUser, postUserAddOrderTbUser);
 				postUserAddOrderRequestModel.setTbUser(postUserAddOrderTbUser);
 				List<com.api.dms.member.model.order.TbUserBrand> lstOrderTbUserBrand = new ArrayList<com.api.dms.member.model.order.TbUserBrand>();
-				for (TbBrand tbBrand : requestModel.getLstTbBrand()) {
+				for (com.api.dms.member.model.user.TbBrand tbBrand : requestModel.getLstTbBrand()) {
 					com.api.dms.member.model.order.TbUserBrand tbUserBrand = new com.api.dms.member.model.order.TbUserBrand();
 					tbUserBrand.setTbuId(tbUser.getTbuId());
 					tbUserBrand.setTbbBrand(tbBrand.getTbbBrand());					
@@ -310,7 +316,7 @@ public class UserService {
 				postUserAddProductTbUser = (com.api.dms.member.model.product.TbUser) simpleMapper.assign(tbUser, postUserAddProductTbUser);
 				postUserAddProductRequestModel.setTbUser(postUserAddProductTbUser);
 				List<com.api.dms.member.model.product.TbUserBrand> lstProductTbUserBrand = new ArrayList<com.api.dms.member.model.product.TbUserBrand>();
-				for (TbBrand tbBrand : requestModel.getLstTbBrand()) {
+				for (com.api.dms.member.model.user.TbBrand tbBrand : requestModel.getLstTbBrand()) {
 					com.api.dms.member.model.product.TbUserBrand tbUserBrand = new com.api.dms.member.model.product.TbUserBrand();
 					tbUserBrand.setTbuId(tbUser.getTbuId());
 					tbUserBrand.setTbbBrand(tbBrand.getTbbBrand());					
@@ -329,7 +335,7 @@ public class UserService {
 				postUserAddReportTbUser = (com.api.dms.member.model.report.TbUser) simpleMapper.assign(tbUser, postUserAddReportTbUser);
 				postUserAddReportRequestModel.setTbUser(postUserAddReportTbUser);
 				List<com.api.dms.member.model.report.TbUserBrand> lstReportTbUserBrand = new ArrayList<com.api.dms.member.model.report.TbUserBrand>();
-				for (TbBrand tbBrand : requestModel.getLstTbBrand()) {
+				for (com.api.dms.member.model.user.TbBrand tbBrand : requestModel.getLstTbBrand()) {
 					com.api.dms.member.model.report.TbUserBrand tbUserBrand = new com.api.dms.member.model.report.TbUserBrand();
 					tbUserBrand.setTbuId(tbUser.getTbuId());
 					tbUserBrand.setTbbBrand(tbBrand.getTbbBrand());					
@@ -603,6 +609,56 @@ public class UserService {
 				responseModel.setStatus("404");
 				responseModel.setMessage("Not found");
 			}
+		} else {
+			responseModel.setStatus("404");
+			responseModel.setMessage("Not found");
+		}
+		
+		return responseModel;
+	}
+
+	public PostSyncBrandResponseModel postSyncBrand(PostSyncBrandRequestModel requestModel) throws Exception {
+		PostSyncBrandResponseModel responseModel = new PostSyncBrandResponseModel(requestModel);
+		
+		TbUser exampleTbUser = new TbUser();
+		exampleTbUser.setTbuEmail(requestModel.getEmail());
+		exampleTbUser.setTbuStatus(TbUserRepository.Active);
+		Optional<TbUser> optTbUser = tbUserRepository.findOne(Example.of(exampleTbUser));
+		
+		if (optTbUser.isPresent()) {
+			SimpleMapper simpleMapper = new SimpleMapper();
+			
+			for (com.api.dms.member.model.user.TbBrand tbBrandOrder : requestModel.getLstTbBrand()) {
+				TbBrand exampleTbBrand = new TbBrand();
+				exampleTbBrand.setTbbBrandId(tbBrandOrder.getTbbBrandId());
+				
+				Optional<TbBrand> optTbBrand = tbBrandRepository.findOne(Example.of(exampleTbBrand));
+				
+				if (optTbBrand.isPresent() == false) {
+					TbBrand tbBrand = new TbBrand();
+					tbBrand = (TbBrand) simpleMapper.assign(tbBrandOrder, tbBrand);
+					
+					tbBrandRepository.save(tbBrand);
+				}
+			}
+			
+			for (com.api.dms.member.model.user.TbUserBrand tbUserBrandOrder : requestModel.getLstTbUserBrand()) {
+				TbUserBrand exampleTbUserBrand = new TbUserBrand();
+				exampleTbUserBrand.setTbuId(tbUserBrandOrder.getTbuId());
+				exampleTbUserBrand.setTbbBrandId(tbUserBrandOrder.getTbbBrandId());
+				
+				Optional<TbUserBrand> optTbUserBrand = tbUserBrandRepository.findOne(Example.of(exampleTbUserBrand));
+				
+				if (optTbUserBrand.isPresent() == false) {
+					TbUserBrand tbUserBrand = new TbUserBrand();
+					tbUserBrand = (TbUserBrand) simpleMapper.assign(tbUserBrandOrder, tbUserBrand);
+					
+					tbUserBrandRepository.save(tbUserBrand);
+				}
+			}
+			
+			responseModel.setStatus("200");
+			responseModel.setMessage("Sync Brand ok");
 		} else {
 			responseModel.setStatus("404");
 			responseModel.setMessage("Not found");

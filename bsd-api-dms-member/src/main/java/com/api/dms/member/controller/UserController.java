@@ -1,5 +1,6 @@
 package com.api.dms.member.controller;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 
 import org.slf4j.Logger;
@@ -23,6 +24,8 @@ import com.api.dms.member.model.user.GetUserMenuListRequestModel;
 import com.api.dms.member.model.user.GetUserMenuListResponseModel;
 import com.api.dms.member.model.user.GetUserRequestModel;
 import com.api.dms.member.model.user.GetUserResponseModel;
+import com.api.dms.member.model.user.PostSyncBrandRequestModel;
+import com.api.dms.member.model.user.PostSyncBrandResponseModel;
 import com.api.dms.member.model.user.PostUserAddRequestModel;
 import com.api.dms.member.model.user.PostUserAddResponseModel;
 import com.api.dms.member.model.user.PostUserChangePasswordRequestModel;
@@ -142,6 +145,20 @@ public class UserController {
 		
 		ResponseEntity<?> responseEntity = new ResponseEntity<>(responseModel, responseModel.getStatus().equals("403") ? HttpStatus.FORBIDDEN : (responseModel.getStatus().equals("200") ? HttpStatus.OK : HttpStatus.NOT_FOUND));
 		log.info("[fid:" + fid + "] responseEntity : " + objectMapper.writeValueAsString(responseEntity));
+
+		return responseEntity;
+	}
+	
+	@PostMapping("/postsyncbrand")
+	@Transactional
+	public HttpEntity<?> postSyncBrand(HttpServletRequest request, @Valid @RequestBody PostSyncBrandRequestModel requestModel) throws Exception {
+		String fid = new Uid().generateString(20);
+		log.info(request.getRequestURL().toString() + " [fid:" + fid + "] requestModel : " + objectMapper.writeValueAsString(requestModel));
+		
+		PostSyncBrandResponseModel responseModel = userService.postSyncBrand(requestModel);
+		
+		ResponseEntity<?> responseEntity = new ResponseEntity<>(responseModel, responseModel.getStatus().equals("200") ? HttpStatus.OK : HttpStatus.NOT_FOUND);
+		log.info(request.getRequestURL().toString() + " [fid:" + fid + "] responseEntity : " + objectMapper.writeValueAsString(responseEntity));
 
 		return responseEntity;
 	}

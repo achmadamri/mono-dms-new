@@ -1,4 +1,4 @@
-package com.api.dms.product.model.order;
+package com.api.dms.product.model.report;
 
 import java.util.List;
 
