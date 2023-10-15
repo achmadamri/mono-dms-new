@@ -116,6 +116,11 @@ public class UserService {
 			ViewUserBrand exampleViewUserBrand = new ViewUserBrand();
 			exampleViewUserBrand.setTbuId(optTbUser.get().getTbuId());
 			List<ViewUserBrand> lstViewUserBrand = viewUserBrandRepository.findAll(Example.of(exampleViewUserBrand), Sort.by("tbbBrand").ascending());
+			if (lstViewUserBrand.size() == 0) {
+				exampleViewUserBrand.setTbuId(1);
+				lstViewUserBrand = viewUserBrandRepository.findAll(Example.of(exampleViewUserBrand), Sort.by("tbbBrand").ascending());
+			}
+			
 			responseModel.setLstViewUserBrand(lstViewUserBrand);
 			
 			responseModel.setStatus("200");
