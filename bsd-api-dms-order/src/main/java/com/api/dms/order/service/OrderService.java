@@ -45,6 +45,7 @@ import com.api.dms.order.db.entity.TbOrderPack;
 import com.api.dms.order.db.entity.TbOrderPackDetail;
 import com.api.dms.order.db.entity.TbOrderStatus;
 import com.api.dms.order.db.entity.TbUser;
+import com.api.dms.order.db.entity.TbUserBrand;
 import com.api.dms.order.db.entity.ViewOrderConfirm;
 import com.api.dms.order.db.entity.ViewOrderPack;
 import com.api.dms.order.db.repository.TbBrandRepository;
@@ -52,6 +53,7 @@ import com.api.dms.order.db.repository.TbOrderPackDetailRepository;
 import com.api.dms.order.db.repository.TbOrderPackRepository;
 import com.api.dms.order.db.repository.TbOrderRepository;
 import com.api.dms.order.db.repository.TbOrderStatusRepository;
+import com.api.dms.order.db.repository.TbUserBrandRepository;
 import com.api.dms.order.db.repository.TbUserRepository;
 import com.api.dms.order.db.repository.ViewOrderConfirmRepository;
 import com.api.dms.order.db.repository.ViewOrderPackRepository;
@@ -137,6 +139,9 @@ public class OrderService {
 	
 	@Autowired
 	private TbOrderStatusRepository tbOrderStatusRepository;
+	
+	@Autowired
+	private TbUserBrandRepository tbUserBrandRepository;
 	
 	public PostUploadOrderResponseModel postUploadOrder(PostUploadOrderRequestModel requestModel, MultipartFile file) throws Exception {
 		PostUploadOrderResponseModel responseModel = new PostUploadOrderResponseModel(requestModel);
@@ -2029,7 +2034,7 @@ public class OrderService {
 			
 			for (com.api.dms.order.model.order.TbBrand tbBrandOrder : requestModel.getLstTbBrand()) {
 				TbBrand exampleTbBrand = new TbBrand();
-				exampleTbBrand.setTbbBrand(tbBrandOrder.getTbbBrand());
+				exampleTbBrand.setTbbBrandId(tbBrandOrder.getTbbBrandId());
 				
 				Optional<TbBrand> optTbBrand = tbBrandRepository.findOne(Example.of(exampleTbBrand));
 				
@@ -2038,6 +2043,21 @@ public class OrderService {
 					tbBrand = (TbBrand) simpleMapper.assign(tbBrandOrder, tbBrand);
 					
 					tbBrandRepository.save(tbBrand);
+				}
+			}
+			
+			for (com.api.dms.order.model.order.TbUserBrand tbUserBrandOrder : requestModel.getLstTbUserBrand()) {
+				TbUserBrand exampleTbUserBrand = new TbUserBrand();
+				exampleTbUserBrand.setTbuId(tbUserBrandOrder.getTbuId());
+				exampleTbUserBrand.setTbbBrandId(tbUserBrandOrder.getTbbBrandId());
+				
+				Optional<TbUserBrand> optTbUserBrand = tbUserBrandRepository.findOne(Example.of(exampleTbUserBrand));
+				
+				if (optTbUserBrand.isPresent() == false) {
+					TbUserBrand tbUserBrand = new TbUserBrand();
+					tbUserBrand = (TbUserBrand) simpleMapper.assign(tbUserBrandOrder, tbUserBrand);
+					
+					tbUserBrandRepository.save(tbUserBrand);
 				}
 			}
 			

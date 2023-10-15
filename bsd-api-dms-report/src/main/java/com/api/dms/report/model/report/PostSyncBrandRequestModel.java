@@ -1,8 +1,8 @@
-package com.api.dms.product.model.order;
+package com.api.dms.report.model.report;
 
 import java.util.List;
 
-import com.api.dms.product.model.RequestModel;
+import com.api.dms.report.model.RequestModel;
 
 public class PostSyncBrandRequestModel extends RequestModel {
 	private List<TbBrand> lstTbBrand;
@@ -23,5 +23,5 @@ public class PostSyncBrandRequestModel extends RequestModel {
 
 	public void setLstTbUserBrand(List<TbUserBrand> lstTbUserBrand) {
 		this.lstTbUserBrand = lstTbUserBrand;
-	}	
+	}
 }

@@ -21,16 +21,20 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
+import com.api.dms.report.db.entity.TbBrand;
 import com.api.dms.report.db.entity.TbProduct;
 import com.api.dms.report.db.entity.TbProductMarket;
 import com.api.dms.report.db.entity.TbUser;
+import com.api.dms.report.db.entity.TbUserBrand;
 import com.api.dms.report.db.entity.ViewOrder;
 import com.api.dms.report.db.entity.ViewSales;
 import com.api.dms.report.db.entity.ViewStock;
+import com.api.dms.report.db.repository.TbBrandRepository;
 import com.api.dms.report.db.repository.TbOrderRepository;
 import com.api.dms.report.db.repository.TbOrderStatusRepository;
 import com.api.dms.report.db.repository.TbProductMarketRepository;
 import com.api.dms.report.db.repository.TbProductRepository;
+import com.api.dms.report.db.repository.TbUserBrandRepository;
 import com.api.dms.report.db.repository.TbUserRepository;
 import com.api.dms.report.db.repository.ViewOrderRepository;
 import com.api.dms.report.db.repository.ViewSalesRepository;
@@ -43,6 +47,8 @@ import com.api.dms.report.model.report.GetSalesListRequestModel;
 import com.api.dms.report.model.report.GetSalesListResponseModel;
 import com.api.dms.report.model.report.GetStockListRequestModel;
 import com.api.dms.report.model.report.GetStockListResponseModel;
+import com.api.dms.report.model.report.PostSyncBrandRequestModel;
+import com.api.dms.report.model.report.PostSyncBrandResponseModel;
 import com.api.dms.report.model.report.PostSyncOrderRequestModel;
 import com.api.dms.report.model.report.PostSyncOrderResponseModel;
 import com.api.dms.report.model.report.PostSyncOrderStatusRequestModel;
@@ -85,6 +91,12 @@ public class ReportService {
 	
 	@Autowired
 	private TbOrderStatusRepository tbOrderStatusRepository;
+	
+	@Autowired
+	private TbBrandRepository tbBrandRepository;
+	
+	@Autowired
+	private TbUserBrandRepository tbUserBrandRepository;
 	
 	public PostSyncOrderResponseModel postSyncOrder(PostSyncOrderRequestModel requestModel) throws Exception {
 		PostSyncOrderResponseModel responseModel = new PostSyncOrderResponseModel(requestModel);
@@ -508,6 +520,56 @@ public class ReportService {
 				responseModel.setStatus("404");
 				responseModel.setMessage("Not found");
 			}
+		} else {
+			responseModel.setStatus("404");
+			responseModel.setMessage("Not found");
+		}
+		
+		return responseModel;
+	}
+
+	public PostSyncBrandResponseModel postSyncBrand(PostSyncBrandRequestModel requestModel) throws Exception {
+		PostSyncBrandResponseModel responseModel = new PostSyncBrandResponseModel(requestModel);
+		
+		TbUser exampleTbUser = new TbUser();
+		exampleTbUser.setTbuEmail(requestModel.getEmail());
+		exampleTbUser.setTbuStatus(TbUserRepository.Active);
+		Optional<TbUser> optTbUser = tbUserRepository.findOne(Example.of(exampleTbUser));
+		
+		if (optTbUser.isPresent()) {
+			SimpleMapper simpleMapper = new SimpleMapper();
+			
+			for (com.api.dms.report.model.report.TbBrand tbBrandOrder : requestModel.getLstTbBrand()) {
+				TbBrand exampleTbBrand = new TbBrand();
+				exampleTbBrand.setTbbBrandId(tbBrandOrder.getTbbBrandId());
+				
+				Optional<TbBrand> optTbBrand = tbBrandRepository.findOne(Example.of(exampleTbBrand));
+				
+				if (optTbBrand.isPresent() == false) {
+					TbBrand tbBrand = new TbBrand();
+					tbBrand = (TbBrand) simpleMapper.assign(tbBrandOrder, tbBrand);
+					
+					tbBrandRepository.save(tbBrand);
+				}
+			}
+			
+			for (com.api.dms.report.model.report.TbUserBrand tbUserBrandOrder : requestModel.getLstTbUserBrand()) {
+				TbUserBrand exampleTbUserBrand = new TbUserBrand();
+				exampleTbUserBrand.setTbuId(tbUserBrandOrder.getTbuId());
+				exampleTbUserBrand.setTbbBrandId(tbUserBrandOrder.getTbbBrandId());
+				
+				Optional<TbUserBrand> optTbUserBrand = tbUserBrandRepository.findOne(Example.of(exampleTbUserBrand));
+				
+				if (optTbUserBrand.isPresent() == false) {
+					TbUserBrand tbUserBrand = new TbUserBrand();
+					tbUserBrand = (TbUserBrand) simpleMapper.assign(tbUserBrandOrder, tbUserBrand);
+					
+					tbUserBrandRepository.save(tbUserBrand);
+				}
+			}
+			
+			responseModel.setStatus("200");
+			responseModel.setMessage("Sync Brand ok");
 		} else {
 			responseModel.setStatus("404");
 			responseModel.setMessage("Not found");

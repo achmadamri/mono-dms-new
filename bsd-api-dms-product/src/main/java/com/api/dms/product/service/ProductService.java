@@ -407,8 +407,15 @@ public class ProductService {
 			List<TbUserMarket> lstTbUserMarket = tbUserMarketRepository.findAll(Example.of(exampleTbUserMarket));
 
 			SimpleMapper simpleMapper = new SimpleMapper();
+
+			List<com.api.dms.product.model.user.TbBrand> lstTbBrandMember = new ArrayList<com.api.dms.product.model.user.TbBrand>();
+			List<com.api.dms.product.model.user.TbUserBrand> lstTbUserBrandMember = new ArrayList<com.api.dms.product.model.user.TbUserBrand>();
 			
 			List<com.api.dms.product.model.order.TbBrand> lstTbBrandOrder = new ArrayList<com.api.dms.product.model.order.TbBrand>();
+			List<com.api.dms.product.model.order.TbUserBrand> lstTbUserBrandOrder = new ArrayList<com.api.dms.product.model.order.TbUserBrand>();
+
+			List<com.api.dms.product.model.report.TbBrand> lstTbBrandReport = new ArrayList<com.api.dms.product.model.report.TbBrand>();
+			List<com.api.dms.product.model.report.TbUserBrand> lstTbUserBrandReport = new ArrayList<com.api.dms.product.model.report.TbUserBrand>();
 			
 			for (TbProduct tbProduct : lstTbProduct) {
 				TbBrand exampleTbBrand = new TbBrand();
@@ -433,7 +440,19 @@ public class ProductService {
 						tbUserBrandAdmin.setTbbBrand(tbBrand.getTbbBrand());
 						tbUserBrandAdmin.setTbbBrandId(tbBrand.getTbbBrandId());
 						tbUserBrandAdmin.setTbbBrandCheck(1);
-						tbUserBrandRepository.save(tbUserBrandAdmin);	
+						tbUserBrandRepository.save(tbUserBrandAdmin);											
+					
+						com.api.dms.product.model.user.TbUserBrand tbUserBrandMember = new com.api.dms.product.model.user.TbUserBrand();
+						tbUserBrandMember = (com.api.dms.product.model.user.TbUserBrand) simpleMapper.assign(tbUserBrandAdmin, tbUserBrandMember);
+						lstTbUserBrandMember.add(tbUserBrandMember);									
+					
+						com.api.dms.product.model.order.TbUserBrand tbUserBrandOrder = new com.api.dms.product.model.order.TbUserBrand();
+						tbUserBrandOrder = (com.api.dms.product.model.order.TbUserBrand) simpleMapper.assign(tbUserBrandAdmin, tbUserBrandOrder);
+						lstTbUserBrandOrder.add(tbUserBrandOrder);									
+					
+						com.api.dms.product.model.report.TbUserBrand tbUserBrandReport = new com.api.dms.product.model.report.TbUserBrand();
+						tbUserBrandReport = (com.api.dms.product.model.report.TbUserBrand) simpleMapper.assign(tbUserBrandAdmin, tbUserBrandReport);
+						lstTbUserBrandReport.add(tbUserBrandReport);
 					} else {
 						TbUserBrand tbUserBrandAdmin = new TbUserBrand();
 						tbUserBrandAdmin.setTbubCreateDate(new Date());
@@ -443,6 +462,18 @@ public class ProductService {
 						tbUserBrandAdmin.setTbbBrandId(tbBrand.getTbbBrandId());
 						tbUserBrandAdmin.setTbbBrandCheck(1);
 						tbUserBrandRepository.save(tbUserBrandAdmin);
+					
+						com.api.dms.product.model.user.TbUserBrand tbUserBrandMember = new com.api.dms.product.model.user.TbUserBrand();
+						tbUserBrandMember = (com.api.dms.product.model.user.TbUserBrand) simpleMapper.assign(tbUserBrandAdmin, tbUserBrandMember);
+						lstTbUserBrandMember.add(tbUserBrandMember);									
+					
+						com.api.dms.product.model.order.TbUserBrand tbUserBrandOrder = new com.api.dms.product.model.order.TbUserBrand();
+						tbUserBrandOrder = (com.api.dms.product.model.order.TbUserBrand) simpleMapper.assign(tbUserBrandAdmin, tbUserBrandOrder);
+						lstTbUserBrandOrder.add(tbUserBrandOrder);									
+					
+						com.api.dms.product.model.report.TbUserBrand tbUserBrandReport = new com.api.dms.product.model.report.TbUserBrand();
+						tbUserBrandReport = (com.api.dms.product.model.report.TbUserBrand) simpleMapper.assign(tbUserBrandAdmin, tbUserBrandReport);
+						lstTbUserBrandReport.add(tbUserBrandReport);
 						
 						TbUserBrand tbUserBrand = new TbUserBrand();
 						tbUserBrand.setTbubCreateDate(new Date());
@@ -452,23 +483,66 @@ public class ProductService {
 						tbUserBrand.setTbbBrandId(tbBrand.getTbbBrandId());
 						tbUserBrand.setTbbBrandCheck(1);
 						tbUserBrandRepository.save(tbUserBrand);	
+										
+						tbUserBrandMember = new com.api.dms.product.model.user.TbUserBrand();
+						tbUserBrandMember = (com.api.dms.product.model.user.TbUserBrand) simpleMapper.assign(tbUserBrand, tbUserBrandMember);
+						lstTbUserBrandMember.add(tbUserBrandMember);									
+					
+						tbUserBrandOrder = new com.api.dms.product.model.order.TbUserBrand();
+						tbUserBrandOrder = (com.api.dms.product.model.order.TbUserBrand) simpleMapper.assign(tbUserBrand, tbUserBrandOrder);
+						lstTbUserBrandOrder.add(tbUserBrandOrder);									
+					
+						tbUserBrandReport = new com.api.dms.product.model.report.TbUserBrand();
+						tbUserBrandReport = (com.api.dms.product.model.report.TbUserBrand) simpleMapper.assign(tbUserBrand, tbUserBrandReport);
+						lstTbUserBrandReport.add(tbUserBrandReport);
 					}
 					
-					com.api.dms.product.model.order.TbBrand tbBrandReport = new com.api.dms.product.model.order.TbBrand();
-					tbBrandReport = (com.api.dms.product.model.order.TbBrand) simpleMapper.assign(tbBrand, tbBrandReport);
-					lstTbBrandOrder.add(tbBrandReport);
+					com.api.dms.product.model.user.TbBrand tbBrandMember = new com.api.dms.product.model.user.TbBrand();
+					tbBrandMember = (com.api.dms.product.model.user.TbBrand) simpleMapper.assign(tbBrand, tbBrandMember);
+					lstTbBrandMember.add(tbBrandMember);
+					
+					com.api.dms.product.model.order.TbBrand tbBrandOrder = new com.api.dms.product.model.order.TbBrand();
+					tbBrandOrder = (com.api.dms.product.model.order.TbBrand) simpleMapper.assign(tbBrand, tbBrandOrder);
+					lstTbBrandOrder.add(tbBrandOrder);
+					
+					com.api.dms.product.model.report.TbBrand tbBrandReport = new com.api.dms.product.model.report.TbBrand();
+					tbBrandReport = (com.api.dms.product.model.report.TbBrand) simpleMapper.assign(tbBrand, tbBrandReport);
+					lstTbBrandReport.add(tbBrandReport);
 				}
 			}
+
+			com.api.dms.product.model.user.PostSyncBrandRequestModel postSyncBrandMemberRequestModel = new com.api.dms.product.model.user.PostSyncBrandRequestModel();
+			postSyncBrandMemberRequestModel.setRequestDate(requestModel.getRequestDate());
+			postSyncBrandMemberRequestModel.setRequestId(requestModel.getRequestId());
+			postSyncBrandMemberRequestModel.setEmail(requestModel.getEmail());
+			postSyncBrandMemberRequestModel.setLstTbBrand(lstTbBrandMember);
+			postSyncBrandMemberRequestModel.setLstTbUserBrand(lstTbUserBrandMember);
 			
-			PostSyncBrandRequestModel postSyncBrandRequestModel = new PostSyncBrandRequestModel();
-			postSyncBrandRequestModel.setRequestDate(requestModel.getRequestDate());
-			postSyncBrandRequestModel.setRequestId(requestModel.getRequestId());
-			postSyncBrandRequestModel.setEmail(requestModel.getEmail());
-			postSyncBrandRequestModel.setLstTbBrand(lstTbBrandOrder);
+			HttpEntity<com.api.dms.product.model.user.PostSyncBrandRequestModel> requestPostSyncBrandMemberRequestModel = new HttpEntity<>(postSyncBrandMemberRequestModel);
+			RestTemplate restTemplatePostSyncBrandMemberRequestModel = new RestTemplate();
+			restTemplatePostSyncBrandMemberRequestModel.postForEntity(env.getProperty("services.bsd.api.dms.member.postsyncbrand"), requestPostSyncBrandMemberRequestModel, String.class);
 			
-			HttpEntity<PostSyncBrandRequestModel> requestPostSyncBrandRequestModel = new HttpEntity<>(postSyncBrandRequestModel);
-			RestTemplate restTemplatePostSyncBrandRequestModel = new RestTemplate();
-			restTemplatePostSyncBrandRequestModel.postForEntity(env.getProperty("services.bsd.api.dms.order.postsyncbrand"), requestPostSyncBrandRequestModel, String.class);
+			PostSyncBrandRequestModel postSyncBrandOrderRequestModel = new PostSyncBrandRequestModel();
+			postSyncBrandOrderRequestModel.setRequestDate(requestModel.getRequestDate());
+			postSyncBrandOrderRequestModel.setRequestId(requestModel.getRequestId());
+			postSyncBrandOrderRequestModel.setEmail(requestModel.getEmail());
+			postSyncBrandOrderRequestModel.setLstTbBrand(lstTbBrandOrder);
+			postSyncBrandOrderRequestModel.setLstTbUserBrand(lstTbUserBrandOrder);
+			
+			HttpEntity<PostSyncBrandRequestModel> requestPostSyncBrandOrderRequestModel = new HttpEntity<>(postSyncBrandOrderRequestModel);
+			RestTemplate restTemplatePostSyncBrandOrderRequestModel = new RestTemplate();
+			restTemplatePostSyncBrandOrderRequestModel.postForEntity(env.getProperty("services.bsd.api.dms.order.postsyncbrand"), requestPostSyncBrandOrderRequestModel, String.class);
+
+			com.api.dms.product.model.report.PostSyncBrandRequestModel postSyncBrandReportRequestModel = new com.api.dms.product.model.report.PostSyncBrandRequestModel();
+			postSyncBrandReportRequestModel.setRequestDate(requestModel.getRequestDate());
+			postSyncBrandReportRequestModel.setRequestId(requestModel.getRequestId());
+			postSyncBrandReportRequestModel.setEmail(requestModel.getEmail());
+			postSyncBrandReportRequestModel.setLstTbBrand(lstTbBrandReport);
+			postSyncBrandReportRequestModel.setLstTbUserBrand(lstTbUserBrandReport);
+			
+			HttpEntity<com.api.dms.product.model.report.PostSyncBrandRequestModel> requestPostSyncBrandReportRequestModel = new HttpEntity<>(postSyncBrandReportRequestModel);
+			RestTemplate restTemplatePostSyncBrandReportRequestModel = new RestTemplate();
+			restTemplatePostSyncBrandReportRequestModel.postForEntity(env.getProperty("services.bsd.api.dms.report.postsyncbrand"), requestPostSyncBrandReportRequestModel, String.class);
 
 			List<com.api.dms.product.model.report.TbProduct> lstTbProductReport = new ArrayList<com.api.dms.product.model.report.TbProduct>();
 			
