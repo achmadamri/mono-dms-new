@@ -35,7 +35,7 @@ export class ProductEditComponent implements OnInit {
   getBrandRequest: GetBrandRequest = new GetBrandRequest();
   getBrandResponse: GetBrandResponse = new GetBrandResponse();
   length = 100;
-  pageSize = 10;
+  pageSize = 100;
   pageIndex = 0;
   pageSizeOptions: number[] = [5, 10, 25, 100];
   pageEvent: PageEvent;
