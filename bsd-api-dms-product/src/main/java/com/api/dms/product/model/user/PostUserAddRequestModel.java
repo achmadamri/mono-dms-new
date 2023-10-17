@@ -6,6 +6,8 @@ import com.api.dms.product.model.RequestModel;
 
 public class PostUserAddRequestModel extends RequestModel {
 	private TbUser tbUser;
+
+	private List<TbUserMarket> lstTbUserMarket;
 	
 	private List<TbUserBrand> lstTbUserBrand;
 
@@ -23,5 +25,13 @@ public class PostUserAddRequestModel extends RequestModel {
 
 	public void setLstTbUserBrand(List<TbUserBrand> lstTbUserBrand) {
 		this.lstTbUserBrand = lstTbUserBrand;
+	}
+
+	public List<TbUserMarket> getLstTbUserMarket() {
+		return lstTbUserMarket;
+	}
+
+	public void setLstTbUserMarket(List<TbUserMarket> lstTbUserMarket) {
+		this.lstTbUserMarket = lstTbUserMarket;
 	}
 }

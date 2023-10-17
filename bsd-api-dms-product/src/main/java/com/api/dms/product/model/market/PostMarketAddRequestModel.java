@@ -11,7 +11,6 @@ public class PostMarketAddRequestModel extends RequestModel {
 	@NotNull(message = "Role is not null")
 	private String tbmRole;
 	
-	@NotNull(message = "Parent Id is not null")
 	private String tbmParentId;
 
 	public String getTbmMarket() {

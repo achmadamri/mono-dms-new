@@ -181,7 +181,8 @@ public class MarketService {
 				tbMarket.setTbmCreateId(optTbUser.get().getTbuId());
 				tbMarket.setTbmMarket(requestModel.getTbmMarket());
 				tbMarket.setTbmRole(requestModel.getTbmRole());
-				tbMarket.setTbmParentId(Integer.valueOf(requestModel.getTbmParentId()));
+
+				if (requestModel.getTbmParentId() != null) tbMarket.setTbmParentId(Integer.valueOf(requestModel.getTbmParentId()));
 				
 				tbMarketRepository.save(tbMarket);
 
@@ -261,7 +262,8 @@ public class MarketService {
 				tbMarket.setTbmUpdateId(optTbUser.get().getTbuId());
 				tbMarket.setTbmMarket(requestModel.getTbmMarket());
 				tbMarket.setTbmRole(requestModel.getTbmRole());
-				tbMarket.setTbmParentId(Integer.valueOf(requestModel.getTbmParentId()));
+				
+				if (requestModel.getTbmParentId() != null) tbMarket.setTbmParentId(Integer.valueOf(requestModel.getTbmParentId()));
 				
 				tbMarketRepository.save(tbMarket);
 

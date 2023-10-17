@@ -109,7 +109,7 @@ CREATE TABLE `tb_user` (
   KEY `tb_user_tbu_lastname_index` (`tbu_lastname`),
   KEY `tb_user_tbu_token_salt_index` (`tbu_token_salt`),
   KEY `tb_user_tbu_role_index` (`tbu_role`)
-) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=latin1 COLLATE=latin1_swedish_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=16 DEFAULT CHARSET=latin1 COLLATE=latin1_swedish_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -118,7 +118,7 @@ CREATE TABLE `tb_user` (
 
 LOCK TABLES `tb_user` WRITE;
 /*!40000 ALTER TABLE `tb_user` DISABLE KEYS */;
-INSERT INTO `tb_user` VALUES (1,NULL,NULL,'2023-10-15 13:53:39',1,'admin@mail.com','202cb962ac59075b964b07152d234b70','admin','admin',NULL,NULL,NULL,'active',NULL,NULL,'pxswhb9314w1eu67c6bbh1x1tfqqfs73yhwo','ADMIN'),(2,NULL,NULL,'2023-10-16 15:58:36',2,'pic1@mail.com','202cb962ac59075b964b07152d234b70','pic','one',NULL,NULL,NULL,'active',NULL,NULL,'br2rtdj6uims6eyts9ofgx5yy12pu1cim8q3','PRINCIPAL'),(3,NULL,NULL,'2023-10-16 15:54:14',1,'pic2@mail.com','202cb962ac59075b964b07152d234b70','pic','two',NULL,NULL,NULL,'active',NULL,NULL,'b3n95p03tsdpm9fya84cnelibj9u34xffz6j','DISTRIBUTOR'),(4,'2023-10-01 11:49:59',1,'2023-10-16 15:54:21',1,'pic3@mail.com','202cb962ac59075b964b07152d234b70','pic','three',NULL,NULL,NULL,'active',NULL,NULL,'ur2r10iu2jq6smbzo7gtfhkhy0zjc61fpkev','SUBDIST');
+INSERT INTO `tb_user` VALUES (1,NULL,NULL,'2023-10-17 11:08:54',1,'admin@mail.com','202cb962ac59075b964b07152d234b70','admin','admin',NULL,NULL,NULL,'active',NULL,NULL,'r7ltvivy2q71mm65axwfmj6ma9q4tn6ytg5r','ADMIN');
 /*!40000 ALTER TABLE `tb_user` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -144,7 +144,7 @@ CREATE TABLE `tb_user_brand` (
   KEY `tb_user_brand_tbb_brand_index` (`tbb_brand`),
   KEY `tb_user_brand_tbb_brand_id_index` (`tbb_brand_id`),
   KEY `tb_user_brand_tbb_brand_check_index` (`tbb_brand_check`)
-) ENGINE=InnoDB AUTO_INCREMENT=11 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=21 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -153,7 +153,7 @@ CREATE TABLE `tb_user_brand` (
 
 LOCK TABLES `tb_user_brand` WRITE;
 /*!40000 ALTER TABLE `tb_user_brand` DISABLE KEYS */;
-INSERT INTO `tb_user_brand` VALUES (1,'2023-10-15 11:34:57',1,NULL,NULL,1,'Mamasuka','MAMAS',1),(8,'2023-10-16 15:54:14',1,NULL,NULL,3,'Mamasuka','MAMAS',1),(9,'2023-10-16 15:54:21',1,NULL,NULL,4,'Mamasuka','MAMAS',1),(10,'2023-10-16 15:58:36',2,NULL,NULL,2,'Mamasuka','MAMAS',1);
+INSERT INTO `tb_user_brand` VALUES (1,'2023-10-15 11:34:57',1,NULL,NULL,1,'Mamasuka','MAMAS',1);
 /*!40000 ALTER TABLE `tb_user_brand` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -177,7 +177,7 @@ CREATE TABLE `tb_user_market` (
   KEY `tb_user_market_tbu_id_index` (`tbu_id`),
   KEY `tb_user_market_tbm_market_index` (`tbm_market`),
   KEY `tb_user_market_tbm_market_check_index` (`tbm_market_check`)
-) ENGINE=InnoDB AUTO_INCREMENT=386 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -186,7 +186,6 @@ CREATE TABLE `tb_user_market` (
 
 LOCK TABLES `tb_user_market` WRITE;
 /*!40000 ALTER TABLE `tb_user_market` DISABLE KEYS */;
-INSERT INTO `tb_user_market` VALUES (8,'2023-09-26 15:05:34',1,NULL,NULL,1,'TREC',1),(9,'2023-09-26 15:05:34',1,NULL,NULL,1,'SUKANDA',1),(10,'2023-09-26 15:05:34',1,NULL,NULL,1,'Distributor A',1),(11,'2023-09-26 15:05:34',1,NULL,NULL,1,'Subdist A',1),(12,'2023-09-26 15:05:34',1,NULL,NULL,1,'Grosir A',1),(13,'2023-09-26 15:05:34',1,NULL,NULL,1,'Grosir B',1),(14,'2023-09-26 15:05:34',1,NULL,NULL,1,'Grosir C',1),(15,'2023-09-26 15:05:34',1,NULL,NULL,1,'Grosir D',1),(16,'2023-09-26 15:05:34',1,NULL,NULL,1,'Grosir F',1),(17,'2023-09-26 15:05:34',1,NULL,NULL,1,'Grosir G',1),(18,'2023-09-26 15:05:34',1,NULL,NULL,1,'Subdist B',1),(19,'2023-09-26 15:05:34',1,NULL,NULL,1,'Subdist C',1),(20,'2023-09-26 15:05:34',1,NULL,NULL,1,'Subdist D',1),(21,'2023-09-26 15:05:34',1,NULL,NULL,1,'Subdist E',1),(22,'2023-09-26 15:05:34',1,NULL,NULL,1,'Distributor B',1),(348,'2023-10-16 15:54:14',1,NULL,NULL,3,'Distributor A',1),(349,'2023-10-16 15:54:14',1,NULL,NULL,3,'Distributor B',1),(350,'2023-10-16 15:54:14',1,NULL,NULL,3,'Subdist A',1),(351,'2023-10-16 15:54:14',1,NULL,NULL,3,'Grosir A',1),(352,'2023-10-16 15:54:14',1,NULL,NULL,3,'Grosir B',1),(353,'2023-10-16 15:54:14',1,NULL,NULL,3,'Grosir C',1),(354,'2023-10-16 15:54:14',1,NULL,NULL,3,'Grosir D',1),(355,'2023-10-16 15:54:14',1,NULL,NULL,3,'Grosir F',1),(356,'2023-10-16 15:54:14',1,NULL,NULL,3,'Grosir G',1),(357,'2023-10-16 15:54:14',1,NULL,NULL,3,'Subdist B',1),(358,'2023-10-16 15:54:14',1,NULL,NULL,3,'Subdist C',1),(359,'2023-10-16 15:54:14',1,NULL,NULL,3,'Subdist D',1),(360,'2023-10-16 15:54:14',1,NULL,NULL,3,'Subdist E',1),(361,'2023-10-16 15:54:21',1,NULL,NULL,4,'Subdist A',1),(362,'2023-10-16 15:54:21',1,NULL,NULL,4,'Subdist B',1),(363,'2023-10-16 15:54:21',1,NULL,NULL,4,'Subdist C',1),(364,'2023-10-16 15:54:21',1,NULL,NULL,4,'Subdist D',1),(365,'2023-10-16 15:54:21',1,NULL,NULL,4,'Subdist E',1),(366,'2023-10-16 15:54:21',1,NULL,NULL,4,'Grosir A',1),(367,'2023-10-16 15:54:21',1,NULL,NULL,4,'Grosir B',1),(368,'2023-10-16 15:54:21',1,NULL,NULL,4,'Grosir C',1),(369,'2023-10-16 15:54:21',1,NULL,NULL,4,'Grosir D',1),(370,'2023-10-16 15:54:21',1,NULL,NULL,4,'Grosir F',1),(371,'2023-10-16 15:54:21',1,NULL,NULL,4,'Grosir G',1),(372,'2023-10-16 15:58:36',2,NULL,NULL,2,'SUKANDA',1),(373,'2023-10-16 15:58:36',2,NULL,NULL,2,'Distributor A',0),(374,'2023-10-16 15:58:36',2,NULL,NULL,2,'Subdist A',0),(375,'2023-10-16 15:58:36',2,NULL,NULL,2,'Grosir A',0),(376,'2023-10-16 15:58:36',2,NULL,NULL,2,'Grosir B',0),(377,'2023-10-16 15:58:36',2,NULL,NULL,2,'Grosir C',0),(378,'2023-10-16 15:58:36',2,NULL,NULL,2,'Grosir D',0),(379,'2023-10-16 15:58:36',2,NULL,NULL,2,'Grosir F',0),(380,'2023-10-16 15:58:36',2,NULL,NULL,2,'Grosir G',0),(381,'2023-10-16 15:58:36',2,NULL,NULL,2,'Subdist B',0),(382,'2023-10-16 15:58:36',2,NULL,NULL,2,'Subdist C',0),(383,'2023-10-16 15:58:36',2,NULL,NULL,2,'Subdist D',0),(384,'2023-10-16 15:58:36',2,NULL,NULL,2,'Subdist E',0),(385,'2023-10-16 15:58:36',2,NULL,NULL,2,'Distributor B',0);
 /*!40000 ALTER TABLE `tb_user_market` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -212,7 +211,7 @@ CREATE TABLE `tb_user_menu` (
   PRIMARY KEY (`tbum_id`),
   KEY `tb_user_menu_tbu_id_index` (`tbu_id`),
   KEY `tb_user_menu_tbm_id_index` (`tbm_id`)
-) ENGINE=InnoDB AUTO_INCREMENT=224 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=312 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -221,7 +220,7 @@ CREATE TABLE `tb_user_menu` (
 
 LOCK TABLES `tb_user_menu` WRITE;
 /*!40000 ALTER TABLE `tb_user_menu` DISABLE KEYS */;
-INSERT INTO `tb_user_menu` VALUES (22,'2023-09-26 15:05:34',1,NULL,NULL,1,4,1,1,1,1),(23,'2023-09-26 15:05:34',1,NULL,NULL,1,7,1,1,1,1),(24,'2023-09-26 15:05:34',1,NULL,NULL,1,2,1,1,1,1),(25,'2023-09-26 15:05:34',1,NULL,NULL,1,3,1,1,1,1),(26,'2023-09-26 15:05:34',1,NULL,NULL,1,1,1,1,1,1),(27,'2023-09-26 15:05:34',1,NULL,NULL,1,5,1,1,1,1),(28,'2023-09-26 15:05:34',1,NULL,NULL,1,6,1,1,1,1),(29,'2023-09-26 15:05:34',NULL,NULL,NULL,1,8,1,1,1,1),(200,'2023-10-16 15:54:14',1,NULL,NULL,3,8,0,0,0,1),(201,'2023-10-16 15:54:14',1,NULL,NULL,3,1,1,1,1,1),(202,'2023-10-16 15:54:14',1,NULL,NULL,3,2,1,1,1,1),(203,'2023-10-16 15:54:14',1,NULL,NULL,3,3,1,1,1,1),(204,'2023-10-16 15:54:14',1,NULL,NULL,3,4,1,1,1,1),(205,'2023-10-16 15:54:14',1,NULL,NULL,3,5,1,1,1,1),(206,'2023-10-16 15:54:14',1,NULL,NULL,3,7,1,1,1,1),(207,'2023-10-16 15:54:14',1,NULL,NULL,3,6,1,1,1,1),(208,'2023-10-16 15:54:21',1,NULL,NULL,4,8,0,0,0,1),(209,'2023-10-16 15:54:21',1,NULL,NULL,4,1,0,0,0,1),(210,'2023-10-16 15:54:21',1,NULL,NULL,4,2,0,0,0,1),(211,'2023-10-16 15:54:21',1,NULL,NULL,4,3,0,0,0,1),(212,'2023-10-16 15:54:21',1,NULL,NULL,4,4,0,0,0,1),(213,'2023-10-16 15:54:21',1,NULL,NULL,4,5,0,0,0,1),(214,'2023-10-16 15:54:21',1,NULL,NULL,4,7,0,0,0,1),(215,'2023-10-16 15:54:21',1,NULL,NULL,4,6,0,0,0,1),(216,'2023-10-16 15:58:36',2,NULL,NULL,2,8,0,0,0,1),(217,'2023-10-16 15:58:36',2,NULL,NULL,2,1,1,1,1,1),(218,'2023-10-16 15:58:36',2,NULL,NULL,2,2,1,1,1,1),(219,'2023-10-16 15:58:36',2,NULL,NULL,2,3,1,1,1,1),(220,'2023-10-16 15:58:36',2,NULL,NULL,2,4,1,1,1,1),(221,'2023-10-16 15:58:36',2,NULL,NULL,2,5,1,1,1,1),(222,'2023-10-16 15:58:36',2,NULL,NULL,2,7,1,1,1,1),(223,'2023-10-16 15:58:36',2,NULL,NULL,2,6,1,1,1,1);
+INSERT INTO `tb_user_menu` VALUES (22,'2023-09-26 15:05:34',1,NULL,NULL,1,4,1,1,1,1),(23,'2023-09-26 15:05:34',1,NULL,NULL,1,7,1,1,1,1),(24,'2023-09-26 15:05:34',1,NULL,NULL,1,2,1,1,1,1),(25,'2023-09-26 15:05:34',1,NULL,NULL,1,3,1,1,1,1),(26,'2023-09-26 15:05:34',1,NULL,NULL,1,1,1,1,1,1),(27,'2023-09-26 15:05:34',1,NULL,NULL,1,5,1,1,1,1),(28,'2023-09-26 15:05:34',1,NULL,NULL,1,6,1,1,1,1),(29,'2023-09-26 15:05:34',NULL,NULL,NULL,1,8,1,1,1,1);
 /*!40000 ALTER TABLE `tb_user_menu` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -312,4 +311,4 @@ SET character_set_client = @saved_cs_client;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2023-10-16 23:10:54
+-- Dump completed on 2023-10-17 18:18:31

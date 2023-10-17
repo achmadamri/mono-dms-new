@@ -116,7 +116,7 @@
                             <th scope="col" style="cursor: pointer;" (click)="checkBrandAll();">Access</th>
                           </tr>
                         </thead>
-                        <tbody *ngIf="userEditRequest.lstViewUserBrand[0].tbbBrandId != undefined">
+                        <tbody *ngIf="userEditRequest.lstViewUserBrand != undefined">
                           <tr *ngFor="let viewUserBrand of userEditRequest.lstViewUserBrand; let i = index">
                             <td>{{viewUserBrand.tbbBrand}}</td>
                             <td>

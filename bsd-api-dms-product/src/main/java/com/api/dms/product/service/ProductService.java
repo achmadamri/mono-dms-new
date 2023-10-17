@@ -775,16 +775,16 @@ public class ProductService {
 		exampleTbUser.setTbuEmail(requestModel.getEmail());
 		exampleTbUser.setTbuStatus(TbUserRepository.Active);
 		Optional<TbUser> optTbUser = tbUserRepository.findOne(Example.of(exampleTbUser));
-		
-		optTbUser.ifPresentOrElse(tbUser -> {			
-			responseModel.setLstTbBrand(tbBrandRepository.findAllByTbuId(tbUser.getTbuId()));
+
+		if (optTbUser.isPresent()) {
+			responseModel.setLstTbBrand(tbBrandRepository.findAllByTbuId(optTbUser.get().getTbuId()));
 			
 			responseModel.setStatus("200");
 			responseModel.setMessage("Brand ok");
-		}, () -> {
+		} else {
 			responseModel.setStatus("404");
 			responseModel.setMessage("Not found");
-		});
+		}
 		
 		return responseModel;
 	}
