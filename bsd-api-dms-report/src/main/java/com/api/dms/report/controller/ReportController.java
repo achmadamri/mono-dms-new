@@ -35,6 +35,8 @@ import com.api.dms.report.model.report.GetStockListRequestModel;
 import com.api.dms.report.model.report.GetStockListResponseModel;
 import com.api.dms.report.model.report.PostSyncBrandRequestModel;
 import com.api.dms.report.model.report.PostSyncBrandResponseModel;
+import com.api.dms.report.model.report.PostSyncConfirmOrderRequestModel;
+import com.api.dms.report.model.report.PostSyncConfirmOrderResponseModel;
 import com.api.dms.report.model.report.PostSyncOrderRequestModel;
 import com.api.dms.report.model.report.PostSyncOrderResponseModel;
 import com.api.dms.report.model.report.PostSyncOrderStatusRequestModel;
@@ -57,6 +59,20 @@ public class ReportController {
 	
 	@Autowired
     private ReportService reportService;
+	
+	@PostMapping("/postsyncconfirmorder")
+	@Transactional
+	public HttpEntity<?> postSyncConfirmOrder(HttpServletRequest request, @Valid @RequestBody PostSyncConfirmOrderRequestModel requestModel) throws Exception {
+		String fid = new Uid().generateString(20);
+		log.info(request.getRequestURL().toString() + " [fid" + fid + "] requestModel : " + objectMapper.writeValueAsString(requestModel));
+		
+		PostSyncConfirmOrderResponseModel responseModel = reportService.postSyncConfirmOrder(requestModel);
+		
+		ResponseEntity<?> responseEntity = new ResponseEntity<>(responseModel, responseModel.getStatus().equals("200") ? HttpStatus.OK : HttpStatus.NOT_FOUND);
+		log.info(request.getRequestURL().toString() + " [fid" + fid + "] responseEntity : " + objectMapper.writeValueAsString(responseEntity));
+
+		return responseEntity;
+	}
 	
 	@PostMapping("/postsyncorder")
 	@Transactional

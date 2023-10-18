@@ -99,6 +99,7 @@ import com.api.dms.order.model.product.GetProductResponseModel;
 import com.api.dms.order.model.product.LstViewGwpSkuProduct;
 import com.api.dms.order.model.product.PostProductConfirmRequestModel;
 import com.api.dms.order.model.product.ViewProductMarket;
+import com.api.dms.order.model.report.PostSyncConfirmOrderRequestModel;
 import com.api.dms.order.model.report.PostSyncOrderRequestModel;
 import com.api.dms.order.model.report.PostSyncOrderStatusRequestModel;
 import com.api.dms.order.util.SimpleMapper;
@@ -1832,6 +1833,27 @@ public class OrderService {
 								HttpEntity<PostProductConfirmRequestModel> requestPostProductConfirmRequestModel = new HttpEntity<>(postProductConfirmRequestModel);
 								restTemplatePostproductconfirm.postForEntity(env.getProperty("services.bsd.api.dms.product") + "/postproductconfirm?", requestPostProductConfirmRequestModel, String.class);
 
+								List<com.api.dms.order.model.report.TbOrder> lstTbOrderReport = new ArrayList<com.api.dms.order.model.report.TbOrder>();
+								
+								SimpleMapper simpleMapper = new SimpleMapper();
+								
+								for (TbOrder tbOrder : lstTbOrder) {
+									com.api.dms.order.model.report.TbOrder tbOrderReport = new com.api.dms.order.model.report.TbOrder();
+									tbOrderReport = (com.api.dms.order.model.report.TbOrder) simpleMapper.assign(tbOrder, tbOrderReport);
+									lstTbOrderReport.add(tbOrderReport);
+								}
+
+								PostSyncConfirmOrderRequestModel postSyncConfirmOrderRequestModel = new PostSyncConfirmOrderRequestModel();
+								postSyncConfirmOrderRequestModel.setRequestDate(requestModel.getRequestDate());
+								postSyncConfirmOrderRequestModel.setRequestId(requestModel.getRequestId());
+								postSyncConfirmOrderRequestModel.setEmail(requestModel.getEmail());
+								postSyncConfirmOrderRequestModel.setLstTbOrder(lstTbOrderReport);
+								
+								RestTemplate restTemplatePostsyncconfirmorder = new RestTemplate();
+
+								HttpEntity<PostSyncConfirmOrderRequestModel> requestPostsyncconfirmorder = new HttpEntity<>(postSyncConfirmOrderRequestModel);				
+								restTemplatePostsyncconfirmorder.postForEntity(env.getProperty("services.bsd.api.dms.report.postsyncconfirmorder"), requestPostsyncconfirmorder, String.class);
+
 								messageOk = messageOk + "Order " + requestModel.getOrderNo()[i] + " with product " + requestModel.getSku()[i] + " delivered<br>";
 							}
 						}
@@ -1883,7 +1905,7 @@ public class OrderService {
 			}
 			
 			if (ok) {
-				for (int i = 0; i < requestModel.getOrderNo().length; i++) {
+								for (int i = 0; i < requestModel.getOrderNo().length; i++) {
 					TbOrder exampleTbOrder = new TbOrder();
 					exampleTbOrder.setTboOrderNo(requestModel.getOrderNo()[i]);
 					exampleTbOrder.setTboSku(requestModel.getSku()[i]);
@@ -1892,7 +1914,7 @@ public class OrderService {
 					
 					optTbOrder.get().setTboStatus(TbOrderRepository.StatusNotPacked);
 					tbOrderRepository.save(optTbOrder.get());
-				}
+}
 				
 				responseModel.setStatus("200");
 				responseModel.setMessage("Confirm ok");

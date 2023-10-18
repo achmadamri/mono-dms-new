@@ -22,6 +22,7 @@ import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import com.api.dms.report.db.entity.TbBrand;
+import com.api.dms.report.db.entity.TbOrder;
 import com.api.dms.report.db.entity.TbProduct;
 import com.api.dms.report.db.entity.TbProductMarket;
 import com.api.dms.report.db.entity.TbUser;
@@ -49,6 +50,8 @@ import com.api.dms.report.model.report.GetStockListRequestModel;
 import com.api.dms.report.model.report.GetStockListResponseModel;
 import com.api.dms.report.model.report.PostSyncBrandRequestModel;
 import com.api.dms.report.model.report.PostSyncBrandResponseModel;
+import com.api.dms.report.model.report.PostSyncConfirmOrderRequestModel;
+import com.api.dms.report.model.report.PostSyncConfirmOrderResponseModel;
 import com.api.dms.report.model.report.PostSyncOrderRequestModel;
 import com.api.dms.report.model.report.PostSyncOrderResponseModel;
 import com.api.dms.report.model.report.PostSyncOrderStatusRequestModel;
@@ -97,6 +100,37 @@ public class ReportService {
 	
 	@Autowired
 	private TbUserBrandRepository tbUserBrandRepository;
+	
+	public PostSyncConfirmOrderResponseModel postSyncConfirmOrder(PostSyncConfirmOrderRequestModel requestModel) throws Exception {
+		PostSyncConfirmOrderResponseModel responseModel = new PostSyncConfirmOrderResponseModel(requestModel);
+		
+		TbUser exampleTbUser = new TbUser();
+		exampleTbUser.setTbuEmail(requestModel.getEmail());
+		exampleTbUser.setTbuStatus(TbUserRepository.Active);
+		Optional<TbUser> optTbUser = tbUserRepository.findOne(Example.of(exampleTbUser));		
+
+		if (optTbUser.isPresent()) {
+			for (TbOrder tbOrder : requestModel.getLstTbOrder()) {
+				TbOrder exampleTbOrder = new TbOrder();
+				exampleTbOrder.setTboOrderNo(tbOrder.getTboOrderNo());
+				Optional<TbOrder> optTbOrder = tbOrderRepository.findOne(Example.of(exampleTbOrder));
+				
+				if (optTbOrder.isPresent()) {
+					optTbOrder.get().setTboStatus(tbOrder.getTboStatus());
+					
+					tbOrderRepository.save(optTbOrder.get());
+				}
+			}			
+			
+			responseModel.setStatus("200");
+			responseModel.setMessage("Sync Confirm Order ok");
+		} else {
+			responseModel.setStatus("404");
+			responseModel.setMessage("Not found");
+		}
+		
+		return responseModel;
+	}
 	
 	public PostSyncOrderResponseModel postSyncOrder(PostSyncOrderRequestModel requestModel) throws Exception {
 		PostSyncOrderResponseModel responseModel = new PostSyncOrderResponseModel(requestModel);
