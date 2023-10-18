@@ -130,7 +130,7 @@ CREATE TABLE `tb_market` (
   KEY `tb_market_tbm_market_index` (`tbm_market`),
   KEY `tb_market_tbm_parent_id_index` (`tbm_parent_id`),
   KEY `tb_market_tbm_role_index` (`tbm_role`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -139,6 +139,7 @@ CREATE TABLE `tb_market` (
 
 LOCK TABLES `tb_market` WRITE;
 /*!40000 ALTER TABLE `tb_market` DISABLE KEYS */;
+INSERT INTO `tb_market` VALUES (1,'2023-10-18 13:38:30',1,NULL,NULL,'Subdist A',NULL,'SUBDIST');
 /*!40000 ALTER TABLE `tb_market` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -173,7 +174,7 @@ CREATE TABLE `tb_product` (
   KEY `tb_product_tbp_code_index` (`tbp_code`),
   KEY `tb_product_tbp_type_index` (`tbp_type`),
   KEY `tb_product_tbp_status_index` (`tbp_status`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=31 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -182,6 +183,7 @@ CREATE TABLE `tb_product` (
 
 LOCK TABLES `tb_product` WRITE;
 /*!40000 ALTER TABLE `tb_product` DISABLE KEYS */;
+INSERT INTO `tb_product` VALUES (1,'2023-10-18 13:39:00',11,'2023-10-18 13:41:13',11,'Mamasuka','MAMAS','4.140402.016','Lemonilo Chimi Jagung Bakar 24x50Gr','NO Barcode','0',70,1000.0000000000,'Sellable','Sellable'),(2,'2023-10-18 13:39:00',11,NULL,NULL,'Mamasuka','MAMAS','4.140401.027','Lemonilo Mie Goreng 20x80 gr','NO Barcode',NULL,100,1000.0000000000,'Sellable','Sellable'),(3,'2023-10-18 13:39:00',11,NULL,NULL,'Mamasuka','MAMAS','4.140402.017','Lemonilo Chimi Jagung Balado 24x50G','NO Barcode',NULL,100,1000.0000000000,'Sellable','Sellable'),(4,'2023-10-18 13:39:00',11,NULL,NULL,'Mamasuka','MAMAS','4.140401.028','Lemonilo Mie Bawang 20x70 gr','NO Barcode',NULL,100,1000.0000000000,'Sellable','Sellable'),(5,'2023-10-18 13:39:00',11,NULL,NULL,'Mamasuka','MAMAS','4.140401.012','Lemonilo Mie Pedas Korea 20x85 gr','NO Barcode',NULL,100,1000.0000000000,'Sellable','Sellable'),(6,'2023-10-18 13:39:00',11,NULL,NULL,'Mamasuka','MAMAS','4.140401.011','Lemonilo Mie Rendang 20x77 gr','NO Barcode',NULL,100,1000.0000000000,'Sellable','Sellable'),(7,'2023-10-18 13:39:00',11,NULL,NULL,'Mamasuka','MAMAS','Skunew003','Lemonilo Ramen Jepang','NO Barcode',NULL,100,1000.0000000000,'Sellable','Sellable'),(8,'2023-10-18 13:39:00',11,NULL,NULL,'Mamasuka','MAMAS','8997232970046','Lemonilo Brownies Crispy Chocochips 40 GR','NO Barcode',NULL,100,1000.0000000000,'Sellable','Sellable'),(9,'2023-10-18 13:39:00',11,NULL,NULL,'Mamasuka','MAMAS','8997232970053','Lemonilo Brownies Crispy Keju 40 GR','NO Barcode',NULL,100,1000.0000000000,'Sellable','Sellable'),(10,'2023-10-18 13:39:00',11,NULL,NULL,'Mamasuka','MAMAS','Skunew002','Lemonilo Kuah Rasa Soto Koya 60GR','NO Barcode',NULL,100,1000.0000000000,'Sellable','Sellable'),(11,'2023-10-18 13:39:00',11,NULL,NULL,'Mamasuka','MAMAS','4.140401.029','Lemonilo Mie Kari Ayam 20x73 gr','NO Barcode',NULL,100,1000.0000000000,'Sellable','Sellable'),(12,'2023-10-18 13:39:00',11,NULL,NULL,'Mamasuka','MAMAS','konjagu001','Lemonilo Konjaqu Mi Instant 78Gr','NO Barcode',NULL,100,1000.0000000000,'Sellable','Sellable'),(13,'2023-10-18 13:39:00',11,NULL,NULL,'Mamasuka','MAMAS','cassamo001','Cassamo Smoky BBQ 50 Gr','NO Barcode',NULL,100,1000.0000000000,'Sellable','Sellable'),(14,'2023-10-18 13:39:00',11,NULL,NULL,'Mamasuka','MAMAS','cassamo002','Cassamo Spicy BBQ 50 Gr','NO Barcode',NULL,100,1000.0000000000,'Sellable','Sellable'),(15,'2023-10-18 13:39:00',11,NULL,NULL,'Mamasuka','MAMAS','nealamami004','Alamami Ayam Goreng Kremes 40Gr','NO Barcode',NULL,100,1000.0000000000,'Sellable','Sellable'),(16,'2023-10-18 13:39:00',11,NULL,NULL,'Mamasuka','MAMAS','newalamami005','Alamami Nasi Goreng 40Gr','NO Barcode',NULL,100,1000.0000000000,'Sellable','Sellable'),(17,'2023-10-18 13:39:00',11,NULL,NULL,'Mamasuka','MAMAS','newalamami003','Alamami Rendang 40Gr','NO Barcode',NULL,100,1000.0000000000,'Sellable','Sellable'),(18,'2023-10-18 13:39:00',11,NULL,NULL,'Mamasuka','MAMAS','newgorme003','Gorme Rasa Kaldu Ayam Kampung 40Gr','NO Barcode',NULL,100,1000.0000000000,'Sellable','Sellable'),(19,'2023-10-18 13:39:00',11,NULL,NULL,'Mamasuka','MAMAS','newgorme002','Gorme Rasa Kaldu Jamur 40Gr','NO Barcode',NULL,100,1000.0000000000,'Sellable','Sellable'),(20,'2023-10-18 13:39:00',11,NULL,NULL,'Mamasuka','MAMAS','newgorme001','Gorme Rasa Kaldu Sapi 40Gr','NO Barcode',NULL,100,1000.0000000000,'Sellable','Sellable'),(21,'2023-10-18 13:39:00',11,NULL,NULL,'Mamasuka','MAMAS','skunew004','Lemonilo chimi karamel mentega 50gr','NO Barcode',NULL,100,1000.0000000000,'Sellable','Sellable'),(22,'2023-10-18 13:39:00',11,NULL,NULL,'Mamasuka','MAMAS','solafarm002','Solafarm Beef Steak 50 Gr','NO Barcode',NULL,100,1000.0000000000,'Sellable','Sellable'),(23,'2023-10-18 13:39:00',11,NULL,NULL,'Mamasuka','MAMAS','salafarm001','Solafarm Seaweed 50 Gr','NO Barcode',NULL,100,1000.0000000000,'Sellable','Sellable'),(24,'2023-10-18 13:39:00',11,NULL,NULL,'Mamasuka','MAMAS','All Produk','All Produk','NO Barcode',NULL,100,1000.0000000000,'Sellable','Sellable'),(25,'2023-10-18 13:39:00',11,NULL,NULL,'Mamasuka','MAMAS','newalamami001','Alamami Ayam Lengkuas 40Gr','NO Barcode',NULL,100,1000.0000000000,'Sellable','Sellable'),(26,'2023-10-18 13:39:00',11,NULL,NULL,'Mamasuka','MAMAS','newalamami002','Alamami Opor Ayam 40Gr','NO Barcode',NULL,100,1000.0000000000,'Sellable','Sellable'),(27,'2023-10-18 13:39:00',11,NULL,NULL,'Mamasuka','MAMAS','skunew001','Lemonilo Michoco 4 x 30 Gram','NO Barcode',NULL,100,1000.0000000000,'Sellable','Sellable'),(28,'2023-10-18 13:39:00',11,NULL,NULL,'Mamasuka','MAMAS','4.140402.022','Mie Kering 114Gr','NO Barcode',NULL,100,1000.0000000000,'Sellable','Sellable'),(29,'2023-10-18 13:39:00',11,NULL,NULL,'Mamasuka','MAMAS','4.140901.032','Lemonilo Kanilo Kacang Panggang125Grx14','NO Barcode',NULL,100,1000.0000000000,'Sellable','Sellable'),(30,'2023-10-18 13:39:34',11,NULL,NULL,'Mamasuka','MAMAS','01','Mie Kering 100gr','01','0',1,1000.0000000000,'Gwp','Sellable');
 /*!40000 ALTER TABLE `tb_product` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -239,7 +241,7 @@ CREATE TABLE `tb_product_confirm` (
   KEY `tb_product_confirm_tbpc_order_no_index` (`tbpc_order_no`),
   KEY `tb_product_confirm_tbpc_sku_index` (`tbpc_sku`),
   KEY `tb_product_confirm_tbpc_qty_index` (`tbpc_qty`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -248,6 +250,7 @@ CREATE TABLE `tb_product_confirm` (
 
 LOCK TABLES `tb_product_confirm` WRITE;
 /*!40000 ALTER TABLE `tb_product_confirm` DISABLE KEYS */;
+INSERT INTO `tb_product_confirm` VALUES (1,'2023-10-18 13:41:13',11,NULL,NULL,'INV/20230929/MMS/00','4.140402.016','Subdist A',30);
 /*!40000 ALTER TABLE `tb_product_confirm` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -275,7 +278,7 @@ CREATE TABLE `tb_product_market` (
   KEY `tb_product_market_tbp_sku_index` (`tbp_sku`),
   KEY `tb_product_market_tbm_market_index` (`tbm_market`),
   KEY `tb_product_market_tbm_market_check_index` (`tbm_market_check`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=31 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -284,6 +287,7 @@ CREATE TABLE `tb_product_market` (
 
 LOCK TABLES `tb_product_market` WRITE;
 /*!40000 ALTER TABLE `tb_product_market` DISABLE KEYS */;
+INSERT INTO `tb_product_market` VALUES (1,'2023-10-18 13:39:00',11,'2023-10-18 13:41:13',11,1,'4.140402.016','Subdist A',1,70),(2,'2023-10-18 13:39:00',11,NULL,NULL,2,'4.140401.027','Subdist A',1,NULL),(3,'2023-10-18 13:39:00',11,NULL,NULL,3,'4.140402.017','Subdist A',1,NULL),(4,'2023-10-18 13:39:00',11,NULL,NULL,4,'4.140401.028','Subdist A',1,NULL),(5,'2023-10-18 13:39:00',11,NULL,NULL,5,'4.140401.012','Subdist A',1,NULL),(6,'2023-10-18 13:39:00',11,NULL,NULL,6,'4.140401.011','Subdist A',1,NULL),(7,'2023-10-18 13:39:00',11,NULL,NULL,7,'Skunew003','Subdist A',1,NULL),(8,'2023-10-18 13:39:00',11,NULL,NULL,8,'8997232970046','Subdist A',1,NULL),(9,'2023-10-18 13:39:00',11,NULL,NULL,9,'8997232970053','Subdist A',1,NULL),(10,'2023-10-18 13:39:00',11,NULL,NULL,10,'Skunew002','Subdist A',1,NULL),(11,'2023-10-18 13:39:00',11,NULL,NULL,11,'4.140401.029','Subdist A',1,NULL),(12,'2023-10-18 13:39:00',11,NULL,NULL,12,'konjagu001','Subdist A',1,NULL),(13,'2023-10-18 13:39:00',11,NULL,NULL,13,'cassamo001','Subdist A',1,NULL),(14,'2023-10-18 13:39:00',11,NULL,NULL,14,'cassamo002','Subdist A',1,NULL),(15,'2023-10-18 13:39:00',11,NULL,NULL,15,'nealamami004','Subdist A',1,NULL),(16,'2023-10-18 13:39:00',11,NULL,NULL,16,'newalamami005','Subdist A',1,NULL),(17,'2023-10-18 13:39:00',11,NULL,NULL,17,'newalamami003','Subdist A',1,NULL),(18,'2023-10-18 13:39:00',11,NULL,NULL,18,'newgorme003','Subdist A',1,NULL),(19,'2023-10-18 13:39:00',11,NULL,NULL,19,'newgorme002','Subdist A',1,NULL),(20,'2023-10-18 13:39:00',11,NULL,NULL,20,'newgorme001','Subdist A',1,NULL),(21,'2023-10-18 13:39:00',11,NULL,NULL,21,'skunew004','Subdist A',1,NULL),(22,'2023-10-18 13:39:00',11,NULL,NULL,22,'solafarm002','Subdist A',1,NULL),(23,'2023-10-18 13:39:00',11,NULL,NULL,23,'salafarm001','Subdist A',1,NULL),(24,'2023-10-18 13:39:00',11,NULL,NULL,24,'All Produk','Subdist A',1,NULL),(25,'2023-10-18 13:39:00',11,NULL,NULL,25,'newalamami001','Subdist A',1,NULL),(26,'2023-10-18 13:39:00',11,NULL,NULL,26,'newalamami002','Subdist A',1,NULL),(27,'2023-10-18 13:39:00',11,NULL,NULL,27,'skunew001','Subdist A',1,NULL),(28,'2023-10-18 13:39:00',11,NULL,NULL,28,'4.140402.022','Subdist A',1,NULL),(29,'2023-10-18 13:39:00',11,NULL,NULL,29,'4.140901.032','Subdist A',1,NULL),(30,'2023-10-18 13:39:34',11,NULL,NULL,30,'01','Subdist A',1,NULL);
 /*!40000 ALTER TABLE `tb_product_market` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -321,7 +325,7 @@ CREATE TABLE `tb_user` (
   KEY `tb_user_tbu_lastname_index` (`tbu_lastname`),
   KEY `tb_user_tbu_token_salt_index` (`tbu_token_salt`),
   KEY `tb_user_tbu_role_index` (`tbu_role`)
-) ENGINE=InnoDB AUTO_INCREMENT=11 DEFAULT CHARSET=latin1 COLLATE=latin1_swedish_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=12 DEFAULT CHARSET=latin1 COLLATE=latin1_swedish_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -330,7 +334,7 @@ CREATE TABLE `tb_user` (
 
 LOCK TABLES `tb_user` WRITE;
 /*!40000 ALTER TABLE `tb_user` DISABLE KEYS */;
-INSERT INTO `tb_user` VALUES (1,NULL,NULL,'2023-10-17 11:08:54',1,'admin@mail.com','202cb962ac59075b964b07152d234b70','admin','admin',NULL,NULL,NULL,'active',NULL,NULL,'r7ltvivy2q71mm65axwfmj6ma9q4tn6ytg5r','ADMIN');
+INSERT INTO `tb_user` VALUES (1,NULL,NULL,'2023-10-18 13:38:21',1,'admin@mail.com','202cb962ac59075b964b07152d234b70','admin','admin',NULL,NULL,NULL,'active',NULL,NULL,'0u38hvf625y76v2c3k6e20w3dez8ui0gpqfp','ADMIN'),(11,'2023-10-18 13:38:47',1,'2023-10-18 13:38:51',11,'pic1@mail.com','202cb962ac59075b964b07152d234b70','pic','satu',NULL,NULL,NULL,'active',NULL,NULL,'qlca7qxa94ekc3v7z8iogp8mj457ub7o5mf3','SUBDIST');
 /*!40000 ALTER TABLE `tb_user` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -356,7 +360,7 @@ CREATE TABLE `tb_user_brand` (
   KEY `tb_user_brand_tbb_brand_index` (`tbb_brand`),
   KEY `tb_user_brand_tbb_brand_id_index` (`tbb_brand_id`),
   KEY `tb_user_brand_tbb_brand_check_index` (`tbb_brand_check`)
-) ENGINE=InnoDB AUTO_INCREMENT=17 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=18 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -365,7 +369,7 @@ CREATE TABLE `tb_user_brand` (
 
 LOCK TABLES `tb_user_brand` WRITE;
 /*!40000 ALTER TABLE `tb_user_brand` DISABLE KEYS */;
-INSERT INTO `tb_user_brand` VALUES (1,'2023-10-15 11:34:57',1,NULL,NULL,1,'Mamasuka','MAMAS',1);
+INSERT INTO `tb_user_brand` VALUES (1,'2023-10-15 11:34:57',1,NULL,NULL,1,'Mamasuka','MAMAS',1),(17,'2023-10-18 13:38:47',1,NULL,NULL,11,'Mamasuka','MAMAS',1);
 /*!40000 ALTER TABLE `tb_user_brand` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -389,7 +393,7 @@ CREATE TABLE `tb_user_market` (
   KEY `tb_user_market_tbu_id_index` (`tbu_id`),
   KEY `tb_user_market_tbm_market_index` (`tbm_market`),
   KEY `tb_user_market_tbm_market_check_index` (`tbm_market_check`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -398,6 +402,7 @@ CREATE TABLE `tb_user_market` (
 
 LOCK TABLES `tb_user_market` WRITE;
 /*!40000 ALTER TABLE `tb_user_market` DISABLE KEYS */;
+INSERT INTO `tb_user_market` VALUES (1,'2023-10-18 13:38:47',1,NULL,NULL,11,'Subdist A',1);
 /*!40000 ALTER TABLE `tb_user_market` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -570,4 +575,4 @@ SET character_set_client = @saved_cs_client;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2023-10-17 18:18:38
+-- Dump completed on 2023-10-18 21:46:30
