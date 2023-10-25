@@ -40,4 +40,5 @@ export class TbOrder {
     tboTypeNotPacked: string;
 	check: boolean;
     tboNotes: string;
+    tboFrontliner: string;
 }

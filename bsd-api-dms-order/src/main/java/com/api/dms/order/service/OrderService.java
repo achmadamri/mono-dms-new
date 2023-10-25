@@ -213,6 +213,7 @@ public class OrderService {
 							tbOrder.setTboRow(((Double) getData(row, column, "Row")).intValue());
 							tbOrder.setTboBrand((String) getData(row, column, "Brand"));
 							tbOrder.setTboMarket((String) getData(row, column, "Market"));							
+							tbOrder.setTboFrontliner((String) getData(row, column, "Frontliner"));							
 							tbOrder.setTboQcId(((Double) getData(row, column, "QC ID")).intValue());
 							tbOrder.setTboSeq(((Double) getData(row, column, "SEQ")).intValue());
 							tbOrder.setTboMaxSeq(((Double) getData(row, column, "Max SEQ")).intValue());

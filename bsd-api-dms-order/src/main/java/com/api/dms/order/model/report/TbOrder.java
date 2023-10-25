@@ -83,6 +83,8 @@ public class TbOrder implements Serializable {
 
 	private String tboTypeNotPacked;
 
+	private String tbo_frontliner;
+
 	public TbOrder() {
 	}
 
@@ -388,6 +390,14 @@ public class TbOrder implements Serializable {
 
 	public void setTboTypeNotPacked(String tboTypeNotPacked) {
 		this.tboTypeNotPacked = tboTypeNotPacked;
+	}
+
+	public String getTbo_frontliner() {
+		return tbo_frontliner;
+	}
+
+	public void setTbo_frontliner(String tbo_frontliner) {
+		this.tbo_frontliner = tbo_frontliner;
 	}
 
 }
