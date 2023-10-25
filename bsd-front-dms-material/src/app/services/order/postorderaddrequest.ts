@@ -29,5 +29,6 @@ export class PostOrderAddRequest {
     tboSeq: number;
     tboSku: string;
     tboUnitPrice: number;    
-    tboNotes: string;
+    tboNotes: string; 
+    tboFrontliner: string;
 }

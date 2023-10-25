@@ -5,6 +5,7 @@ export class ViewOrder {
 	tboFullAddress: string;
 	tboHp: string;
 	tboMarket: string;
+	tboFrontliner: string;
 	tboName: string;
 	tboOrderNo: string;
 	tboUpdateDate: Date;

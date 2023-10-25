@@ -13,4 +13,5 @@ export class TbOrderPack {
 	tbopUpdateDate: Date;
 	tbopUpdateId: number;
 	tbopType: string;
+	tbopFrontliner: string;
 }

@@ -151,6 +151,7 @@ export class OrderEditComponent implements OnInit {
           this.postOrderEditRequest.tboItem = this.getOrderResponse.tbOrder.tboItem;
           this.postOrderEditRequest.tboLoc = this.getOrderResponse.tbOrder.tboLoc;
           this.postOrderEditRequest.tboMarket = this.getOrderResponse.tbOrder.tboMarket;
+          this.postOrderEditRequest.tboFrontliner = this.getOrderResponse.tbOrder.tboFrontliner;
           this.postOrderEditRequest.tboMaxSeq = this.getOrderResponse.tbOrder.tboMaxSeq;
           this.postOrderEditRequest.tboName = this.getOrderResponse.tbOrder.tboName;
           this.postOrderEditRequest.tboOrderNo = this.getOrderResponse.tbOrder.tboOrderNo;

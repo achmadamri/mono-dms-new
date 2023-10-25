@@ -41,6 +41,9 @@ public class ViewOrder implements Serializable {
 	@Column(name="tbo_market")
 	private String tboMarket;
 
+	@Column(name="tbo_frontliner")
+	private String tboFrontliner;
+
 	@Column(name="tbo_name")
 	private String tboName;
 
@@ -110,6 +113,14 @@ public class ViewOrder implements Serializable {
 
 	public void setTboMarket(String tboMarket) {
 		this.tboMarket = tboMarket;
+	}
+
+	public String getTboFrontliner() {
+		return tboFrontliner;
+	}
+
+	public void setTboFrontliner(String tboFrontliner) {
+		this.tboFrontliner = tboFrontliner;
 	}
 
 	public String getTboName() {

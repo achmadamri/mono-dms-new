@@ -61,6 +61,9 @@ public class ViewOrderConfirm implements Serializable {
 	@Column(name="market")
 	private String market;
 
+	@Column(name="frontliner")
+	private String frontliner;
+
 	@Column(name="awb")
 	private String awb;
 
@@ -179,6 +182,14 @@ public class ViewOrderConfirm implements Serializable {
 
 	public void setMarket(String market) {
 		this.market = market;
+	}
+
+	public String getFrontliner() {
+		return frontliner;
+	}
+
+	public void setFrontliner(String frontliner) {
+		this.frontliner = frontliner;
 	}
 
 	public String getAwb() {

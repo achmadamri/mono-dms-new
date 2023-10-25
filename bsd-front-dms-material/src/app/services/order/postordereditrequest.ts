@@ -31,4 +31,5 @@ export class PostOrderEditRequest {
     tboSku: string;
     tboUnitPrice: number;
     tboNotes: string;
+    tboFrontliner: string;
 }

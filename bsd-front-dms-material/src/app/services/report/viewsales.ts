@@ -4,6 +4,7 @@ export class ViewSales {
 	tboCreateId: number;
 	tboItem: string;
 	tboMarket: string;
+	tboFrontliner: string;
 	tboOrderNo: string;
 	tboQty: number;
 	tboSku: string;

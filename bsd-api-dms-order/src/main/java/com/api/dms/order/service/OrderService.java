@@ -404,7 +404,8 @@ public class OrderService {
 					tbOrderPack.setTbopQcId(tbOrder.getTboQcId());
 					tbOrderPack.setTbopAwb(tbOrder.getTboAwb());
 					tbOrderPack.setTbopBrand(tbOrder.getTboBrand());
-					tbOrderPack.setTbopMarket(tbOrder.getTboMarket());
+					tbOrderPack.setTbopMarket(tbOrder.getTboMarket());					
+					tbOrderPack.setTbopFrontliner(tbOrder.getTboFrontliner());
 					tbOrderPack.setTbopOrderNo(tbOrder.getTboOrderNo());
 					tbOrderPack.setTbopName(tbOrder.getTboName());
 					tbOrderPack.setTbopStatus(TbOrderPackRepository.StatusPacked);
@@ -478,6 +479,7 @@ public class OrderService {
 						tbOrderGwpBundleDetail.setTboAddress5(tbOrder.getTboAddress5());
 						tbOrderGwpBundleDetail.setTboFullAddress(tbOrder.getTboFullAddress());
 						tbOrderGwpBundleDetail.setTboFile(tbOrder.getTboFile());
+						tbOrderGwpBundleDetail.setTboFrontliner(tbOrder.getTboFrontliner());
 
 						tbOrderRepository.save(tbOrderGwpBundleDetail);
 
@@ -1201,7 +1203,8 @@ public class OrderService {
 						tbOrderPack.setTbopAwb(optViewOrderPack.get().getTboAwb());
 						tbOrderPack.setTbopQcId(optViewOrderPack.get().getTboQcId());
 						tbOrderPack.setTbopBrand(optViewOrderPack.get().getTboBrand());
-						tbOrderPack.setTbopMarket(optViewOrderPack.get().getTboMarket());
+						tbOrderPack.setTbopMarket(optViewOrderPack.get().getTboMarket());						
+						tbOrderPack.setTbopFrontliner(optViewOrderPack.get().getTboFrontliner());
 						tbOrderPack.setTbopOrderNo(optViewOrderPack.get().getTboOrderNo());
 						tbOrderPack.setTbopName(optViewOrderPack.get().getTboName());
 						tbOrderPack.setTbopType(TbOrderPackRepository.TypeOrder);
