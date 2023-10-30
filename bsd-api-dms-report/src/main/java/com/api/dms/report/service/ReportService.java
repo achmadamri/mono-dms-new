@@ -27,6 +27,7 @@ import com.api.dms.report.db.entity.TbProduct;
 import com.api.dms.report.db.entity.TbProductMarket;
 import com.api.dms.report.db.entity.TbUser;
 import com.api.dms.report.db.entity.TbUserBrand;
+import com.api.dms.report.db.entity.TbUserMarket;
 import com.api.dms.report.db.entity.ViewOrder;
 import com.api.dms.report.db.entity.ViewSales;
 import com.api.dms.report.db.entity.ViewStock;
@@ -36,6 +37,7 @@ import com.api.dms.report.db.repository.TbOrderStatusRepository;
 import com.api.dms.report.db.repository.TbProductMarketRepository;
 import com.api.dms.report.db.repository.TbProductRepository;
 import com.api.dms.report.db.repository.TbUserBrandRepository;
+import com.api.dms.report.db.repository.TbUserMarketRepository;
 import com.api.dms.report.db.repository.TbUserRepository;
 import com.api.dms.report.db.repository.ViewOrderRepository;
 import com.api.dms.report.db.repository.ViewSalesRepository;
@@ -100,6 +102,9 @@ public class ReportService {
 	
 	@Autowired
 	private TbUserBrandRepository tbUserBrandRepository;
+	
+	@Autowired
+	private TbUserMarketRepository tbUserMarketRepository;
 	
 	public PostSyncConfirmOrderResponseModel postSyncConfirmOrder(PostSyncConfirmOrderRequestModel requestModel) throws Exception {
 		PostSyncConfirmOrderResponseModel responseModel = new PostSyncConfirmOrderResponseModel(requestModel);
@@ -234,10 +239,20 @@ public class ReportService {
 		Optional<TbUser> optTbUser = tbUserRepository.findOne(Example.of(exampleTbUser));
 		
 		if (optTbUser.isPresent()) {
-			List<ViewOrder> lstViewOrder = viewOrderRepository.find(optTbUser.get().getTbuId(), brand, orderNo, new SimpleDateFormat("yyyy-MM-dd hh:mm:ss").parse(startDate + " 00:00:00"), new SimpleDateFormat("yyyy-MM-dd hh:mm:ss").parse(endDate + " 23:59:50"), PageRequest.of(Integer.valueOf(pageIndex), Integer.valueOf(pageSize), Sort.by("tboCreateDate").ascending()));
+			TbUserMarket exampleTbUserMarket = new TbUserMarket();
+			exampleTbUserMarket.setTbuId(optTbUser.get().getTbuId());
+			exampleTbUserMarket.setTbmMarketCheck(1);
+			List<TbUserMarket> lstTbUserMarket = tbUserMarketRepository.findAll(Example.of(exampleTbUserMarket));
+
+			List<String> lstTbmMarketId = new ArrayList<>();
+			for (TbUserMarket tbUserMarket : lstTbUserMarket) {
+				lstTbmMarketId.add(tbUserMarket.getTbmMarketId());
+			}
+			
+			List<ViewOrder> lstViewOrder = viewOrderRepository.find(lstTbmMarketId, brand, orderNo, new SimpleDateFormat("yyyy-MM-dd hh:mm:ss").parse(startDate + " 00:00:00"), new SimpleDateFormat("yyyy-MM-dd hh:mm:ss").parse(endDate + " 23:59:50"), PageRequest.of(Integer.valueOf(pageIndex), Integer.valueOf(pageSize), Sort.by("tboCreateDate").ascending()));
 			
 			if (lstViewOrder.size() > 0) {
-				responseModel.setLength(viewOrderRepository.count(optTbUser.get().getTbuId(),brand, orderNo, new SimpleDateFormat("yyyy-MM-dd hh:mm:ss").parse(startDate + " 00:00:00"), new SimpleDateFormat("yyyy-MM-dd hh:mm:ss").parse(endDate + " 23:59:50")));
+				responseModel.setLength(viewOrderRepository.count(lstTbmMarketId, brand, orderNo, new SimpleDateFormat("yyyy-MM-dd hh:mm:ss").parse(startDate + " 00:00:00"), new SimpleDateFormat("yyyy-MM-dd hh:mm:ss").parse(endDate + " 23:59:50")));
 				responseModel.setLstViewOrder(lstViewOrder);
 				
 				responseModel.setStatus("200");
@@ -341,10 +356,20 @@ public class ReportService {
 		Optional<TbUser> optTbUser = tbUserRepository.findOne(Example.of(exampleTbUser));
 		
 		if (optTbUser.isPresent()) {
-			List<ViewStock> lstViewStock = viewStockRepository.find(optTbUser.get().getTbuId(), brand, sku, item, PageRequest.of(Integer.valueOf(pageIndex), Integer.valueOf(pageSize), Sort.by("tbpSku").ascending()));
+			TbUserMarket exampleTbUserMarket = new TbUserMarket();
+			exampleTbUserMarket.setTbuId(optTbUser.get().getTbuId());
+			exampleTbUserMarket.setTbmMarketCheck(1);
+			List<TbUserMarket> lstTbUserMarket = tbUserMarketRepository.findAll(Example.of(exampleTbUserMarket));
+
+			List<String> lstTbmMarketId = new ArrayList<>();
+			for (TbUserMarket tbUserMarket : lstTbUserMarket) {
+				lstTbmMarketId.add(tbUserMarket.getTbmMarketId());
+			}
+
+			List<ViewStock> lstViewStock = viewStockRepository.find(lstTbmMarketId, brand, sku, item, PageRequest.of(Integer.valueOf(pageIndex), Integer.valueOf(pageSize), Sort.by("tbpSku").ascending()));
 			
 			if (lstViewStock.size() > 0) {
-				responseModel.setLength(viewStockRepository.count(optTbUser.get().getTbuId(), brand, sku, item));
+				responseModel.setLength(viewStockRepository.count(lstTbmMarketId, brand, sku, item));
 				responseModel.setLstViewStock(lstViewStock);
 				
 				responseModel.setStatus("200");
@@ -408,7 +433,7 @@ public class ReportService {
 			cell.setCellValue(viewStock.getTbpItem());
 			
 			cell = row.createCell(intCell++);
-			cell.setCellValue(viewStock.getTbpQty());
+			cell.setCellValue(viewStock.getTbpmQty());
 			
 			intRow++;
 		}
@@ -430,10 +455,20 @@ public class ReportService {
 		Optional<TbUser> optTbUser = tbUserRepository.findOne(Example.of(exampleTbUser));
 		
 		if (optTbUser.isPresent()) {
-			List<ViewSales> lstViewSales = viewSalesRepository.find(optTbUser.get().getTbuId(), brand, orderNo, sku, new SimpleDateFormat("yyyy-MM-dd hh:mm:ss").parse(startDate + " 00:00:00"), new SimpleDateFormat("yyyy-MM-dd hh:mm:ss").parse(endDate + " 23:59:50"), PageRequest.of(Integer.valueOf(pageIndex), Integer.valueOf(pageSize), Sort.by("tboCreateDate").ascending()));
+			TbUserMarket exampleTbUserMarket = new TbUserMarket();
+			exampleTbUserMarket.setTbuId(optTbUser.get().getTbuId());
+			exampleTbUserMarket.setTbmMarketCheck(1);
+			List<TbUserMarket> lstTbUserMarket = tbUserMarketRepository.findAll(Example.of(exampleTbUserMarket));
+
+			List<String> lstTbmMarketId = new ArrayList<>();
+			for (TbUserMarket tbUserMarket : lstTbUserMarket) {
+				lstTbmMarketId.add(tbUserMarket.getTbmMarketId());
+			}
+
+			List<ViewSales> lstViewSales = viewSalesRepository.find(lstTbmMarketId, brand, orderNo, sku, new SimpleDateFormat("yyyy-MM-dd hh:mm:ss").parse(startDate + " 00:00:00"), new SimpleDateFormat("yyyy-MM-dd hh:mm:ss").parse(endDate + " 23:59:50"), PageRequest.of(Integer.valueOf(pageIndex), Integer.valueOf(pageSize), Sort.by("tboCreateDate").ascending()));
 			
 			if (lstViewSales.size() > 0) {
-				responseModel.setLength(viewSalesRepository.count(optTbUser.get().getTbuId(), brand, orderNo, sku, new SimpleDateFormat("yyyy-MM-dd hh:mm:ss").parse(startDate + " 00:00:00"), new SimpleDateFormat("yyyy-MM-dd hh:mm:ss").parse(endDate + " 23:59:50")));
+				responseModel.setLength(viewSalesRepository.count(lstTbmMarketId, brand, orderNo, sku, new SimpleDateFormat("yyyy-MM-dd hh:mm:ss").parse(startDate + " 00:00:00"), new SimpleDateFormat("yyyy-MM-dd hh:mm:ss").parse(endDate + " 23:59:50")));
 				responseModel.setLstViewSales(lstViewSales);
 				
 				responseModel.setStatus("200");
@@ -536,28 +571,28 @@ public class ReportService {
 		exampleTbUser.setTbuStatus(TbUserRepository.Active);
 		Optional<TbUser> optTbUser = tbUserRepository.findOne(Example.of(exampleTbUser));
 		
-		if (optTbUser.isPresent()) {
-			List<ViewOrder> lstViewOrder = viewOrderRepository.find(optTbUser.get().getTbuId(), brand, orderNo, new SimpleDateFormat("yyyy-MM-dd hh:mm:ss").parse(startDate + " 00:00:00"), new SimpleDateFormat("yyyy-MM-dd hh:mm:ss").parse(endDate + " 23:59:50"), PageRequest.of(Integer.valueOf(pageIndex), Integer.valueOf(pageSize), Sort.by("tboCreateDate").ascending()));
+		// if (optTbUser.isPresent()) {
+		// 	List<ViewOrder> lstViewOrder = viewOrderRepository.find(optTbUser.get().getTbuId(), brand, orderNo, new SimpleDateFormat("yyyy-MM-dd hh:mm:ss").parse(startDate + " 00:00:00"), new SimpleDateFormat("yyyy-MM-dd hh:mm:ss").parse(endDate + " 23:59:50"), PageRequest.of(Integer.valueOf(pageIndex), Integer.valueOf(pageSize), Sort.by("tboCreateDate").ascending()));
 			
-			if (lstViewOrder.size() > 0) {
-				responseModel.setSku(
-					tbProductRepository.countByTbpQtyLessThan(5)
-					+ "/" +
-					tbProductRepository.count()
-				);
+		// 	if (lstViewOrder.size() > 0) {
+		// 		responseModel.setSku(
+		// 			tbProductRepository.countByTbpQtyLessThan(5)
+		// 			+ "/" +
+		// 			tbProductRepository.count()
+		// 		);
 
-				// responseModel.setLstViewOrder(lstViewOrder);
+		// 		// responseModel.setLstViewOrder(lstViewOrder);
 				
-				responseModel.setStatus("200");
-				responseModel.setMessage("Get Dashboard ok");
-			} else {
-				responseModel.setStatus("404");
-				responseModel.setMessage("Not found");
-			}
-		} else {
-			responseModel.setStatus("404");
-			responseModel.setMessage("Not found");
-		}
+		// 		responseModel.setStatus("200");
+		// 		responseModel.setMessage("Get Dashboard ok");
+		// 	} else {
+		// 		responseModel.setStatus("404");
+		// 		responseModel.setMessage("Not found");
+		// 	}
+		// } else {
+		// 	responseModel.setStatus("404");
+		// 	responseModel.setMessage("Not found");
+		// }
 		
 		return responseModel;
 	}

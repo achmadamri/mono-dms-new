@@ -35,8 +35,8 @@ public class ViewStock implements Serializable {
 	@Column(name="tbp_item")
 	private String tbpItem;
 
-	@Column(name="tbp_qty")
-	private Integer tbpQty;
+	@Column(name="tbpm_qty")
+	private Integer tbpmQty;
 
 	@Column(name="tbp_sku")
 	private String tbpSku;
@@ -51,8 +51,8 @@ public class ViewStock implements Serializable {
 	@Column(name="tbp_update_id")
 	private Integer tbpUpdateId;
 
-	@Column(name="tbu_id")
-	private Integer tbuId;
+	@Column(name="tbm_market_id")
+	private String tbmMarketId;
 
 	@Id
 	@Column(name="uuid")
@@ -93,12 +93,12 @@ public class ViewStock implements Serializable {
 		this.tbpItem = tbpItem;
 	}
 
-	public Integer getTbpQty() {
-		return this.tbpQty;
+	public Integer getTbpmQty() {
+		return this.tbpmQty;
 	}
 
-	public void setTbpQty(Integer tbpQty) {
-		this.tbpQty = tbpQty;
+	public void setTbpmQty(Integer tbpmQty) {
+		this.tbpmQty = tbpmQty;
 	}
 
 	public String getTbpSku() {
@@ -133,20 +133,20 @@ public class ViewStock implements Serializable {
 		this.tbpUpdateId = tbpUpdateId;
 	}
 
+	public String getTbmMarketId() {
+		return tbmMarketId;
+	}
+
+	public void setTbmMarketId(String tbmMarketId) {
+		this.tbmMarketId = tbmMarketId;
+	}
+
 	public String getUuid() {
 		return this.uuid;
 	}
 
 	public void setUuid(String uuid) {
 		this.uuid = uuid;
-	}
-
-	public Integer getTbuId() {
-		return tbuId;
-	}
-
-	public void setTbuId(Integer tbuId) {
-		this.tbuId = tbuId;
 	}
 
 }

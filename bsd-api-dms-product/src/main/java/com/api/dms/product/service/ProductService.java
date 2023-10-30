@@ -657,31 +657,22 @@ public class ProductService {
 		Optional<TbUser> optTbUser = tbUserRepository.findOne(Example.of(exampleTbUser));
 
 		if (optTbUser.isPresent()) {
-			List<ViewProductMarket> lstViewProductMarket = viewProductMarketRepository.findAllByTbpSku(tbpId, PageRequest.of(Integer.valueOf(pageIndex), Integer.valueOf(pageSize), Sort.by("tbpmId", "tbpmId").ascending()));
+			TbUserMarket exampleTbUserMarket = new TbUserMarket();
+			exampleTbUserMarket.setTbuId(optTbUser.get().getTbuId());
+			exampleTbUserMarket.setTbmMarketCheck(1);
+			List<TbUserMarket> lstTbUserMarket = tbUserMarketRepository.findAll(Example.of(exampleTbUserMarket));
 			
-			if (lstViewProductMarket.size() > 0) {
-				List<String> lstTbmMarketId = new ArrayList<>();
-				for (ViewProductMarket viewProductMarket : lstViewProductMarket) {
-					lstTbmMarketId.add(viewProductMarket.getTbmMarketId());
-				}
-
-				List<TbUserMarket> lstTbUserMarket = tbUserMarketRepository.findByTbuIdAndTbmMarketIdNotIn(optTbUser.get().getTbuId(), lstTbmMarketId);
-				for (TbUserMarket tbUserMarket : lstTbUserMarket) {
-					ViewProductMarket viewProductMarket	= new ViewProductMarket();
-					viewProductMarket.setTbmMarketId(tbUserMarket.getTbmMarketId());
-					viewProductMarket.setTbpmQty(0);
-
-					lstViewProductMarket.add(viewProductMarket);
-				}
-
-				responseModel.setLstViewProductMarket(lstViewProductMarket);
-				
-				responseModel.setStatus("200");
-				responseModel.setMessage("Get Product List ok");
-			} else {
-				responseModel.setStatus("404");
-				responseModel.setMessage("Not found");
+			List<String> lstTbmMarketId = new ArrayList<>();
+			for (TbUserMarket tbUserMarket : lstTbUserMarket) {
+				lstTbmMarketId.add(tbUserMarket.getTbmMarketId());
 			}
+			
+			List<ViewProductMarket> lstViewProductMarket = viewProductMarketRepository.findByTbpIdAndTbmMarketIdIn(tbpId, lstTbmMarketId, PageRequest.of(Integer.valueOf(pageIndex), Integer.valueOf(pageSize), Sort.by("tbpmId", "tbpmId").ascending()));
+			
+			responseModel.setLstViewProductMarket(lstViewProductMarket);
+				
+			responseModel.setStatus("200");
+			responseModel.setMessage("Get Product List ok");
 		} else {
 			responseModel.setStatus("404");
 			responseModel.setMessage("Not found");
@@ -925,6 +916,7 @@ public class ProductService {
 								TbProductMarket tbProductMarket = tbProductMarketRepository.findById(viewProductMarket.getTbpmId()).get();							
 								tbProductMarket.setTbpmUpdateDate(new Date());
 								tbProductMarket.setTbpmUpdateId(optTbUser.get().getTbuId());
+								tbProductMarket.setTbmMarketCheck(1);
 								tbProductMarket.setTbpmQty(viewProductMarket.getTbpmQty());
 								tbProductMarketRepository.save(tbProductMarket);					
 							} else {
@@ -948,6 +940,20 @@ public class ProductService {
 						
 						com.api.dms.product.model.report.TbProduct tbProductReport = new com.api.dms.product.model.report.TbProduct();
 						tbProductReport = (com.api.dms.product.model.report.TbProduct) simpleMapper.assign(tbProduct, tbProductReport);
+
+						TbProductMarket exampleTbProductMarket = new TbProductMarket();
+						exampleTbProductMarket.setTbpSku(tbProduct.getTbpSku());
+						List<TbProductMarket> lstTbProductMarket = tbProductMarketRepository.findAll(Example.of(exampleTbProductMarket));
+
+						List<com.api.dms.product.model.report.TbProductMarket> lstTbProductMarketReport = new ArrayList<com.api.dms.product.model.report.TbProductMarket>();
+
+						for (TbProductMarket tbProductMarket : lstTbProductMarket) {
+							com.api.dms.product.model.report.TbProductMarket tbProductMarketReport = new com.api.dms.product.model.report.TbProductMarket();
+							tbProductMarketReport = (com.api.dms.product.model.report.TbProductMarket) simpleMapper.assign(tbProductMarket, tbProductMarketReport);
+							lstTbProductMarketReport.add(tbProductMarketReport);
+						}
+
+						tbProductReport.setLstTbProductMarket(lstTbProductMarketReport);
 						lstTbProductReport.add(tbProductReport);
 						
 						PostSyncProductRequestModel postSyncProductRequestModel = new PostSyncProductRequestModel();
@@ -1094,12 +1100,23 @@ public class ProductService {
 				}
 				
 				SimpleMapper simpleMapper = new SimpleMapper();
+
+				List<TbProductMarket> lstTbProductMarket = tbProductMarketRepository.findAll(Example.of(exampleTbProductMarket));
+
+				List<com.api.dms.product.model.report.TbProductMarket> lstTbProductMarketReport = new ArrayList<com.api.dms.product.model.report.TbProductMarket>();
+
+				for (TbProductMarket tbProductMarket : lstTbProductMarket) {
+					com.api.dms.product.model.report.TbProductMarket tbProductMarketReport = new com.api.dms.product.model.report.TbProductMarket();
+					tbProductMarketReport = (com.api.dms.product.model.report.TbProductMarket) simpleMapper.assign(tbProductMarket, tbProductMarketReport);
+					lstTbProductMarketReport.add(tbProductMarketReport);
+				}
 				
 				List<com.api.dms.product.model.report.TbProduct> lstTbProductReport = new ArrayList<com.api.dms.product.model.report.TbProduct>();
 				
 				for (TbProduct tbProduct : lstTbProduct) {					
 					com.api.dms.product.model.report.TbProduct tbProductReport = new com.api.dms.product.model.report.TbProduct();
 					tbProductReport = (com.api.dms.product.model.report.TbProduct) simpleMapper.assign(tbProduct, tbProductReport);
+					tbProductReport.setLstTbProductMarket(lstTbProductMarketReport);
 					lstTbProductReport.add(tbProductReport);
 				}
 				

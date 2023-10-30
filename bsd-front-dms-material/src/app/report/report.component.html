@@ -130,6 +130,7 @@
                                 <thead class="text-warning">
                                   <tr>
                                     <th scope="col">Brand</th>
+                                    <th scope="col">Market ID</th>
                                     <th scope="col">Sku</th>
                                     <th scope="col">Code</th>
                                     <th scope="col">Item</th>
@@ -139,10 +140,11 @@
                                 <tbody *ngIf="this.getStockListResponse.lstViewStock[0].tbpBrand != undefined">
                                   <tr *ngFor="let viewStock of getStockListResponse.lstViewStock">
                                     <td>{{viewStock.tbpBrand}}</td>
+                                    <td>{{viewStock.tbmMarketId}}</td>
                                     <td>{{viewStock.tbpSku}}</td>
                                     <td>{{viewStock.tbpCode}}</td>
                                     <td>{{viewStock.tbpItem}}</td>
-                                    <td>{{viewStock.tbpQty}}</td>
+                                    <td>{{viewStock.tbpmQty}}</td>
                                   </tr>
                                 </tbody>
                               </table>
