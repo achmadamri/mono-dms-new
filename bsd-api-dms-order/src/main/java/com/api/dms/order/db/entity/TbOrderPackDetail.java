@@ -73,8 +73,8 @@ public class TbOrderPackDetail implements Serializable {
 	@Column(name="tbopd_update_id")
 	private Integer tbopdUpdateId;
 
-	@Column(name="tbopd_market")
-	private String tbopdMarket;
+	@Column(name="tbopd_market_id")
+	private String tbopdMarketId;
 
 	public TbOrderPackDetail() {
 	}
@@ -224,11 +224,11 @@ public class TbOrderPackDetail implements Serializable {
 	}
 
 	public String getTbopdMarket() {
-		return tbopdMarket;
+		return tbopdMarketId;
 	}
 
-	public void setTbopdMarket(String tbopdMarket) {
-		this.tbopdMarket = tbopdMarket;
+	public void setTbopdMarket(String tbopdMarketId) {
+		this.tbopdMarketId = tbopdMarketId;
 	}
 
 }

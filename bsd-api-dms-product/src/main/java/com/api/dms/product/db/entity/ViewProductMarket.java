@@ -28,8 +28,8 @@ public class ViewProductMarket implements Serializable {
 	@Column(name="tbp_sku")
 	private String tbpSku;
 	
-	@Column(name="tbm_market")
-	private String tbmMarket;
+	@Column(name="tbm_market_id")
+	private String tbmMarketId;
 
 	@Column(name="tbpm_qty")
 	private Integer tbpmQty;
@@ -65,12 +65,12 @@ public class ViewProductMarket implements Serializable {
 		this.tbpSku = tbpSku;
 	}
 
-	public String getTbmMarket() {
-		return tbmMarket;
+	public String getTbmMarketId() {
+		return tbmMarketId;
 	}
 
-	public void setTbmMarket(String tbmMarket) {
-		this.tbmMarket = tbmMarket;
+	public void setTbmMarketId(String tbmMarketId) {
+		this.tbmMarketId = tbmMarketId;
 	}
 
 	public Integer getTbpmQty() {

@@ -85,7 +85,7 @@ public class UserService {
 					tbUserMarket.setTbumCreateDate(new Date());
 					tbUserMarket.setTbumCreateId(optTbUser.get().getTbuId());
 					tbUserMarket.setTbuId(tbUser.getTbuId());
-					tbUserMarket.setTbmMarket(tbUserMarket_.getTbmMarket());					
+					tbUserMarket.setTbmMarketId(tbUserMarket_.getTbmMarketId());					
 					tbUserMarket.setTbmMarketCheck(tbUserMarket_.getTbmMarketCheck());
 					tbUserMarketRepository.save(tbUserMarket);
 				}
@@ -150,7 +150,7 @@ public class UserService {
 					tbUserMarket_.setTbumCreateDate(new Date());
 					tbUserMarket_.setTbumCreateId(optTbUser.get().getTbuId());
 					tbUserMarket_.setTbuId(optTbUserExisting.get().getTbuId());
-					tbUserMarket_.setTbmMarket(tbUserMarket.getTbmMarket());					
+					tbUserMarket_.setTbmMarketId(tbUserMarket.getTbmMarketId());					
 					tbUserMarket_.setTbmMarketCheck(tbUserMarket.getTbmMarketCheck());
 					tbUserMarketRepository.save(tbUserMarket_);
 				}

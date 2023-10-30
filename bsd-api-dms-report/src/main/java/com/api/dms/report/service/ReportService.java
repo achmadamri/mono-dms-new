@@ -307,7 +307,7 @@ public class ReportService {
 			cell.setCellValue(viewOrder.getTboBrand());
 			
 			cell = row.createCell(intCell++);
-			cell.setCellValue(viewOrder.getTboMarket());
+			cell.setCellValue(viewOrder.getTboMarketId());
 			
 			cell = row.createCell(intCell++);
 			cell.setCellValue(viewOrder.getTboOrderNo());
@@ -503,7 +503,7 @@ public class ReportService {
 			cell.setCellValue(viewSales.getTboBrand());
 			
 			cell = row.createCell(intCell++);
-			cell.setCellValue(viewSales.getTboMarket());
+			cell.setCellValue(viewSales.getTboMarketId());
 			
 			cell = row.createCell(intCell++);
 			cell.setCellValue(viewSales.getTboOrderNo());

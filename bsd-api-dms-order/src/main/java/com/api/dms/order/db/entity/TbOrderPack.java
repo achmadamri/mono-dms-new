@@ -33,8 +33,8 @@ public class TbOrderPack implements Serializable {
 	@Column(name="tbop_create_id")
 	private Integer tbopCreateId;
 
-	@Column(name="tbop_market")
-	private String tbopMarket;
+	@Column(name="tbop_market_id")
+	private String tbopMarketId;
 
 	@Column(name="tbop_name")
 	private String tbopName;
@@ -108,11 +108,11 @@ public class TbOrderPack implements Serializable {
 	}
 
 	public String getTbopMarket() {
-		return tbopMarket;
+		return tbopMarketId;
 	}
 
-	public void setTbopMarket(String tbopMarket) {
-		this.tbopMarket = tbopMarket;
+	public void setTbopMarket(String tbopMarketId) {
+		this.tbopMarketId = tbopMarketId;
 	}
 
 	public String getTbopName() {

@@ -19,7 +19,7 @@ export class TbOrder {
     tboItem: string;
     tboItemShort: string;
     tboLoc: string;
-    tboMarket: string;
+    tboMarketId: string;
     tboMaxSeq: number;
     tboName: string;
     tboNameShort: string;

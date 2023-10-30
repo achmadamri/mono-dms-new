@@ -20,8 +20,8 @@ public class ViewOrderPack implements Serializable {
 	@Column(name="tbo_brand")
 	private String tboBrand;
 
-	@Column(name="tbo_market")
-	private String tboMarket;
+	@Column(name="tbo_market_id")
+	private String tboMarketId;
 
 	@Column(name="tbo_frontliner")
 	private String tboFrontliner;
@@ -61,12 +61,12 @@ public class ViewOrderPack implements Serializable {
 		this.tboBrand = tboBrand;
 	}
 
-	public String getTboMarket() {
-		return this.tboMarket;
+	public String getTboMarketId() {
+		return this.tboMarketId;
 	}
 
-	public void setTboMarket(String tboMarket) {
-		this.tboMarket = tboMarket;
+	public void setTboMarketId(String tboMarketId) {
+		this.tboMarketId = tboMarketId;
 	}
 
 	public String getTboFrontliner() {

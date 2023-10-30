@@ -181,7 +181,7 @@ export class UserEditComponent implements OnInit {
       
                 this.userEditRequest.lstTbMarket.forEach((element1) => {
                   this.userEditRequest.lstTbUserMarket.forEach((element2) => {
-                    if (element1.tbmMarket == element2.tbmMarket) {
+                    if (element1.tbmMarketId == element2.tbmMarketId) {
                       element1.check = element2.tbmMarketCheck;
                     }                                      
                   });  

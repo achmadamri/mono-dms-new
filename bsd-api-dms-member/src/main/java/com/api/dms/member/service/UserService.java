@@ -264,7 +264,7 @@ public class UserService {
 					tbUserMarket.setTbumCreateDate(new Date());
 					tbUserMarket.setTbumCreateId(optTbUser.get().getTbuId());
 					tbUserMarket.setTbuId(tbUser.getTbuId());
-					tbUserMarket.setTbmMarket(tbMarket.getTbmMarket());					
+					tbUserMarket.setTbmMarketId(tbMarket.getTbmMarketId());					
 					tbUserMarket.setTbmMarketCheck(tbMarket.getCheck());
 					tbUserMarketRepository.save(tbUserMarket);
 					lstTbUserMarket.add(tbUserMarket);
@@ -307,7 +307,7 @@ public class UserService {
 				for (TbUserMarket tbUserMarket : lstTbUserMarket) {
 					com.api.dms.member.model.order.TbUserMarket tbUserMarket_ = new com.api.dms.member.model.order.TbUserMarket();
 					tbUserMarket_.setTbuId(tbUser.getTbuId());
-					tbUserMarket_.setTbmMarket(tbUserMarket.getTbmMarket());
+					tbUserMarket_.setTbmMarketId(tbUserMarket.getTbmMarketId());
 					tbUserMarket_.setTbmMarketCheck(tbUserMarket.getTbmMarketCheck());
 					lstOrderTbUserMarket.add(tbUserMarket_);
 				}
@@ -335,7 +335,7 @@ public class UserService {
 				for (TbUserMarket tbUserMarket : lstTbUserMarket) {
 					com.api.dms.member.model.product.TbUserMarket tbUserMarket_ = new com.api.dms.member.model.product.TbUserMarket();
 					tbUserMarket_.setTbuId(tbUser.getTbuId());
-					tbUserMarket_.setTbmMarket(tbUserMarket.getTbmMarket());
+					tbUserMarket_.setTbmMarketId(tbUserMarket.getTbmMarketId());
 					tbUserMarket_.setTbmMarketCheck(tbUserMarket.getTbmMarketCheck());
 					lstProductTbUserMarket.add(tbUserMarket_);
 				}
@@ -363,7 +363,7 @@ public class UserService {
 				for (TbUserMarket tbUserMarket : lstTbUserMarket) {
 					com.api.dms.member.model.report.TbUserMarket tbUserMarket_ = new com.api.dms.member.model.report.TbUserMarket();
 					tbUserMarket_.setTbuId(tbUser.getTbuId());
-					tbUserMarket_.setTbmMarket(tbUserMarket.getTbmMarket());
+					tbUserMarket_.setTbmMarketId(tbUserMarket.getTbmMarketId());
 					tbUserMarket_.setTbmMarketCheck(tbUserMarket.getTbmMarketCheck());
 					lstReportTbUserMarket.add(tbUserMarket_);
 				}
@@ -446,7 +446,7 @@ public class UserService {
 					tbUserMarket.setTbumCreateDate(new Date());
 					tbUserMarket.setTbumCreateId(optTbUser.get().getTbuId());
 					tbUserMarket.setTbuId(optTbUserExisting.get().getTbuId());
-					tbUserMarket.setTbmMarket(tbMarket.getTbmMarket());					
+					tbUserMarket.setTbmMarketId(tbMarket.getTbmMarketId());					
 					tbUserMarket.setTbmMarketCheck(tbMarket.getCheck());
 					tbUserMarketRepository.save(tbUserMarket);
 				}
@@ -489,7 +489,7 @@ public class UserService {
 				for (TbUserMarket tbUserMarket : lstTbUserMarket) {
 					com.api.dms.member.model.order.TbUserMarket tbUserMarket_ = new com.api.dms.member.model.order.TbUserMarket();
 					tbUserMarket_.setTbuId(optTbUser.get().getTbuId());
-					tbUserMarket_.setTbmMarket(tbUserMarket.getTbmMarket());
+					tbUserMarket_.setTbmMarketId(tbUserMarket.getTbmMarketId());
 					tbUserMarket_.setTbmMarketCheck(tbUserMarket.getTbmMarketCheck());
 					lstOrderTbUserMarket.add(tbUserMarket_);
 				}
@@ -517,7 +517,7 @@ public class UserService {
 				for (TbUserMarket tbUserMarket : lstTbUserMarket) {
 					com.api.dms.member.model.product.TbUserMarket tbUserMarket_ = new com.api.dms.member.model.product.TbUserMarket();
 					tbUserMarket_.setTbuId(optTbUser.get().getTbuId());
-					tbUserMarket_.setTbmMarket(tbUserMarket.getTbmMarket());
+					tbUserMarket_.setTbmMarketId(tbUserMarket.getTbmMarketId());
 					tbUserMarket_.setTbmMarketCheck(tbUserMarket.getTbmMarketCheck());
 					lstProductTbUserMarket.add(tbUserMarket_);
 				}
@@ -545,7 +545,7 @@ public class UserService {
 				for (TbUserMarket tbUserMarket : lstTbUserMarket) {
 					com.api.dms.member.model.report.TbUserMarket tbUserMarket_ = new com.api.dms.member.model.report.TbUserMarket();
 					tbUserMarket_.setTbuId(optTbUser.get().getTbuId());
-					tbUserMarket_.setTbmMarket(tbUserMarket.getTbmMarket());
+					tbUserMarket_.setTbmMarketId(tbUserMarket.getTbmMarketId());
 					tbUserMarket_.setTbmMarketCheck(tbUserMarket.getTbmMarketCheck());
 					lstReportTbUserMarket.add(tbUserMarket_);
 				}

@@ -212,7 +212,7 @@ public class OrderService {
 							tbOrder.setTboType(TbOrderRepository.TypeOrder);							
 							tbOrder.setTboRow(((Double) getData(row, column, "Row")).intValue());
 							tbOrder.setTboBrand((String) getData(row, column, "Brand"));
-							tbOrder.setTboMarket((String) getData(row, column, "Market"));							
+							tbOrder.setTboMarketId((String) getData(row, column, "Market ID"));							
 							tbOrder.setTboFrontliner((String) getData(row, column, "Frontliner"));							
 							tbOrder.setTboQcId(((Double) getData(row, column, "QC ID")).intValue());
 							tbOrder.setTboSeq(((Double) getData(row, column, "SEQ")).intValue());
@@ -404,7 +404,7 @@ public class OrderService {
 					tbOrderPack.setTbopQcId(tbOrder.getTboQcId());
 					tbOrderPack.setTbopAwb(tbOrder.getTboAwb());
 					tbOrderPack.setTbopBrand(tbOrder.getTboBrand());
-					tbOrderPack.setTbopMarket(tbOrder.getTboMarket());					
+					tbOrderPack.setTbopMarket(tbOrder.getTboMarketId());					
 					tbOrderPack.setTbopFrontliner(tbOrder.getTboFrontliner());
 					tbOrderPack.setTbopOrderNo(tbOrder.getTboOrderNo());
 					tbOrderPack.setTbopName(tbOrder.getTboName());
@@ -429,7 +429,7 @@ public class OrderService {
 					tbOrderPackDetail.setTbopdCheck(TbOrderPackDetailRepository.CheckOk);
 					tbOrderPackDetail.setTbopdQty(tbOrder.getTboQty());
 					tbOrderPackDetail.setTbopdQtyPack(tbOrder.getTboQty());
-					tbOrderPackDetail.setTbopdMarket(tbOrder.getTboMarket());
+					tbOrderPackDetail.setTbopdMarket(tbOrder.getTboMarketId());
 					lstTbOrderPackDetail.add(tbOrderPackDetail);
 				}
 				tbOrderPackDetailRepository.saveAll(lstTbOrderPackDetail);
@@ -464,7 +464,7 @@ public class OrderService {
 						tbOrderGwpBundleDetail.setTboTypeNotPacked(TbOrderRepository.TypeOrder);
 						tbOrderGwpBundleDetail.setTboType(TbOrderRepository.TypeOrder);							
 						tbOrderGwpBundleDetail.setTboBrand(lstViewGwpSkuProduct.getTbpgTbpBrand());						
-						tbOrderGwpBundleDetail.setTboMarket(tbOrder.getTboMarket());
+						tbOrderGwpBundleDetail.setTboMarketId(tbOrder.getTboMarketId());
 						tbOrderGwpBundleDetail.setTboRow(tbOrder.getTboRow());
 						tbOrderGwpBundleDetail.setTboBrand(lstViewGwpSkuProduct.getTbpgTbpBrand());
 						tbOrderGwpBundleDetail.setTboQcId(tbOrder.getTboQcId());
@@ -504,7 +504,7 @@ public class OrderService {
 						tbOrderPackGwpBundleDetail.setTbopdTypeNotPacked(TbOrderPackDetailRepository.TypeNotPackedItem);
 						tbOrderPackGwpBundleDetail.setTbopdQty(lstViewGwpSkuProduct.getTbgsQty());
 						tbOrderPackGwpBundleDetail.setTbopdQtyPack(lstViewGwpSkuProduct.getTbgsQty());
-						tbOrderPackGwpBundleDetail.setTbopdMarket(tbOrder.getTboMarket());
+						tbOrderPackGwpBundleDetail.setTbopdMarket(tbOrder.getTboMarketId());
 
 						lstTbOrderPackDetail.add(tbOrderPackGwpBundleDetail);
 					}					
@@ -756,7 +756,7 @@ public class OrderService {
 			intCell = 0;
 			
 			cell = row.createCell(intCell++);
-			cell.setCellValue(viewOrderPack.getTboMarket());
+			cell.setCellValue(viewOrderPack.getTboMarketId());
 			
 			cell = row.createCell(intCell++);
 			cell.setCellValue(viewOrderPack.getTboOrderNo());
@@ -841,7 +841,7 @@ public class OrderService {
 			cell.setCellValue(tbOrder.getTboBrand());
 			
 			cell = row.createCell(intCell++);
-			cell.setCellValue(tbOrder.getTboMarket());
+			cell.setCellValue(tbOrder.getTboMarketId());
 			
 			cell = row.createCell(intCell++);
 			cell.setCellValue(tbOrder.getTboOrderNo());
@@ -1042,7 +1042,7 @@ public class OrderService {
 					tbOrderPackDetail.setTbopdType(TbOrderPackDetailRepository.TypeProduct);
 					tbOrderPackDetail.setTbopdQty(tbOrder.getTboQty());
 					tbOrderPackDetail.setTbopdQtyPack(tbOrder.getTboQty());
-					tbOrderPackDetail.setTbopdMarket(tbOrder.getTboMarket());
+					tbOrderPackDetail.setTbopdMarket(tbOrder.getTboMarketId());
 					
 					tbOrderPackDetailRepository.save(tbOrderPackDetail);
 				}
@@ -1203,7 +1203,7 @@ public class OrderService {
 						tbOrderPack.setTbopAwb(optViewOrderPack.get().getTboAwb());
 						tbOrderPack.setTbopQcId(optViewOrderPack.get().getTboQcId());
 						tbOrderPack.setTbopBrand(optViewOrderPack.get().getTboBrand());
-						tbOrderPack.setTbopMarket(optViewOrderPack.get().getTboMarket());						
+						tbOrderPack.setTbopMarket(optViewOrderPack.get().getTboMarketId());						
 						tbOrderPack.setTbopFrontliner(optViewOrderPack.get().getTboFrontliner());
 						tbOrderPack.setTbopOrderNo(optViewOrderPack.get().getTboOrderNo());
 						tbOrderPack.setTbopName(optViewOrderPack.get().getTboName());
@@ -1378,7 +1378,7 @@ public class OrderService {
 					tbOrder.setTboCreateId(optTbUser.get().getTbuId());
 					tbOrder.setTboRow(lstTbOrder.get(0).getTboRow() + 1);
 					tbOrder.setTboBrand(getProductResponseModel.getTbProduct().getTbbBrand());
-					tbOrder.setTboMarket(lstTbOrder.get(0).getTboMarket());
+					tbOrder.setTboMarketId(lstTbOrder.get(0).getTboMarketId());
 					tbOrder.setTboQcId(lstTbOrder.get(0).getTboQcId());
 					tbOrder.setTboSeq(lstTbOrder.get(0).getTboSeq() + 1);
 					tbOrder.setTboMaxSeq(lstTbOrder.get(0).getTboMaxSeq() + 1);
@@ -1482,7 +1482,7 @@ public class OrderService {
 							tbOrderPackDetail.setTbopdCheck(optTbOrder.get().getTboCheck());
 						}
 					}
-					tbOrderPackDetail.setTbopdMarket(optTbOrder.get().getTboMarket());
+					tbOrderPackDetail.setTbopdMarket(optTbOrder.get().getTboMarketId());
 					
 					tbOrderPackDetailRepository.save(tbOrderPackDetail);
 					
@@ -1780,7 +1780,7 @@ public class OrderService {
 						ViewProductMarket viewProductMarket = new ViewProductMarket();						
 
 						for (ViewProductMarket viewProductMarket_ : getProductResponseModel.getLstViewProductMarket()) {
-							if (viewProductMarket_.getTbmMarket().equals(optTbOrderPackDetail.get().getTbopdMarket())) {
+							if (viewProductMarket_.getTbmMarketId().equals(optTbOrderPackDetail.get().getTbopdMarket())) {
 								viewProductMarket = viewProductMarket_;
 							}
 						}
@@ -1832,7 +1832,7 @@ public class OrderService {
 								postProductConfirmRequestModel.setTbpcOrderNo(optTbOrder.get().getTboOrderNo());
 								postProductConfirmRequestModel.setTbpcSku(optTbOrder.get().getTboSku());
 								postProductConfirmRequestModel.setTbpcQty(optTbOrder.get().getTboQty());
-								postProductConfirmRequestModel.setTbpcMarket(optTbOrder.get().getTboMarket());
+								postProductConfirmRequestModel.setTbpcMarket(optTbOrder.get().getTboMarketId());
 								
 								HttpEntity<PostProductConfirmRequestModel> requestPostProductConfirmRequestModel = new HttpEntity<>(postProductConfirmRequestModel);
 								restTemplatePostproductconfirm.postForEntity(env.getProperty("services.bsd.api.dms.product") + "/postproductconfirm?", requestPostProductConfirmRequestModel, String.class);

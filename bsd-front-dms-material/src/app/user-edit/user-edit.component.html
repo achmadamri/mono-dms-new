@@ -87,13 +87,13 @@
                       <table class="table table-hover">
                         <thead class="text-warning">
                           <tr>
-                            <th scope="col">Market</th>
+                            <th scope="col">Market ID</th>
                             <th scope="col" style="cursor: pointer;" (click)="checkMarketAll();">Access</th>
                           </tr>
                         </thead>
                         <tbody *ngIf="userEditRequest.lstTbMarket[0].tbmId != undefined">
                           <tr *ngFor="let tbMarket of userEditRequest.lstTbMarket; let i = index">
-                            <td>{{tbMarket.tbmMarket}}</td>
+                            <td>{{tbMarket.tbmMarketId}}</td>
                             <td>
                               <mat-checkbox [(ngModel)]="tbMarket.check" name="checkMarket{{i}}"></mat-checkbox>
                             </td>

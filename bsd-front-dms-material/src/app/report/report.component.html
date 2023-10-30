@@ -73,7 +73,7 @@
                                   <tr>
                                     <th scope="col">Date</th>
                                     <th scope="col">Brand</th>
-                                    <th scope="col">Market</th>
+                                    <th scope="col">Market ID</th>
                                     <th scope="col">Frontliner</th>
                                     <th scope="col">Order No</th>
                                     <th scope="col">Name</th>
@@ -85,7 +85,7 @@
                                   <tr *ngFor="let viewOrder of getOrderListResponse.lstViewOrder">
                                     <td>{{viewOrder.tboCreateDate | date: 'M/dd/yyyy'}}</td>
                                     <td>{{viewOrder.tboBrand}}</td>
-                                    <td>{{viewOrder.tboMarket}}</td>
+                                    <td>{{viewOrder.tboMarketId}}</td>
                                     <td>{{viewOrder.tboFrontliner}}</td>
                                     <td>{{viewOrder.tboOrderNo}}</td>
                                     <td>{{viewOrder.tboName}}</td>
@@ -197,7 +197,7 @@
                                   <tr>
                                     <th scope="col">Date</th>
                                     <th scope="col">Brand</th>
-                                    <th scope="col">Market</th>
+                                    <th scope="col">Market ID</th>
                                     <th scope="col">Frontliner</th>
                                     <th scope="col">Order No</th>
                                     <th scope="col">Sku</th>
@@ -210,7 +210,7 @@
                                   <tr *ngFor="let viewSales of getSalesListResponse.lstViewSales">
                                     <td>{{viewSales.tboCreateDate | date: 'M/dd/yyyy'}}</td>
                                     <td>{{viewSales.tboBrand}}</td>
-                                    <td>{{viewSales.tboMarket}}</td>
+                                    <td>{{viewSales.tboMarketId}}</td>
                                     <td>{{viewSales.tboFrontliner}}</td>
                                     <td>{{viewSales.tboOrderNo}}</td>
                                     <td>{{viewSales.tboSku}}</td>

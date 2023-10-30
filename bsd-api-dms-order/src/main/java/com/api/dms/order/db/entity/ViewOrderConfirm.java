@@ -58,7 +58,7 @@ public class ViewOrderConfirm implements Serializable {
 	@Column(name="brand")
 	private String brand;
 
-	@Column(name="market")
+	@Column(name="market_id")
 	private String market;
 
 	@Column(name="frontliner")

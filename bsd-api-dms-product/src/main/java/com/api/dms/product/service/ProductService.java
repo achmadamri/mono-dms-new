@@ -266,7 +266,7 @@ public class ProductService {
 					tbProductMarket.setTbpmCreateId(optTbUser.get().getTbuId());
 					tbProductMarket.setTbpId(tbProduct.getTbpId());
 					tbProductMarket.setTbpSku(tbProduct.getTbpSku());
-					tbProductMarket.setTbmMarket(tbUserMarket.getTbmMarket());
+					tbProductMarket.setTbmMarketId(tbUserMarket.getTbmMarketId());
 					tbProductMarket.setTbmMarketCheck(tbUserMarket.getTbmMarketCheck());
 					
 					tbProductMarketRepository.save(tbProductMarket);
@@ -558,7 +558,7 @@ public class ProductService {
 					tbProductMarket.setTbpmCreateId(optTbUser.get().getTbuId());
 					tbProductMarket.setTbpId(tbProduct.getTbpId());
 					tbProductMarket.setTbpSku(tbProduct.getTbpSku());
-					tbProductMarket.setTbmMarket(tbUserMarket.getTbmMarket());
+					tbProductMarket.setTbmMarketId(tbUserMarket.getTbmMarketId());
 					tbProductMarket.setTbmMarketCheck(tbUserMarket.getTbmMarketCheck());
 					
 					tbProductMarketRepository.save(tbProductMarket);
@@ -660,9 +660,21 @@ public class ProductService {
 			List<ViewProductMarket> lstViewProductMarket = viewProductMarketRepository.findAllByTbpSku(tbpId, PageRequest.of(Integer.valueOf(pageIndex), Integer.valueOf(pageSize), Sort.by("tbpmId", "tbpmId").ascending()));
 			
 			if (lstViewProductMarket.size() > 0) {
+				List<String> lstTbmMarketId = new ArrayList<>();
+				for (ViewProductMarket viewProductMarket : lstViewProductMarket) {
+					lstTbmMarketId.add(viewProductMarket.getTbmMarketId());
+				}
+
+				List<TbUserMarket> lstTbUserMarket = tbUserMarketRepository.findByTbuIdAndTbmMarketIdNotIn(optTbUser.get().getTbuId(), lstTbmMarketId);
+				for (TbUserMarket tbUserMarket : lstTbUserMarket) {
+					ViewProductMarket viewProductMarket	= new ViewProductMarket();
+					viewProductMarket.setTbmMarketId(tbUserMarket.getTbmMarketId());
+					viewProductMarket.setTbpmQty(0);
+
+					lstViewProductMarket.add(viewProductMarket);
+				}
+
 				responseModel.setLstViewProductMarket(lstViewProductMarket);
-				
-				responseModel.setLength(viewProductMarketRepository.countAllByTbpSku(tbpId));
 				
 				responseModel.setStatus("200");
 				responseModel.setMessage("Get Product List ok");
@@ -724,7 +736,7 @@ public class ProductService {
 					tbProductMarket.setTbpmCreateId(optTbUser.get().getTbuId());
 					tbProductMarket.setTbpId(tbProduct.getTbpId());
 					tbProductMarket.setTbpSku(tbProduct.getTbpSku());
-					tbProductMarket.setTbmMarket(tbUserMarket.getTbmMarket());
+					tbProductMarket.setTbmMarketId(tbUserMarket.getTbmMarketId());
 					tbProductMarket.setTbmMarketCheck(tbUserMarket.getTbmMarketCheck());
 					
 					tbProductMarketRepository.save(tbProductMarket);
@@ -909,11 +921,23 @@ public class ProductService {
 						tbProductRepository.save(tbProduct);
 
 						for (ViewProductMarket viewProductMarket : requestModel.getLstViewProductMarket()) {
-							TbProductMarket tbProductMarket = tbProductMarketRepository.findById(viewProductMarket.getTbpmId()).get();
-							tbProductMarket.setTbpmUpdateDate(new Date());
-							tbProductMarket.setTbpmUpdateId(optTbUser.get().getTbuId());
-							tbProductMarket.setTbpmQty(viewProductMarket.getTbpmQty());
-							tbProductMarketRepository.save(tbProductMarket);					
+							if (viewProductMarket.getTbpmId() != null) {
+								TbProductMarket tbProductMarket = tbProductMarketRepository.findById(viewProductMarket.getTbpmId()).get();							
+								tbProductMarket.setTbpmUpdateDate(new Date());
+								tbProductMarket.setTbpmUpdateId(optTbUser.get().getTbuId());
+								tbProductMarket.setTbpmQty(viewProductMarket.getTbpmQty());
+								tbProductMarketRepository.save(tbProductMarket);					
+							} else {
+								TbProductMarket tbProductMarket = new TbProductMarket();
+								tbProductMarket.setTbpmCreateDate(new Date());
+								tbProductMarket.setTbpmCreateId(optTbUser.get().getTbuId());
+								tbProductMarket.setTbpId(tbProduct.getTbpId());
+								tbProductMarket.setTbpSku(tbProduct.getTbpSku());
+								tbProductMarket.setTbmMarketId(viewProductMarket.getTbmMarketId());
+								tbProductMarket.setTbmMarketCheck(1);
+								tbProductMarket.setTbpmQty(viewProductMarket.getTbpmQty());
+								tbProductMarketRepository.save(tbProductMarket);					
+							}							
 						}
 						
 						List<TbProduct> lstTbProduct = new ArrayList<TbProduct>();
@@ -1023,7 +1047,7 @@ public class ProductService {
 
 				TbProductMarket exampleTbProductMarket = new TbProductMarket();
 				exampleTbProductMarket.setTbpSku(requestModel.getTbpcSku());
-				exampleTbProductMarket.setTbmMarket(requestModel.getTbpcMarket());
+				exampleTbProductMarket.setTbmMarketId(requestModel.getTbpcMarket());
 				Optional<TbProductMarket> optTbProductMarket = tbProductMarketRepository.findOne(Example.of(exampleTbProductMarket));
 				optTbProductMarket.get().setTbpmUpdateDate(new Date());
 				optTbProductMarket.get().setTbpmUpdateId(optTbUser.get().getTbuId());

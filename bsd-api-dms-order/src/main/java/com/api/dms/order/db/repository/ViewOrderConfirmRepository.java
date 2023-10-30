@@ -19,9 +19,9 @@ public interface ViewOrderConfirmRepository extends JpaRepository<ViewOrderConfi
 	public final static String StatusReturned = "Returned";
 	public final static String StatusCancelled = "Cancelled";
 
-	@Query("select t from ViewOrderConfirm t join TbUserMarket t2 on t2.tbmMarket = t.market and t2.tbmMarketCheck = 1 and t2.tbuId = :tbuId where t.tbuId = :tbuId and t.orderNo like %:orderNo% and (t.sku like :sku% or t.code like :sku%) and status like :status% and status != 'Completed' and type like :type% and brand like :brand% and t.createDate >= :startDate and t.createDate <= :endDate")
+	@Query("select t from ViewOrderConfirm t join TbUserMarket t2 on t2.tbmMarketId = t.market and t2.tbmMarketCheck = 1 and t2.tbuId = :tbuId where t.tbuId = :tbuId and t.orderNo like %:orderNo% and (t.sku like :sku% or t.code like :sku%) and status like :status% and status != 'Completed' and type like :type% and brand like :brand% and t.createDate >= :startDate and t.createDate <= :endDate")
 	List<ViewOrderConfirm> find(@Param("tbuId") Integer tbuId, @Param("orderNo") String orderNo, @Param("sku") String sku, @Param("status") String status, @Param("type") String type, @Param("brand") String brand, @Param("startDate") Date startDate, @Param("endDate") Date endDate, Pageable pageable);
 	
-	@Query("select count(0) from ViewOrderConfirm t join TbUserMarket t2 on t2.tbmMarket = t.market and t2.tbmMarketCheck = 1 and t2.tbuId = :tbuId where t.tbuId = :tbuId and t.orderNo like %:orderNo% and (t.sku like :sku% or t.code like :sku%) and status like :status% and status != 'Completed' and type like :type% and brand like :brand% and t.createDate >= :startDate and t.createDate <= :endDate")
+	@Query("select count(0) from ViewOrderConfirm t join TbUserMarket t2 on t2.tbmMarketId = t.market and t2.tbmMarketCheck = 1 and t2.tbuId = :tbuId where t.tbuId = :tbuId and t.orderNo like %:orderNo% and (t.sku like :sku% or t.code like :sku%) and status like :status% and status != 'Completed' and type like :type% and brand like :brand% and t.createDate >= :startDate and t.createDate <= :endDate")
 	Long count(@Param("tbuId") Integer tbuId, @Param("orderNo") String orderNo, @Param("sku") String sku, @Param("status") String status, @Param("type") String type, @Param("brand") String brand, @Param("startDate") Date startDate, @Param("endDate") Date endDate);
 }

@@ -41,7 +41,7 @@ public class TbOrder implements Serializable {
 
 	private String tboLoc;
 
-	private String tboMarket;
+	private String tboMarketId;
 
 	private Integer tboMaxSeq;
 
@@ -224,12 +224,12 @@ public class TbOrder implements Serializable {
 		this.tboLoc = tboLoc;
 	}
 
-	public String getTboMarket() {
-		return tboMarket;
+	public String getTboMarketId() {
+		return tboMarketId;
 	}
 
-	public void setTboMarket(String tboMarket) {
-		this.tboMarket = tboMarket;
+	public void setTboMarketId(String tboMarketId) {
+		this.tboMarketId = tboMarketId;
 	}
 
 	public Integer getTboMaxSeq() {

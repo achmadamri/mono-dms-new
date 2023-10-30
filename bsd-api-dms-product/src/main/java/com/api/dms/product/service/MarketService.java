@@ -61,13 +61,13 @@ public class MarketService {
 		
 		if (optTbUser.isPresent()) {
 			ExampleMatcher matcher = ExampleMatcher.matching()
-					.withMatcher("tbmMarket", ExampleMatcher.GenericPropertyMatchers.contains().ignoreCase())
+					.withMatcher("tbmMarketId", ExampleMatcher.GenericPropertyMatchers.contains().ignoreCase())
 					;
 		
 			TbMarket exampleTbMarket = new TbMarket();
 			exampleTbMarket.setTbmRole(tbmRole.equals("ADMIN") ? "PRINCIPAL" : tbmRole);
 			
-			List<TbMarket> lstTbMarketParent = tbMarketRepository.findAll(Example.of(exampleTbMarket), Sort.by("tbmMarket").ascending());
+			List<TbMarket> lstTbMarketParent = tbMarketRepository.findAll(Example.of(exampleTbMarket), Sort.by("tbmMarketId").ascending());
 			List<TbMarket> lstTbMarketChild = new ArrayList<TbMarket>();
 			
 			for (TbMarket tbMarket_ : lstTbMarketParent) {
@@ -109,7 +109,7 @@ public class MarketService {
 		return lstTbMarket;
 	}
 	
-	public GetMarketListResponseModel getMarketList(String tbmMarket, String length, String pageSize, String pageIndex, GetMarketListRequestModel requestModel) throws Exception {
+	public GetMarketListResponseModel getMarketList(String tbmMarketId, String length, String pageSize, String pageIndex, GetMarketListRequestModel requestModel) throws Exception {
 		GetMarketListResponseModel responseModel = new GetMarketListResponseModel(requestModel);
 		
 		tokenUtil.claims(requestModel);
@@ -121,11 +121,11 @@ public class MarketService {
 		
 		if (optTbUser.isPresent()) {
 			ExampleMatcher matcher = ExampleMatcher.matching()
-					.withMatcher("tbmMarket", ExampleMatcher.GenericPropertyMatchers.contains().ignoreCase())
+					.withMatcher("tbmMarketId", ExampleMatcher.GenericPropertyMatchers.contains().ignoreCase())
 					;
 		
 			TbMarket exampleTbMarket = new TbMarket();
-			exampleTbMarket.setTbmMarket(tbmMarket);
+			exampleTbMarket.setTbmMarketId(tbmMarketId);
 			
 			Page<TbMarket> pgTbMarket = tbMarketRepository.findAll(Example.of(exampleTbMarket, matcher), PageRequest.of(Integer.valueOf(pageIndex), Integer.valueOf(pageSize), Sort.by("tbmId").ascending()));
 			
@@ -161,11 +161,11 @@ public class MarketService {
 		
 		if (optTbUser.isPresent()) {
 			ExampleMatcher matcher = ExampleMatcher.matching()
-					.withMatcher("tbmMarket", ExampleMatcher.GenericPropertyMatchers.contains().ignoreCase())
+					.withMatcher("tbmMarketId", ExampleMatcher.GenericPropertyMatchers.contains().ignoreCase())
 					;
 			
 			TbMarket exampleTbMarket = new TbMarket();
-			exampleTbMarket.setTbmMarket(requestModel.getTbmMarket());
+			exampleTbMarket.setTbmMarketId(requestModel.getTbmMarketId());
 			
 			Optional<TbMarket> optTbMarket = tbMarketRepository.findOne(Example.of(exampleTbMarket, matcher));
 			
@@ -179,7 +179,7 @@ public class MarketService {
 
 				tbMarket.setTbmCreateDate(new Date());
 				tbMarket.setTbmCreateId(optTbUser.get().getTbuId());
-				tbMarket.setTbmMarket(requestModel.getTbmMarket());
+				tbMarket.setTbmMarketId(requestModel.getTbmMarketId());
 				tbMarket.setTbmRole(requestModel.getTbmRole());
 
 				if (requestModel.getTbmParentId() != null) tbMarket.setTbmParentId(Integer.valueOf(requestModel.getTbmParentId()));
@@ -260,7 +260,7 @@ public class MarketService {
 
 				tbMarket.setTbmUpdateDate(new Date());
 				tbMarket.setTbmUpdateId(optTbUser.get().getTbuId());
-				tbMarket.setTbmMarket(requestModel.getTbmMarket());
+				tbMarket.setTbmMarketId(requestModel.getTbmMarketId());
 				tbMarket.setTbmRole(requestModel.getTbmRole());
 				
 				if (requestModel.getTbmParentId() != null) tbMarket.setTbmParentId(Integer.valueOf(requestModel.getTbmParentId()));

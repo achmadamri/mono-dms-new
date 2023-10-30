@@ -39,7 +39,7 @@ CREATE TABLE `tb_auth` (
   KEY `tb_auth_tba_status_index` (`tba_status`),
   KEY `tb_auth_tba_token_salt_index` (`tba_token_salt`),
   KEY `tb_auth_tba_tba_role_index` (`tba_role`)
-) ENGINE=InnoDB AUTO_INCREMENT=12 DEFAULT CHARSET=latin1 COLLATE=latin1_swedish_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=15 DEFAULT CHARSET=latin1 COLLATE=latin1_swedish_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -48,7 +48,7 @@ CREATE TABLE `tb_auth` (
 
 LOCK TABLES `tb_auth` WRITE;
 /*!40000 ALTER TABLE `tb_auth` DISABLE KEYS */;
-INSERT INTO `tb_auth` VALUES (1,NULL,NULL,'2023-10-18 13:38:21',0,'admin@mail.com','202cb962ac59075b964b07152d234b70','active','0u38hvf625y76v2c3k6e20w3dez8ui0gpqfp','ADMIN'),(11,'2023-10-18 13:38:47',0,'2023-10-18 13:38:51',0,'pic1@mail.com','202cb962ac59075b964b07152d234b70','active','qlca7qxa94ekc3v7z8iogp8mj457ub7o5mf3','SUBDIST');
+INSERT INTO `tb_auth` VALUES (1,NULL,NULL,'2023-10-30 00:40:34',0,'admin@mail.com','202cb962ac59075b964b07152d234b70','active','1lm38q5t2vzny0cfa08olp7zthhivzi4on4i','ADMIN'),(14,'2023-10-30 00:39:27',0,'2023-10-30 00:40:59',0,'pic1@mail.com','202cb962ac59075b964b07152d234b70','active','qp44m27ac0ic6ryow1ed73n4husk7myqsyof','SUBDIST');
 /*!40000 ALTER TABLE `tb_auth` ENABLE KEYS */;
 UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
@@ -61,4 +61,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2023-10-25  7:47:21
+-- Dump completed on 2023-10-30  8:05:49

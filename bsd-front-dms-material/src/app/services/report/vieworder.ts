@@ -4,7 +4,7 @@ export class ViewOrder {
 	tboCreateId: number;
 	tboFullAddress: string;
 	tboHp: string;
-	tboMarket: string;
+	tboMarketId: string;
 	tboFrontliner: string;
 	tboName: string;
 	tboOrderNo: string;

@@ -14,7 +14,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 
 @JsonInclude(JsonInclude.Include.NON_NULL)
-@JsonPropertyOrder({ "tbpmId", "tbpId", "tbpSku", "tbmMarket", "tbpmQty", "uuid" })
+@JsonPropertyOrder({ "tbpmId", "tbpId", "tbpSku", "tbmMarketId", "tbpmQty", "uuid" })
 @Generated("jsonschema2pojo")
 public class ViewProductMarket implements Serializable {
 	@JsonProperty("tbpmId")
@@ -23,8 +23,8 @@ public class ViewProductMarket implements Serializable {
 	private Integer tbpId;
 	@JsonProperty("tbpSku")
 	private String tbpSku;
-	@JsonProperty("tbmMarket")
-	private String tbmMarket;
+	@JsonProperty("tbmMarketId")
+	private String tbmMarketId;
 	@JsonProperty("tbpmQty")
 	private Integer tbpmQty;
 	@JsonProperty("uuid")
@@ -62,14 +62,14 @@ public class ViewProductMarket implements Serializable {
 		this.tbpSku = tbpSku;
 	}
 
-	@JsonProperty("tbmMarket")
-	public String getTbmMarket() {
-		return tbmMarket;
+	@JsonProperty("tbmMarketId")
+	public String getTbmMarketId() {
+		return tbmMarketId;
 	}
 
-	@JsonProperty("tbmMarket")
-	public void setTbmMarket(String tbmMarket) {
-		this.tbmMarket = tbmMarket;
+	@JsonProperty("tbmMarketId")
+	public void setTbmMarketId(String tbmMarketId) {
+		this.tbmMarketId = tbmMarketId;
 	}
 
 	@JsonProperty("tbpmQty")

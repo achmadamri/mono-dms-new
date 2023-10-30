@@ -38,8 +38,8 @@ public class ViewOrder implements Serializable {
 	@Column(name="tbo_hp")
 	private String tboHp;
 
-	@Column(name="tbo_market")
-	private String tboMarket;
+	@Column(name="tbo_market_id")
+	private String tboMarketId;
 
 	@Column(name="tbo_frontliner")
 	private String tboFrontliner;
@@ -107,12 +107,12 @@ public class ViewOrder implements Serializable {
 		this.tboHp = tboHp;
 	}
 
-	public String getTboMarket() {
-		return this.tboMarket;
+	public String getTboMarketId() {
+		return this.tboMarketId;
 	}
 
-	public void setTboMarket(String tboMarket) {
-		this.tboMarket = tboMarket;
+	public void setTboMarketId(String tboMarketId) {
+		this.tboMarketId = tboMarketId;
 	}
 
 	public String getTboFrontliner() {

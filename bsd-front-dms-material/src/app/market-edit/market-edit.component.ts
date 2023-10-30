@@ -105,7 +105,7 @@ export class MarketEditComponent implements OnInit {
           this.getMarketResponse = successResponse;
 
           this.postMarketEditRequest.tbmId = this.getMarketResponse.tbMarket.tbmId;
-          this.postMarketEditRequest.tbmMarket = this.getMarketResponse.tbMarket.tbmMarket;
+          this.postMarketEditRequest.tbmMarketId = this.getMarketResponse.tbMarket.tbmMarketId;
           this.postMarketEditRequest.tbmParentId = this.getMarketResponse.tbMarket.tbmParentId;
           this.postMarketEditRequest.tbmRole = this.getMarketResponse.tbMarket.tbmRole;
 

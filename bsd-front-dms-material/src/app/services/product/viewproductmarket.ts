@@ -2,7 +2,7 @@ export class ViewProductMarket {
 	tbpmId: number;
 	tbpId: number;
 	tbpSku: string;
-	tbmMarket: string;
+	tbmMarketId: string;
 	tbpmQty: number;
 	uuid: string;
 }
