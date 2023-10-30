@@ -39,7 +39,7 @@ CREATE TABLE `tb_auth` (
   KEY `tb_auth_tba_status_index` (`tba_status`),
   KEY `tb_auth_tba_token_salt_index` (`tba_token_salt`),
   KEY `tb_auth_tba_tba_role_index` (`tba_role`)
-) ENGINE=InnoDB AUTO_INCREMENT=15 DEFAULT CHARSET=latin1 COLLATE=latin1_swedish_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=19 DEFAULT CHARSET=latin1 COLLATE=latin1_swedish_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -48,7 +48,7 @@ CREATE TABLE `tb_auth` (
 
 LOCK TABLES `tb_auth` WRITE;
 /*!40000 ALTER TABLE `tb_auth` DISABLE KEYS */;
-INSERT INTO `tb_auth` VALUES (1,NULL,NULL,'2023-10-30 00:40:34',0,'admin@mail.com','202cb962ac59075b964b07152d234b70','active','1lm38q5t2vzny0cfa08olp7zthhivzi4on4i','ADMIN'),(14,'2023-10-30 00:39:27',0,'2023-10-30 00:40:59',0,'pic1@mail.com','202cb962ac59075b964b07152d234b70','active','qp44m27ac0ic6ryow1ed73n4husk7myqsyof','SUBDIST');
+INSERT INTO `tb_auth` VALUES (1,NULL,NULL,'2023-10-30 14:58:12',0,'admin@mail.com','202cb962ac59075b964b07152d234b70','active','j2x9fzhzeoln4kgv9s30hnicya5du69zch6w','ADMIN'),(17,'2023-10-30 14:59:46',0,'2023-10-30 15:15:03',0,'picdki@mail.com','202cb962ac59075b964b07152d234b70','active','mdai8anacb0qrs7j0ee88ttxi9if70ngn7ik','DISTRIBUTOR'),(18,'2023-10-30 15:00:18',0,NULL,NULL,'picjabar@mail.com','202cb962ac59075b964b07152d234b70','active','otcoiaut7kkn2r6hxukuj06915rrtz7ynra9','DISTRIBUTOR');
 /*!40000 ALTER TABLE `tb_auth` ENABLE KEYS */;
 UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
@@ -61,4 +61,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2023-10-30  8:05:49
+-- Dump completed on 2023-10-30 22:18:59

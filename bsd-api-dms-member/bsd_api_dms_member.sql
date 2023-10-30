@@ -109,7 +109,7 @@ CREATE TABLE `tb_user` (
   KEY `tb_user_tbu_lastname_index` (`tbu_lastname`),
   KEY `tb_user_tbu_token_salt_index` (`tbu_token_salt`),
   KEY `tb_user_tbu_role_index` (`tbu_role`)
-) ENGINE=InnoDB AUTO_INCREMENT=20 DEFAULT CHARSET=latin1 COLLATE=latin1_swedish_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=24 DEFAULT CHARSET=latin1 COLLATE=latin1_swedish_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -118,7 +118,7 @@ CREATE TABLE `tb_user` (
 
 LOCK TABLES `tb_user` WRITE;
 /*!40000 ALTER TABLE `tb_user` DISABLE KEYS */;
-INSERT INTO `tb_user` VALUES (1,NULL,NULL,'2023-10-30 00:40:34',1,'admin@mail.com','202cb962ac59075b964b07152d234b70','admin','admin',NULL,NULL,NULL,'active',NULL,NULL,'1lm38q5t2vzny0cfa08olp7zthhivzi4on4i','ADMIN'),(19,'2023-10-30 00:39:27',1,'2023-10-30 00:40:58',19,'pic1@mail.com','202cb962ac59075b964b07152d234b70','Pic','Satu',NULL,NULL,NULL,'active',NULL,NULL,'qp44m27ac0ic6ryow1ed73n4husk7myqsyof','SUBDIST');
+INSERT INTO `tb_user` VALUES (1,NULL,NULL,'2023-10-30 14:58:12',1,'admin@mail.com','202cb962ac59075b964b07152d234b70','admin','admin',NULL,NULL,NULL,'active',NULL,NULL,'j2x9fzhzeoln4kgv9s30hnicya5du69zch6w','ADMIN'),(22,'2023-10-30 14:59:46',1,'2023-10-30 15:15:03',22,'picdki@mail.com','202cb962ac59075b964b07152d234b70','pic','dki',NULL,NULL,NULL,'active',NULL,NULL,'mdai8anacb0qrs7j0ee88ttxi9if70ngn7ik','DISTRIBUTOR'),(23,'2023-10-30 15:00:18',1,NULL,NULL,'picjabar@mail.com','202cb962ac59075b964b07152d234b70','pic','jabar',NULL,NULL,NULL,'active',NULL,NULL,'otcoiaut7kkn2r6hxukuj06915rrtz7ynra9','DISTRIBUTOR');
 /*!40000 ALTER TABLE `tb_user` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -144,7 +144,7 @@ CREATE TABLE `tb_user_brand` (
   KEY `tb_user_brand_tbb_brand_index` (`tbb_brand`),
   KEY `tb_user_brand_tbb_brand_id_index` (`tbb_brand_id`),
   KEY `tb_user_brand_tbb_brand_check_index` (`tbb_brand_check`)
-) ENGINE=InnoDB AUTO_INCREMENT=30 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=49 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -153,7 +153,7 @@ CREATE TABLE `tb_user_brand` (
 
 LOCK TABLES `tb_user_brand` WRITE;
 /*!40000 ALTER TABLE `tb_user_brand` DISABLE KEYS */;
-INSERT INTO `tb_user_brand` VALUES (24,'2023-10-29 07:13:55',1,NULL,NULL,1,'Mamasuka','MAMAS',1),(29,'2023-10-30 00:40:42',1,NULL,NULL,19,'Mamasuka','MAMAS',1);
+INSERT INTO `tb_user_brand` VALUES (35,'2023-10-30 12:15:33',1,NULL,NULL,1,'Mamasuka','MAMAS',1),(46,'2023-10-30 15:00:18',1,NULL,NULL,23,'Mamasuka','MAMAS',1),(48,'2023-10-30 15:15:03',22,NULL,NULL,22,'Mamasuka','MAMAS',1);
 /*!40000 ALTER TABLE `tb_user_brand` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -177,7 +177,7 @@ CREATE TABLE `tb_user_market` (
   KEY `tb_user_market_tbu_id_index` (`tbu_id`),
   KEY `tb_user_market_tbm_market_index` (`tbm_market_id`),
   KEY `tb_user_market_tbm_market_check_index` (`tbm_market_check`)
-) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=29 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -186,7 +186,7 @@ CREATE TABLE `tb_user_market` (
 
 LOCK TABLES `tb_user_market` WRITE;
 /*!40000 ALTER TABLE `tb_user_market` DISABLE KEYS */;
-INSERT INTO `tb_user_market` VALUES (2,'2023-10-30 00:40:42',1,NULL,NULL,19,'SUBDIST_1',1),(3,'2023-10-30 00:40:42',1,NULL,NULL,19,'SUBDIST_2',1);
+INSERT INTO `tb_user_market` VALUES (8,'2023-10-30 15:00:18',1,NULL,NULL,23,'DIST_BALI',0),(9,'2023-10-30 15:00:18',1,NULL,NULL,23,'DIST_DKI',0),(10,'2023-10-30 15:00:18',1,NULL,NULL,23,'DIST_JABAR',1),(11,'2023-10-30 15:00:18',1,NULL,NULL,23,'DIST_JATENG',0),(12,'2023-10-30 15:00:18',1,NULL,NULL,23,'DIST_JATIM',0),(13,'2023-10-30 15:00:18',1,NULL,NULL,23,'DIST_KALIMANTAN',0),(14,'2023-10-30 15:00:18',1,NULL,NULL,23,'DIST_NUSA',0),(22,'2023-10-30 15:15:03',22,NULL,NULL,22,'DIST_BALI',0),(23,'2023-10-30 15:15:03',22,NULL,NULL,22,'DIST_DKI',1),(24,'2023-10-30 15:15:03',22,NULL,NULL,22,'DIST_JABAR',1),(25,'2023-10-30 15:15:03',22,NULL,NULL,22,'DIST_JATENG',0),(26,'2023-10-30 15:15:03',22,NULL,NULL,22,'DIST_JATIM',0),(27,'2023-10-30 15:15:03',22,NULL,NULL,22,'DIST_KALIMANTAN',0),(28,'2023-10-30 15:15:03',22,NULL,NULL,22,'DIST_NUSA',0);
 /*!40000 ALTER TABLE `tb_user_market` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -212,7 +212,7 @@ CREATE TABLE `tb_user_menu` (
   PRIMARY KEY (`tbum_id`),
   KEY `tb_user_menu_tbu_id_index` (`tbu_id`),
   KEY `tb_user_menu_tbm_id_index` (`tbm_id`)
-) ENGINE=InnoDB AUTO_INCREMENT=384 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=554 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -221,7 +221,7 @@ CREATE TABLE `tb_user_menu` (
 
 LOCK TABLES `tb_user_menu` WRITE;
 /*!40000 ALTER TABLE `tb_user_menu` DISABLE KEYS */;
-INSERT INTO `tb_user_menu` VALUES (336,'2023-10-29 07:13:55',1,NULL,NULL,1,8,1,1,1,1),(337,'2023-10-29 07:13:55',1,NULL,NULL,1,1,1,1,1,1),(338,'2023-10-29 07:13:55',1,NULL,NULL,1,2,1,1,1,1),(339,'2023-10-29 07:13:55',1,NULL,NULL,1,3,1,1,1,1),(340,'2023-10-29 07:13:55',1,NULL,NULL,1,4,1,1,1,1),(341,'2023-10-29 07:13:55',1,NULL,NULL,1,5,1,1,1,1),(342,'2023-10-29 07:13:55',1,NULL,NULL,1,7,1,1,1,1),(343,'2023-10-29 07:13:55',1,NULL,NULL,1,6,1,1,1,1),(376,'2023-10-30 00:40:42',1,NULL,NULL,19,8,0,0,0,1),(377,'2023-10-30 00:40:42',1,NULL,NULL,19,1,0,0,0,1),(378,'2023-10-30 00:40:42',1,NULL,NULL,19,2,0,0,0,1),(379,'2023-10-30 00:40:42',1,NULL,NULL,19,3,0,0,0,1),(380,'2023-10-30 00:40:42',1,NULL,NULL,19,4,0,0,0,1),(381,'2023-10-30 00:40:42',1,NULL,NULL,19,5,0,0,0,1),(382,'2023-10-30 00:40:42',1,NULL,NULL,19,7,0,0,0,1),(383,'2023-10-30 00:40:42',1,NULL,NULL,19,6,0,0,0,1);
+INSERT INTO `tb_user_menu` VALUES (428,'2023-10-30 12:15:33',1,NULL,NULL,1,8,1,1,1,1),(429,'2023-10-30 12:15:33',1,NULL,NULL,1,1,1,1,1,1),(430,'2023-10-30 12:15:33',1,NULL,NULL,1,9,1,1,1,1),(431,'2023-10-30 12:15:33',1,NULL,NULL,1,2,1,1,1,1),(432,'2023-10-30 12:15:33',1,NULL,NULL,1,3,1,1,1,1),(433,'2023-10-30 12:15:33',1,NULL,NULL,1,4,1,1,1,1),(434,'2023-10-30 12:15:33',1,NULL,NULL,1,5,1,1,1,1),(435,'2023-10-30 12:15:33',1,NULL,NULL,1,7,1,1,1,1),(436,'2023-10-30 12:15:33',1,NULL,NULL,1,6,1,1,1,1),(527,'2023-10-30 15:00:18',1,NULL,NULL,23,8,0,0,0,1),(528,'2023-10-30 15:00:18',1,NULL,NULL,23,1,0,0,0,1),(529,'2023-10-30 15:00:18',1,NULL,NULL,23,9,0,0,0,1),(530,'2023-10-30 15:00:18',1,NULL,NULL,23,2,0,0,0,1),(531,'2023-10-30 15:00:18',1,NULL,NULL,23,3,0,0,0,1),(532,'2023-10-30 15:00:18',1,NULL,NULL,23,4,0,0,0,1),(533,'2023-10-30 15:00:18',1,NULL,NULL,23,5,0,0,0,1),(534,'2023-10-30 15:00:18',1,NULL,NULL,23,7,0,0,0,1),(535,'2023-10-30 15:00:18',1,NULL,NULL,23,6,0,0,0,1),(545,'2023-10-30 15:15:03',22,NULL,NULL,22,8,0,0,0,1),(546,'2023-10-30 15:15:03',22,NULL,NULL,22,1,0,0,0,1),(547,'2023-10-30 15:15:03',22,NULL,NULL,22,9,0,0,0,1),(548,'2023-10-30 15:15:03',22,NULL,NULL,22,2,0,0,0,1),(549,'2023-10-30 15:15:03',22,NULL,NULL,22,3,0,0,0,1),(550,'2023-10-30 15:15:03',22,NULL,NULL,22,4,0,0,0,1),(551,'2023-10-30 15:15:03',22,NULL,NULL,22,5,0,0,0,1),(552,'2023-10-30 15:15:03',22,NULL,NULL,22,7,0,0,0,1),(553,'2023-10-30 15:15:03',22,NULL,NULL,22,6,0,0,0,1);
 /*!40000 ALTER TABLE `tb_user_menu` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -312,4 +312,4 @@ SET character_set_client = @saved_cs_client;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2023-10-30  8:05:53
+-- Dump completed on 2023-10-30 22:19:02
