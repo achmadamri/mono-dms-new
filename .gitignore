@@ -5,7 +5,6 @@ bsd-front-dms-material/.angular
 bsd-front-dms-material/bin
 bsd-front-dms-material/node_modules
 *.log
-Temp*.xlsx
 ~$*.xlsx
 bsd-api-dms-auth/target
 bsd-api-dms-member/target
