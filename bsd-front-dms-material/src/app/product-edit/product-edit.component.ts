@@ -16,6 +16,7 @@ import { Title } from '@angular/platform-browser';
 import { GetProductMarketListRequest } from 'app/services/product/getproductmarketlistrequest';
 import { GetProductMarketListResponse } from 'app/services/product/getproductmarketlistresponse';
 import { PageEvent } from '@angular/material/paginator';
+import { Location } from '@angular/common';
 
 @Component({
   selector: 'app-product-edit',
@@ -41,6 +42,7 @@ export class ProductEditComponent implements OnInit {
   pageEvent: PageEvent;
 
   constructor(
+    private location: Location,
     private router: Router,
     private titleService: Title,
     private route: ActivatedRoute,
@@ -172,6 +174,6 @@ export class ProductEditComponent implements OnInit {
   }
 
   back() {
-    this.router.navigate(['/product']);
+    this.location.back();
   }
 }

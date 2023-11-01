@@ -1,15 +1,26 @@
 import { Component, OnInit } from '@angular/core';
 import { Title } from '@angular/platform-browser';
+import { Router } from '@angular/router';
+import { GetDashboardRequest } from 'app/services/report/getdashboardrequest';
+import { GetDashboardResponse } from 'app/services/report/getdashboardresponse';
+import { ReportService } from 'app/services/report/report.service';
+import { Util } from 'app/util';
 import * as Chartist from 'chartist';
 
 @Component({
   selector: 'app-dashboard',
   templateUrl: './dashboard.component.html',
+  styleUrls: ['./dashboard.component.css']
 })
 export class DashboardComponent implements OnInit {
+  util: Util = new Util();
+  getDashboardRequest: GetDashboardRequest = new GetDashboardRequest();
+  getDashboardResponse: GetDashboardResponse = new GetDashboardResponse();
 
   constructor(    
+    private router: Router,
     private titleService: Title,
+    private reportService: ReportService,
   ) { }
   startAnimationForLineChart(chart) {
     let seq: any, delays: any, durations: any;
@@ -70,6 +81,17 @@ export class DashboardComponent implements OnInit {
   
   ngOnInit() {
     this.titleService.setTitle('DMS - Dashboard');
+
+    this.reportService.getDashboard(this.getDashboardRequest)
+    .subscribe(
+      successResponse => {
+        this.getDashboardResponse = successResponse;
+      },
+      errorResponse => {
+        this.util.showNotification('danger', 'top', 'center', errorResponse.error.error + '<br>' + errorResponse.error.message);
+        this.router.navigate(['/user-login']);
+      }
+    );
 
     /* ----------==========     Daily Sales Chart initialization For Documentation    ==========---------- */
 

@@ -2,6 +2,7 @@ package com.api.dms.report.model.report;
 
 import java.util.List;
 
+import com.api.dms.report.db.entity.TbProductMarket;
 import com.api.dms.report.db.entity.ViewOrder;
 import com.api.dms.report.model.ResponseModel;
 
@@ -19,13 +20,13 @@ public class GetDashboardResponseModel extends ResponseModel {
 
 	private String orderDelivered;
 
-	private List<ViewOrder> listDailySales;
+	private List<ViewOrder> lstDailySales;
 
-	private List<ViewOrder> listTeamPerformance;
+	private List<ViewOrder> lstTeamPerformance;
 
-	private List<ViewOrder> listMarketStats;
+	private List<ViewOrder> lstMarketStats;
 
-	private List<ViewOrder> listLowSku;
+	private List<TbProductMarket> lstLowSku;
 
 	public String getSku() {
 		return sku;
@@ -59,35 +60,35 @@ public class GetDashboardResponseModel extends ResponseModel {
 		this.orderDelivered = orderDelivered;
 	}
 
-	public List<ViewOrder> getListDailySales() {
-		return listDailySales;
+	public List<ViewOrder> getLstDailySales() {
+		return lstDailySales;
 	}
 
-	public void setListDailySales(List<ViewOrder> listDailySales) {
-		this.listDailySales = listDailySales;
+	public void setLstDailySales(List<ViewOrder> lstDailySales) {
+		this.lstDailySales = lstDailySales;
 	}
 
-	public List<ViewOrder> getListTeamPerformance() {
-		return listTeamPerformance;
+	public List<ViewOrder> getLstTeamPerformance() {
+		return lstTeamPerformance;
 	}
 
-	public void setListTeamPerformance(List<ViewOrder> listTeamPerformance) {
-		this.listTeamPerformance = listTeamPerformance;
+	public void setLstTeamPerformance(List<ViewOrder> lstTeamPerformance) {
+		this.lstTeamPerformance = lstTeamPerformance;
 	}
 
-	public List<ViewOrder> getListMarketStats() {
-		return listMarketStats;
+	public List<ViewOrder> getLstMarketStats() {
+		return lstMarketStats;
 	}
 
-	public void setListMarketStats(List<ViewOrder> listMarketStats) {
-		this.listMarketStats = listMarketStats;
+	public void setLstMarketStats(List<ViewOrder> lstMarketStats) {
+		this.lstMarketStats = lstMarketStats;
 	}
 
-	public List<ViewOrder> getListLowSku() {
-		return listLowSku;
+	public List<TbProductMarket> getLstLowSku() {
+		return lstLowSku;
 	}
 
-	public void setListLowSku(List<ViewOrder> listLowSku) {
-		this.listLowSku = listLowSku;
+	public void setLstLowSku(List<TbProductMarket> lstLowSku) {
+		this.lstLowSku = lstLowSku;
 	}
 }

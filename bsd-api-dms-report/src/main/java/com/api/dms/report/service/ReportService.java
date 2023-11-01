@@ -3,7 +3,12 @@ package com.api.dms.report.service;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.text.SimpleDateFormat;
+import java.time.Instant;
+import java.time.LocalDateTime;
+import java.time.ZoneOffset;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 
@@ -561,7 +566,7 @@ public class ReportService {
 		return new ByteArrayInputStream(out.toByteArray());
 	}
 
-	public GetDashboardResponseModel getDashboard(String brand, String orderNo, String startDate, String endDate, String length, String pageSize, String pageIndex, GetDashboardRequestModel requestModel) throws Exception {
+	public GetDashboardResponseModel getDashboard(GetDashboardRequestModel requestModel) throws Exception {
 		GetDashboardResponseModel responseModel = new GetDashboardResponseModel(requestModel);
 		
 		tokenUtil.claims(requestModel);
@@ -571,28 +576,41 @@ public class ReportService {
 		exampleTbUser.setTbuStatus(TbUserRepository.Active);
 		Optional<TbUser> optTbUser = tbUserRepository.findOne(Example.of(exampleTbUser));
 		
-		// if (optTbUser.isPresent()) {
-		// 	List<ViewOrder> lstViewOrder = viewOrderRepository.find(optTbUser.get().getTbuId(), brand, orderNo, new SimpleDateFormat("yyyy-MM-dd hh:mm:ss").parse(startDate + " 00:00:00"), new SimpleDateFormat("yyyy-MM-dd hh:mm:ss").parse(endDate + " 23:59:50"), PageRequest.of(Integer.valueOf(pageIndex), Integer.valueOf(pageSize), Sort.by("tboCreateDate").ascending()));
-			
-		// 	if (lstViewOrder.size() > 0) {
-		// 		responseModel.setSku(
-		// 			tbProductRepository.countByTbpQtyLessThan(5)
-		// 			+ "/" +
-		// 			tbProductRepository.count()
-		// 		);
+		if (optTbUser.isPresent()) {
+			TbUserMarket exampleTbUserMarket = new TbUserMarket();
+			exampleTbUserMarket.setTbuId(optTbUser.get().getTbuId());
+			exampleTbUserMarket.setTbmMarketCheck(1);
+			List<TbUserMarket> lstTbUserMarket = tbUserMarketRepository.findAll(Example.of(exampleTbUserMarket));
 
-		// 		// responseModel.setLstViewOrder(lstViewOrder);
-				
-		// 		responseModel.setStatus("200");
-		// 		responseModel.setMessage("Get Dashboard ok");
-		// 	} else {
-		// 		responseModel.setStatus("404");
-		// 		responseModel.setMessage("Not found");
-		// 	}
-		// } else {
-		// 	responseModel.setStatus("404");
-		// 	responseModel.setMessage("Not found");
-		// }
+			List<String> lstTbmMarketId = new ArrayList<>();
+			lstTbmMarketId.add("");
+			for (TbUserMarket tbUserMarket : lstTbUserMarket) {
+				lstTbmMarketId.add(tbUserMarket.getTbmMarketId());
+			}
+
+			List<TbProductMarket> lstTbProductMarket = tbProductMarketRepository.dashboardLowSku(lstTbmMarketId);
+			responseModel.setSku(String.valueOf(lstTbProductMarket.size()));
+			
+			Instant currentUtcInstant = Instant.now();
+    		Date currentDateInUtc = Date.from(currentUtcInstant);
+			responseModel.setRevenue(String.valueOf(viewOrderRepository.dashboardCountRevenue(lstTbmMarketId, currentDateInUtc)));
+
+			responseModel.setOrderPending(String.valueOf(viewOrderRepository.dashboardCountOrderPacked(lstTbmMarketId, currentDateInUtc)));
+			
+			responseModel.setOrderDelivered(String.valueOf(viewOrderRepository.dashboardCountOrderDelivered(lstTbmMarketId, currentDateInUtc)));
+
+			responseModel.setLstLowSku(lstTbProductMarket);
+
+			List<ViewOrder> lstViewOrder = viewOrderRepository.dashboardMarketStats(lstTbmMarketId, currentDateInUtc);
+			responseModel.setLstMarketStats(lstViewOrder);
+
+			responseModel.setStatus("200");
+			responseModel.setMessage("Get Dashboard ok");
+			
+		} else {
+			responseModel.setStatus("404");
+			responseModel.setMessage("Not found");
+		}
 		
 		return responseModel;
 	}

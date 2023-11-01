@@ -237,7 +237,7 @@ public class ReportController {
 	}
 	
 	@GetMapping("/getdashboard")
-	public HttpEntity<?> getDashboard(HttpServletRequest request, @RequestParam String brand, @RequestParam String orderNo, @RequestParam String start, @RequestParam String end, @RequestParam String length, @RequestParam String pageSize, @RequestParam String pageIndex, @RequestParam String email, @RequestParam String token, @RequestParam String requestId, @RequestParam String requestDate) throws Exception {
+	public HttpEntity<?> getDashboard(HttpServletRequest request, @RequestParam String email, @RequestParam String token, @RequestParam String requestId, @RequestParam String requestDate) throws Exception {
 		GetDashboardRequestModel requestModel = new GetDashboardRequestModel();
 		requestModel.setEmail(email);
 		requestModel.setToken(token);
@@ -247,7 +247,7 @@ public class ReportController {
 		String fid = new Uid().generateString(20);
 		log.info(request.getRequestURL().toString() + " [fid" + fid + "] requestModel : " + objectMapper.writeValueAsString(requestModel));
 		
-		GetDashboardResponseModel responseModel = reportService.getDashboard(brand, orderNo, start, end, length, pageSize, pageIndex, requestModel);
+		GetDashboardResponseModel responseModel = reportService.getDashboard(requestModel);
 		
 		ResponseEntity<?> responseEntity = new ResponseEntity<>(responseModel, responseModel.getStatus().equals("200") ? HttpStatus.OK : HttpStatus.NOT_FOUND);
 		log.info(request.getRequestURL().toString() + " [fid" + fid + "] responseEntity : " + objectMapper.writeValueAsString(responseEntity));

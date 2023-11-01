@@ -1,6 +1,7 @@
 package com.api.dms.report.db.entity;
 
 import java.io.Serializable;
+import java.math.BigDecimal;
 import java.util.Date;
 
 import javax.persistence.Column;
@@ -59,6 +60,12 @@ public class ViewOrder implements Serializable {
 
 	@Column(name="tbu_id")
 	private Integer tbuId;
+
+	@Column(name="tbo_order_sum")
+	private BigDecimal tboOrderSum;
+
+	@Column(name="tbo_status")
+	private String tboStatus;
 	
 	@Id
 	@Column(name="uuid")
@@ -153,6 +160,22 @@ public class ViewOrder implements Serializable {
 
 	public void setTboUpdateId(Integer tboUpdateId) {
 		this.tboUpdateId = tboUpdateId;
+	}
+
+	public BigDecimal getTboOrderSum() {
+		return tboOrderSum;
+	}
+
+	public void setTboOrderSum(BigDecimal tboOrderSum) {
+		this.tboOrderSum = tboOrderSum;
+	}
+
+	public String getTboStatus() {
+		return tboStatus;
+	}
+
+	public void setTboStatus(String tboStatus) {
+		this.tboStatus = tboStatus;
 	}
 
 	public String getUuid() {

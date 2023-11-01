@@ -10,5 +10,7 @@ export class ViewOrder {
 	tboOrderNo: string;
 	tboUpdateDate: Date;
 	tboUpdateId: number;
+	tboOrderSum: number;
+	tboStatus: string;
 	uuid: string;
 }

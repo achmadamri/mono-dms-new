@@ -48,7 +48,7 @@ CREATE TABLE `tb_auth` (
 
 LOCK TABLES `tb_auth` WRITE;
 /*!40000 ALTER TABLE `tb_auth` DISABLE KEYS */;
-INSERT INTO `tb_auth` VALUES (1,NULL,NULL,'2023-10-30 14:58:12',0,'admin@mail.com','202cb962ac59075b964b07152d234b70','active','j2x9fzhzeoln4kgv9s30hnicya5du69zch6w','ADMIN'),(17,'2023-10-30 14:59:46',0,'2023-10-30 15:15:03',0,'picdki@mail.com','202cb962ac59075b964b07152d234b70','active','mdai8anacb0qrs7j0ee88ttxi9if70ngn7ik','DISTRIBUTOR'),(18,'2023-10-30 15:00:18',0,NULL,NULL,'picjabar@mail.com','202cb962ac59075b964b07152d234b70','active','otcoiaut7kkn2r6hxukuj06915rrtz7ynra9','DISTRIBUTOR');
+INSERT INTO `tb_auth` VALUES (1,NULL,NULL,'2023-10-30 14:58:12',0,'admin@mail.com','202cb962ac59075b964b07152d234b70','active','j2x9fzhzeoln4kgv9s30hnicya5du69zch6w','ADMIN'),(17,'2023-10-30 14:59:46',0,'2023-10-31 23:14:18',0,'picdki@mail.com','202cb962ac59075b964b07152d234b70','active','mdai8anacb0qrs7j0ee88ttxi9if70ngn7ik','DISTRIBUTOR'),(18,'2023-10-30 15:00:18',0,NULL,NULL,'picjabar@mail.com','202cb962ac59075b964b07152d234b70','active','otcoiaut7kkn2r6hxukuj06915rrtz7ynra9','DISTRIBUTOR');
 /*!40000 ALTER TABLE `tb_auth` ENABLE KEYS */;
 UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
@@ -61,4 +61,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2023-10-30 22:18:59
+-- Dump completed on 2023-11-01  7:50:45
