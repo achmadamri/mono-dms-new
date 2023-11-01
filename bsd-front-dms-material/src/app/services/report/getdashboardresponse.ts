@@ -14,7 +14,7 @@ export class GetDashboardResponse {
 	orderPending: string;
 	orderDelivered: string;    
     lstDailySales: ViewOrder[] = Array(new ViewOrder());
-    lstTeamPerformance: ViewOrder[] = Array(new ViewOrder());
+    lstMarketPerformance: Object[] = Array(new Object());
     lstMarketStats: ViewOrder[] = Array(new ViewOrder());
     lstLowSku: TbProductMarket[] = Array(new TbProductMarket());
 }

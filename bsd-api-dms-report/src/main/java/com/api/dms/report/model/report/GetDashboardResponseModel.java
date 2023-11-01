@@ -20,9 +20,9 @@ public class GetDashboardResponseModel extends ResponseModel {
 
 	private String orderDelivered;
 
-	private List<ViewOrder> lstDailySales;
+	private List<Object[]> lstDailySales;
 
-	private List<ViewOrder> lstTeamPerformance;
+	private List<List<Object[]>> lstMarketPerformance;
 
 	private List<ViewOrder> lstMarketStats;
 
@@ -60,20 +60,20 @@ public class GetDashboardResponseModel extends ResponseModel {
 		this.orderDelivered = orderDelivered;
 	}
 
-	public List<ViewOrder> getLstDailySales() {
+	public List<Object[]> getLstDailySales() {
 		return lstDailySales;
 	}
 
-	public void setLstDailySales(List<ViewOrder> lstDailySales) {
+	public void setLstDailySales(List<Object[]> lstDailySales) {
 		this.lstDailySales = lstDailySales;
 	}
 
-	public List<ViewOrder> getLstTeamPerformance() {
-		return lstTeamPerformance;
+	public List<List<Object[]>> getLstMarketPerformance() {
+		return lstMarketPerformance;
 	}
 
-	public void setLstTeamPerformance(List<ViewOrder> lstTeamPerformance) {
-		this.lstTeamPerformance = lstTeamPerformance;
+	public void setLstMarketPerformance(List<List<Object[]>> lstMarketPerformance) {
+		this.lstMarketPerformance = lstMarketPerformance;
 	}
 
 	public List<ViewOrder> getLstMarketStats() {

@@ -7,6 +7,7 @@ import java.time.Instant;
 import java.time.LocalDateTime;
 import java.time.ZoneOffset;
 import java.time.format.DateTimeFormatter;
+import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -603,6 +604,18 @@ public class ReportService {
 
 			List<ViewOrder> lstViewOrder = viewOrderRepository.dashboardMarketStats(lstTbmMarketId, currentDateInUtc);
 			responseModel.setLstMarketStats(lstViewOrder);
+			
+			Instant sevenDaysAgoInstant = currentUtcInstant.minus(7, ChronoUnit.DAYS);
+			Date sevenDaysAgoDate = Date.from(sevenDaysAgoInstant);
+			responseModel.setLstDailySales(viewOrderRepository.dashboardDailySales(sevenDaysAgoDate));
+
+			List<List<Object[]>> lstMarketPerformance = new ArrayList<>();
+			for (TbUserMarket tbUserMarket : lstTbUserMarket) {
+				lstMarketPerformance.add(viewOrderRepository.dashboardMarketPerformance(sevenDaysAgoDate, tbUserMarket.getTbmMarketId()));
+				// lstTbmMarketPerformance.add(tbUserMarket.getTbmMarketId());
+			}
+			
+			responseModel.setLstMarketPerformance(lstMarketPerformance);
 
 			responseModel.setStatus("200");
 			responseModel.setMessage("Get Dashboard ok");

@@ -10,7 +10,6 @@ import * as Chartist from 'chartist';
 @Component({
   selector: 'app-dashboard',
   templateUrl: './dashboard.component.html',
-  styleUrls: ['./dashboard.component.css']
 })
 export class DashboardComponent implements OnInit {
   util: Util = new Util();
@@ -86,66 +85,84 @@ export class DashboardComponent implements OnInit {
     .subscribe(
       successResponse => {
         this.getDashboardResponse = successResponse;
+
+        /* ----------==========     Daily Sales Chart initialization For Documentation    ==========---------- */
+
+        const lstDailySales = this.getDashboardResponse.lstDailySales; // Assuming lstDailySales is an array in the response
+
+        const labels = lstDailySales.map(item => {
+          const date = new Date(item[0]); // Assuming the timestamp is the first item in each array
+          return `${date.getMonth() + 1}/${date.getDate()}/${date.getFullYear()}`;
+        });
+
+        const series = [lstDailySales.map(item => item[1])];
+
+        const dataDailySalesChart = {
+          labels: labels,
+          series: series
+        };
+
+        // Assuming you have already calculated your 'series' data as shown in your previous code
+
+        // Calculate the maximum value in 'series'
+        const maxDataValue = Math.max(...series[0]);
+
+        // Set the 'high' option based on the maximum value with some extra padding (e.g., 10%)
+        const extraPadding = 0.1; // You can adjust this as needed
+        const highValue = maxDataValue * (1 + extraPadding);
+
+        // Define your options with the dynamically calculated 'high' value
+        const optionsDailySalesChart = {
+          lineSmooth: Chartist.Interpolation.cardinal({
+            tension: 0
+          }),
+          low: 0,
+          high: highValue,
+          chartPadding: { top: 0, right: 0, bottom: 0, left: 0 },
+        };
+
+        var dailySalesChart = new Chartist.Line('#dailySalesChart', dataDailySalesChart, optionsDailySalesChart);
+
+        this.startAnimationForLineChart(dailySalesChart);
+
+        // ------------------------------------------------------------------------------------------------------
+        /* ----------==========     Team Performance Chart initialization    ==========---------- */
+
+        var datateamPerformanceChart = {
+          labels: ['J', 'F', 'M', 'A', 'M', 'J', 'J', 'A', 'S', 'O', 'N', 'D'],
+          series: [
+            [542, 443, 320, 780, 553, 453, 326, 434, 568, 610, 756, 895]
+
+          ]
+        };
+        var optionsteamPerformanceChart = {
+          axisX: {
+            showGrid: false
+          },
+          low: 0,
+          high: 1000,
+          chartPadding: { top: 0, right: 5, bottom: 0, left: 0 }
+        };
+        var responsiveOptions: any[] = [
+          ['screen and (max-width: 640px)', {
+            seriesBarDistance: 5,
+            axisX: {
+              labelInterpolationFnc: function (value) {
+                return value[0];
+              }
+            }
+          }]
+        ];
+        var teamPerformanceChart = new Chartist.Bar('#teamPerformanceChart', datateamPerformanceChart, optionsteamPerformanceChart, responsiveOptions);
+
+        //start animation for the Emails Subscription Chart
+        this.startAnimationForBarChart(teamPerformanceChart);
       },
       errorResponse => {
         this.util.showNotification('danger', 'top', 'center', errorResponse.error.error + '<br>' + errorResponse.error.message);
         this.router.navigate(['/user-login']);
       }
-    );
-
-    /* ----------==========     Daily Sales Chart initialization For Documentation    ==========---------- */
-
-    const dataDailySalesChart: any = {
-      labels: ['M', 'T', 'W', 'T', 'F', 'S', 'S'],
-      series: [
-        [12, 17, 7, 17, 23, 18, 38]
-      ]
-    };
-
-    const optionsDailySalesChart: any = {
-      lineSmooth: Chartist.Interpolation.cardinal({
-        tension: 0
-      }),
-      low: 0,
-      high: 50, // creative tim: we recommend you to set the high sa the biggest value + something for a better look
-      chartPadding: { top: 0, right: 0, bottom: 0, left: 0 },
-    }
-
-    var dailySalesChart = new Chartist.Line('#dailySalesChart', dataDailySalesChart, optionsDailySalesChart);
-
-    this.startAnimationForLineChart(dailySalesChart);
-
-    /* ----------==========     Team Performance Chart initialization    ==========---------- */
-
-    var datateamPerformanceChart = {
-      labels: ['J', 'F', 'M', 'A', 'M', 'J', 'J', 'A', 'S', 'O', 'N', 'D'],
-      series: [
-        [542, 443, 320, 780, 553, 453, 326, 434, 568, 610, 756, 895]
-
-      ]
-    };
-    var optionsteamPerformanceChart = {
-      axisX: {
-        showGrid: false
-      },
-      low: 0,
-      high: 1000,
-      chartPadding: { top: 0, right: 5, bottom: 0, left: 0 }
-    };
-    var responsiveOptions: any[] = [
-      ['screen and (max-width: 640px)', {
-        seriesBarDistance: 5,
-        axisX: {
-          labelInterpolationFnc: function (value) {
-            return value[0];
-          }
-        }
-      }]
-    ];
-    var teamPerformanceChart = new Chartist.Bar('#teamPerformanceChart', datateamPerformanceChart, optionsteamPerformanceChart, responsiveOptions);
-
-    //start animation for the Emails Subscription Chart
-    this.startAnimationForBarChart(teamPerformanceChart);
+    );    
   }
 
 }
