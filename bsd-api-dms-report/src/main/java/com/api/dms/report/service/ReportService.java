@@ -594,7 +594,8 @@ public class ReportService {
 			
 			Instant currentUtcInstant = Instant.now();
     		Date currentDateInUtc = Date.from(currentUtcInstant);
-			responseModel.setRevenue(String.valueOf(viewOrderRepository.dashboardCountRevenue(lstTbmMarketId, currentDateInUtc)));
+			Long revenue = viewOrderRepository.dashboardCountRevenue(lstTbmMarketId, currentDateInUtc);
+			responseModel.setRevenue(String.valueOf(revenue == null ? 0 : revenue));
 
 			responseModel.setOrderPending(String.valueOf(viewOrderRepository.dashboardCountOrderPacked(lstTbmMarketId, currentDateInUtc)));
 			

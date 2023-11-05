@@ -126,37 +126,47 @@ export class DashboardComponent implements OnInit {
         this.startAnimationForLineChart(dailySalesChart);
 
         // ------------------------------------------------------------------------------------------------------
-        /* ----------==========     Team Performance Chart initialization    ==========---------- */
+        /* ----------==========     Market Performance Chart initialization    ==========---------- */
 
-        var datateamPerformanceChart = {
-          labels: ['J', 'F', 'M', 'A', 'M', 'J', 'J', 'A', 'S', 'O', 'N', 'D'],
-          series: [
-            [542, 443, 320, 780, 553, 453, 326, 434, 568, 610, 756, 895]
+        const lstMarketPerformance = this.getDashboardResponse.lstMarketPerformance;
+    
+        const seriesMarketPerformance = [];
 
-          ]
+        for (const performanceArray of lstMarketPerformance) {
+          const series = performanceArray.map(item => item[1]);
+          seriesMarketPerformance.push(series);     
+        }
+
+        const dataMarketPerformanceChart = {
+          series: seriesMarketPerformance
         };
-        var optionsteamPerformanceChart = {
-          axisX: {
-            showGrid: false
-          },
+
+        console.log(dataMarketPerformanceChart);
+
+        // Calculate the maximum value in 'series'
+        const maxDataValueMarketPerformance = Math.max(
+          ...seriesMarketPerformance.reduce((acc, val) => acc.concat(val), [])
+        );
+
+        console.log(maxDataValueMarketPerformance);
+
+        // Set the 'high' option based on the maximum value with some extra padding (e.g., 10%)
+        const extraPaddingMarketPerformance = 0.1; // You can adjust this as needed
+        const highValueMarketPerformance = maxDataValueMarketPerformance * (1 + extraPaddingMarketPerformance);
+
+        // Define your options with the dynamically calculated 'high' value
+        const optionsMarketPerformanceChart = {
+          lineSmooth: Chartist.Interpolation.cardinal({
+          tension: 0
+          }),
           low: 0,
-          high: 1000,
-          chartPadding: { top: 0, right: 5, bottom: 0, left: 0 }
+          high: highValueMarketPerformance,
+          chartPadding: { top: 0, right: 0, bottom: 0, left: 0 },
         };
-        var responsiveOptions: any[] = [
-          ['screen and (max-width: 640px)', {
-            seriesBarDistance: 5,
-            axisX: {
-              labelInterpolationFnc: function (value) {
-                return value[0];
-              }
-            }
-          }]
-        ];
-        var teamPerformanceChart = new Chartist.Bar('#teamPerformanceChart', datateamPerformanceChart, optionsteamPerformanceChart, responsiveOptions);
 
-        //start animation for the Emails Subscription Chart
-        this.startAnimationForBarChart(teamPerformanceChart);
+        var marketPerformanceChart = new Chartist.Line('#marketPerformanceChart', dataMarketPerformanceChart, optionsMarketPerformanceChart);
+
+        this.startAnimationForLineChart(marketPerformanceChart);
       },
       errorResponse => {
         this.util.showNotification('danger', 'top', 'center', errorResponse.error.error + '<br>' + errorResponse.error.message);
