@@ -37,12 +37,12 @@
                                 <div class="col-md-4">
                                   <mat-form-field>
                                     <mat-label>Order Date</mat-label>
-                                    <mat-date-range-input [formGroup]="rangeOrder" [rangePicker]="picker">
+                                    <mat-date-range-input [formGroup]="rangeOrder" [rangePicker]="pickerOrder">
                                       <input matStartDate formControlName="start" placeholder="Start date">
                                       <input matEndDate formControlName="end" placeholder="End date" (dateChange)="getOrderList(null)">
                                     </mat-date-range-input>
-                                    <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
-                                    <mat-date-range-picker #picker></mat-date-range-picker>
+                                    <mat-datepicker-toggle matSuffix [for]="pickerOrder"></mat-datepicker-toggle>
+                                    <mat-date-range-picker #pickerOrder></mat-date-range-picker>
                                     
                                     <mat-error *ngIf="rangeOrder.controls.start.hasError('matStartDateInvalid')">Invalid start date</mat-error>
                                     <mat-error *ngIf="rangeOrder.controls.end.hasError('matEndDateInvalid')">Invalid end date</mat-error>
@@ -158,12 +158,12 @@
                                 <div class="col-md-3">
                                   <mat-form-field>
                                     <mat-label>Sales Date</mat-label>
-                                    <mat-date-range-input [formGroup]="rangeSales" [rangePicker]="picker">
+                                    <mat-date-range-input [formGroup]="rangeSales" [rangePicker]="pickerSales">
                                       <input matStartDate formControlName="start" placeholder="Start date">
                                       <input matEndDate formControlName="end" placeholder="End date" (dateChange)="getSalesList(null)">
                                     </mat-date-range-input>
-                                    <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
-                                    <mat-date-range-picker #picker></mat-date-range-picker>
+                                    <mat-datepicker-toggle matSuffix [for]="pickerSales"></mat-datepicker-toggle>
+                                    <mat-date-range-picker #pickerSales></mat-date-range-picker>
                                     
                                     <mat-error *ngIf="rangeSales.controls.start.hasError('matStartDateInvalid')">Invalid start date</mat-error>
                                     <mat-error *ngIf="rangeSales.controls.end.hasError('matEndDateInvalid')">Invalid end date</mat-error>
