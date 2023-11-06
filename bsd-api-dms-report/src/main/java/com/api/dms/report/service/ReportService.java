@@ -608,15 +608,10 @@ public class ReportService {
 			
 			Instant sevenDaysAgoInstant = currentUtcInstant.minus(7, ChronoUnit.DAYS);
 			Date sevenDaysAgoDate = Date.from(sevenDaysAgoInstant);
+			
 			responseModel.setLstDailySales(viewOrderRepository.dashboardDailySales(sevenDaysAgoDate));
 
-			List<List<Object[]>> lstMarketPerformance = new ArrayList<>();
-			for (TbUserMarket tbUserMarket : lstTbUserMarket) {
-				lstMarketPerformance.add(viewOrderRepository.dashboardMarketPerformance(sevenDaysAgoDate, tbUserMarket.getTbmMarketId()));
-				// lstTbmMarketPerformance.add(tbUserMarket.getTbmMarketId());
-			}
-			
-			responseModel.setLstMarketPerformance(lstMarketPerformance);
+			responseModel.setLstMarketPerformance(viewOrderRepository.dashboardMarketPerformance(sevenDaysAgoDate));
 
 			responseModel.setStatus("200");
 			responseModel.setMessage("Get Dashboard ok");

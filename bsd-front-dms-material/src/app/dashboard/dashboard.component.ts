@@ -128,27 +128,24 @@ export class DashboardComponent implements OnInit {
         // ------------------------------------------------------------------------------------------------------
         /* ----------==========     Market Performance Chart initialization    ==========---------- */
 
-        const lstMarketPerformance = this.getDashboardResponse.lstMarketPerformance;
-    
-        const seriesMarketPerformance = [];
+        const lstMarketPerformance = this.getDashboardResponse.lstMarketPerformance; // Assuming lstMarketPerformance is an array in the response
 
-        for (const performanceArray of lstMarketPerformance) {
-          const series = performanceArray.map(item => item[1]);
-          seriesMarketPerformance.push(series);     
-        }
+        const labelsMarketPerformance = lstMarketPerformance.map(item => {
+          const date = new Date(item[0]); // Assuming the timestamp is the first item in each array
+          return `${date.getMonth() + 1}/${date.getDate()}/${date.getFullYear()}`;
+        });
+
+        const seriesMarketPerformance = [lstMarketPerformance.map(item => item[1])];
 
         const dataMarketPerformanceChart = {
+          labels: labelsMarketPerformance,
           series: seriesMarketPerformance
         };
 
-        console.log(dataMarketPerformanceChart);
+        // Assuming you have already calculated your 'series' data as shown in your previous code
 
         // Calculate the maximum value in 'series'
-        const maxDataValueMarketPerformance = Math.max(
-          ...seriesMarketPerformance.reduce((acc, val) => acc.concat(val), [])
-        );
-
-        console.log(maxDataValueMarketPerformance);
+        const maxDataValueMarketPerformance = Math.max(...seriesMarketPerformance[0]);
 
         // Set the 'high' option based on the maximum value with some extra padding (e.g., 10%)
         const extraPaddingMarketPerformance = 0.1; // You can adjust this as needed

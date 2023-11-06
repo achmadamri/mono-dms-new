@@ -35,9 +35,9 @@ public interface ViewOrderRepository extends JpaRepository<ViewOrder, Integer> {
            "GROUP BY DATE(t.tboCreateDate)")
     List<Object[]> dashboardDailySales(@Param("startDate") Date startDate);
 
-	@Query("SELECT DATE(t.tboCreateDate) as tboCreateDate, SUM(t.tboOrderSum) / 1000000 as sumTboOrderSum, t.tboMarketId as tboMarketId " +
+	@Query("SELECT DATE(t.tboCreateDate) as tboCreateDate, SUM(t.tboOrderSum / 1000000) as tboOrderSum " +
            "FROM ViewOrder t " +
-           "WHERE DATE(t.tboCreateDate) >= :startDate AND t.tboMarketId = :tboMarketId " +
-           "GROUP BY DATE(t.tboCreateDate), t.tboMarketId")
-    List<Object[]> dashboardMarketPerformance(@Param("startDate") Date startDate, @Param("tboMarketId") String tboMarketId);
+           "WHERE DATE(t.tboCreateDate) >= :startDate " +
+           "GROUP BY DATE(t.tboCreateDate)")
+    List<Object[]> dashboardMarketPerformance(@Param("startDate") Date startDate);
 }

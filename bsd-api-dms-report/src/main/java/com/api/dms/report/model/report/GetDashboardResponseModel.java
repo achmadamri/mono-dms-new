@@ -22,7 +22,7 @@ public class GetDashboardResponseModel extends ResponseModel {
 
 	private List<Object[]> lstDailySales;
 
-	private List<List<Object[]>> lstMarketPerformance;
+	private List<Object[]> lstMarketPerformance;
 
 	private List<ViewOrder> lstMarketStats;
 
@@ -68,11 +68,11 @@ public class GetDashboardResponseModel extends ResponseModel {
 		this.lstDailySales = lstDailySales;
 	}
 
-	public List<List<Object[]>> getLstMarketPerformance() {
+	public List<Object[]> getLstMarketPerformance() {
 		return lstMarketPerformance;
 	}
 
-	public void setLstMarketPerformance(List<List<Object[]>> lstMarketPerformance) {
+	public void setLstMarketPerformance(List<Object[]> lstMarketPerformance) {
 		this.lstMarketPerformance = lstMarketPerformance;
 	}
 
