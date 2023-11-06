@@ -15,6 +15,8 @@ export class DashboardComponent implements OnInit {
   util: Util = new Util();
   getDashboardRequest: GetDashboardRequest = new GetDashboardRequest();
   getDashboardResponse: GetDashboardResponse = new GetDashboardResponse();
+  percentageTodaySales: number;
+  percentageTodayMarket: number;
 
   constructor(    
     private router: Router,
@@ -102,6 +104,18 @@ export class DashboardComponent implements OnInit {
           series: series
         };
 
+        // Assuming the timestamp is the first item in each array and today's date is the last item in the array
+        const todaySales = lstDailySales[lstDailySales.length - 1][1];
+
+        // Assuming you want to calculate the increase based on the previous day's sales
+        const yesterdaySales = lstDailySales[lstDailySales.length - 2][1];
+
+        // Calculate the increase
+        const increaseSales = todaySales - yesterdaySales;
+
+        // Format the label
+        this.percentageTodaySales = ((increaseSales / yesterdaySales) * 100);     
+
         // Assuming you have already calculated your 'series' data as shown in your previous code
 
         // Calculate the maximum value in 'series'
@@ -119,7 +133,7 @@ export class DashboardComponent implements OnInit {
           low: 0,
           high: highValue,
           chartPadding: { top: 0, right: 0, bottom: 0, left: 0 },
-        };
+        };   
 
         var dailySalesChart = new Chartist.Line('#dailySalesChart', dataDailySalesChart, optionsDailySalesChart);
 
@@ -160,6 +174,18 @@ export class DashboardComponent implements OnInit {
           high: highValueMarketPerformance,
           chartPadding: { top: 0, right: 0, bottom: 0, left: 0 },
         };
+
+        // Assuming the timestamp is the first item in each array and today's date is the last item in the array
+        const todayMarket = lstMarketPerformance[lstMarketPerformance.length - 1][1];
+
+        // Assuming you want to calculate the increase based on the previous day's sales
+        const yesterdayMarket = lstMarketPerformance[lstMarketPerformance.length - 2][1];
+
+        // Calculate the increase
+        const increaseMarket = todayMarket - yesterdayMarket;
+
+        // Format the label
+        this.percentageTodayMarket = ((increaseMarket / yesterdayMarket) * 100);  
 
         var marketPerformanceChart = new Chartist.Line('#marketPerformanceChart', dataMarketPerformanceChart, optionsMarketPerformanceChart);
 
