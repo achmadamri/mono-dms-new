@@ -343,11 +343,12 @@ public class ProductService {
 						if (getData(row, column, "Sku") == null || getData(row, column, "Sku").equals("")) {
 							exampleTbProduct.setTbpSku(uid.generateString(10));
 						} else {
-							if (getData(row, column, "Sku").getClass().equals(Double.valueOf(0).getClass())) {
-								exampleTbProduct.setTbpSku(new BigDecimal((Double) getData(row, column, "Sku")).toString());								
-							} else if (getData(row, column, "Sku").getClass().equals("".getClass())) {
+							if (getData(row, column, "Sku") instanceof Double) {
+								double skuValue = (Double) getData(row, column, "Sku");
+								exampleTbProduct.setTbpSku(BigDecimal.valueOf(skuValue).toPlainString());
+							} else if (getData(row, column, "Sku") instanceof String) {
 								exampleTbProduct.setTbpSku(String.valueOf(getData(row, column, "Sku")));
-							}
+							}							
 						}
 						
 						Optional<TbProduct> optTbProduct = tbProductRepository.findOne(Example.of(exampleTbProduct));
@@ -381,7 +382,12 @@ public class ProductService {
 						}
 						
 						tbProduct.setTbpItem(String.valueOf(getData(row, column, "Item")));
-						tbProduct.setTbpCode(String.valueOf(getData(row, column, "Code")));
+						if (getData(row, column, "Code") instanceof Double) {
+							double codeValue = (Double) getData(row, column, "Code");
+							tbProduct.setTbpCode(BigDecimal.valueOf(codeValue).toPlainString());
+						} else if (getData(row, column, "Code") instanceof String) {
+							tbProduct.setTbpCode(String.valueOf(getData(row, column, "Code")));
+						}
 						tbProduct.setTbpLoc(String.valueOf(getData(row, column, "Loc")));						
 						if (getData(row, column, "Qty Type").equals("INI")) tbProduct.setTbpQty(((Double) getData(row, column, "Qty")).intValue());
 						if (getData(row, column, "Qty Type").equals("ADD")) tbProduct.setTbpQty(tbProduct.getTbpQty() + ((Double) getData(row, column, "Qty")).intValue());
