@@ -255,7 +255,7 @@ CREATE TABLE `tb_user` (
   KEY `tb_user_tbu_lastname_index` (`tbu_lastname`),
   KEY `tb_user_tbu_token_salt_index` (`tbu_token_salt`),
   KEY `tb_user_tbu_role_index` (`tbu_role`)
-) ENGINE=InnoDB AUTO_INCREMENT=11 DEFAULT CHARSET=latin1 COLLATE=latin1_swedish_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=11 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --

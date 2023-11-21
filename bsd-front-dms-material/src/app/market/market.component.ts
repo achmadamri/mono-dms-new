@@ -34,7 +34,7 @@ export class MarketComponent implements OnInit {
   ngOnInit() {
     this.titleService.setTitle('DMS - Market');
 
-    this.role = ['ADMIN', 'PRINCIPAL', 'DISTRIBUTOR', 'SUBDIST', 'GROSIR', 'MOTORIST'];
+    this.role = ['ADMIN', 'PRINCIPAL', 'AREA', 'DISTRIBUTOR', 'SUBDIST', 'GROSIR', 'MOTORIST'];
 
     this.getMarketList(null);
   }
