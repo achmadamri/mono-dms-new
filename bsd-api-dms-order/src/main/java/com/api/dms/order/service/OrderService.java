@@ -12,9 +12,11 @@ import java.time.ZoneOffset;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.Set;
 
 import org.apache.commons.collections4.map.HashedMap;
 import org.apache.poi.ss.usermodel.Cell;
@@ -397,28 +399,37 @@ public class OrderService {
 				}
 				tbOrderStatusRepository.saveAll(lstTbOrderStatus);
 
+				Set<String> uniqueOrderNumbers = new HashSet<>();
 				for (TbOrder tbOrder : lstTbOrder) {
-					TbOrderPack tbOrderPack = new TbOrderPack();
-					tbOrderPack.setTbopCreateDate(Date.from(LocalDateTime.now(ZoneOffset.UTC).toInstant(ZoneOffset.UTC)));
-					tbOrderPack.setTbopCreateId(optTbUser.get().getTbuId());
-					tbOrderPack.setTbopQcId(tbOrder.getTboQcId());
-					tbOrderPack.setTbopAwb(tbOrder.getTboAwb());
-					tbOrderPack.setTbopBrand(tbOrder.getTboBrand());
-					tbOrderPack.setTbopMarket(tbOrder.getTboMarketId());					
-					tbOrderPack.setTbopFrontliner(tbOrder.getTboFrontliner());
-					tbOrderPack.setTbopOrderNo(tbOrder.getTboOrderNo());
-					tbOrderPack.setTbopName(tbOrder.getTboName());
-					tbOrderPack.setTbopStatus(TbOrderPackRepository.StatusPacked);
-					tbOrderPack.setTbopType(TbOrderPackRepository.TypeOrder);
-					lstTbOrderPack.add(tbOrderPack);
+					// Check if the order number is unique
+					if (uniqueOrderNumbers.add(tbOrder.getTboOrderNo())) {
+						// If it's unique, add the order pack to the result list
+						TbOrderPack tbOrderPack = new TbOrderPack();
+						tbOrderPack.setTbopCreateDate(Date.from(LocalDateTime.now(ZoneOffset.UTC).toInstant(ZoneOffset.UTC)));
+						tbOrderPack.setTbopCreateId(optTbUser.get().getTbuId());
+						tbOrderPack.setTbopQcId(tbOrder.getTboQcId());
+						tbOrderPack.setTbopAwb(tbOrder.getTboAwb());
+						tbOrderPack.setTbopBrand(tbOrder.getTboBrand());
+						tbOrderPack.setTbopMarket(tbOrder.getTboMarketId());					
+						tbOrderPack.setTbopFrontliner(tbOrder.getTboFrontliner());
+						tbOrderPack.setTbopOrderNo(tbOrder.getTboOrderNo());
+						tbOrderPack.setTbopName(tbOrder.getTboName());
+						tbOrderPack.setTbopStatus(TbOrderPackRepository.StatusPacked);
+						tbOrderPack.setTbopType(TbOrderPackRepository.TypeOrder);
+						lstTbOrderPack.add(tbOrderPack);
+					}
 				}
 				tbOrderPackRepository.saveAll(lstTbOrderPack);
 
 				for (TbOrder tbOrder : lstTbOrder) {
+					TbOrderPack exampleTbOrderPack = new TbOrderPack();
+					exampleTbOrderPack.setTbopOrderNo(tbOrder.getTboOrderNo());
+					Optional<TbOrderPack> opTbOrderPack = tbOrderPackRepository.findOne(Example.of(exampleTbOrderPack));
+
 					TbOrderPackDetail tbOrderPackDetail = new TbOrderPackDetail();
 					tbOrderPackDetail.setTbopdCreateDate(Date.from(LocalDateTime.now(ZoneOffset.UTC).toInstant(ZoneOffset.UTC)));
 					tbOrderPackDetail.setTbopdCreateId(optTbUser.get().getTbuId());
-					tbOrderPackDetail.setTbopId(tbOrder.getTboId());
+					tbOrderPackDetail.setTbopId(opTbOrderPack.get().getTbopId());
 					tbOrderPackDetail.setTbopdType(TbOrderPackDetailRepository.TypeProduct);
 					tbOrderPackDetail.setTbopdOrderNo(tbOrder.getTboOrderNo());
 					tbOrderPackDetail.setTbopdBrand(tbOrder.getTboBrand());

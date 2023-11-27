@@ -124,6 +124,8 @@ public class ReportService {
 			for (TbOrder tbOrder : requestModel.getLstTbOrder()) {
 				TbOrder exampleTbOrder = new TbOrder();
 				exampleTbOrder.setTboOrderNo(tbOrder.getTboOrderNo());
+				exampleTbOrder.setTboSeq(tbOrder.getTboSeq());
+				exampleTbOrder.setTboSku(tbOrder.getTboSku());
 				Optional<TbOrder> optTbOrder = tbOrderRepository.findOne(Example.of(exampleTbOrder));
 				
 				if (optTbOrder.isPresent()) {
