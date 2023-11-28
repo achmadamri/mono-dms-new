@@ -121,7 +121,7 @@ export class UserEditComponent implements OnInit {
   ngOnInit() {
     this.titleService.setTitle('DMS - User Edit');
 
-    this.role = ['ADMIN', 'PRINCIPAL', 'DISTRIBUTOR', 'SUBDIST', 'GROSIR', 'MOTORIST'];
+    this.role = ['ADMIN', 'PRINCIPAL', 'AREA', 'DISTRIBUTOR', 'SUBDIST', 'GROSIR', 'MOTORIST'];
 
     this.route.paramMap.subscribe(params => {
       this.userGetRequest.tbuId = params.get('tbuId') == null ? '0' : params.get('tbuId');

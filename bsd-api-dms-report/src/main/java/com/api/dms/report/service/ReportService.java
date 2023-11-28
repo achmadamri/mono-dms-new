@@ -124,6 +124,8 @@ public class ReportService {
 			for (TbOrder tbOrder : requestModel.getLstTbOrder()) {
 				TbOrder exampleTbOrder = new TbOrder();
 				exampleTbOrder.setTboOrderNo(tbOrder.getTboOrderNo());
+				exampleTbOrder.setTboSeq(tbOrder.getTboSeq());
+				exampleTbOrder.setTboSku(tbOrder.getTboSku());
 				Optional<TbOrder> optTbOrder = tbOrderRepository.findOne(Example.of(exampleTbOrder));
 				
 				if (optTbOrder.isPresent()) {
@@ -372,7 +374,7 @@ public class ReportService {
 				lstTbmMarketId.add(tbUserMarket.getTbmMarketId());
 			}
 
-			List<ViewStock> lstViewStock = viewStockRepository.find(lstTbmMarketId, brand, sku, item, PageRequest.of(Integer.valueOf(pageIndex), Integer.valueOf(pageSize), Sort.by("tbpSku").ascending()));
+			List<ViewStock> lstViewStock = viewStockRepository.find(lstTbmMarketId, brand, sku, item, PageRequest.of(Integer.valueOf(pageIndex), Integer.valueOf(pageSize), Sort.by("tbpSku", "tbpmQty").descending()));
 			
 			if (lstViewStock.size() > 0) {
 				responseModel.setLength(viewStockRepository.count(lstTbmMarketId, brand, sku, item));

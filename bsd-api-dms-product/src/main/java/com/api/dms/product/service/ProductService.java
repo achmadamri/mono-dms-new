@@ -175,7 +175,7 @@ public class ProductService {
 						if (getData(row, column, "Sku Bundle") == null || getData(row, column, "Sku Bundle").equals("")) {
 							exampleTbProduct.setTbpSku(uid.generateString(10));
 						} else {
-							exampleTbProduct.setTbpSku((String) getData(row, column, "Sku Bundle"));
+							exampleTbProduct.setTbpSku(String.valueOf(getData(row, column, "Sku Bundle")));
 						}						
 						
 						Optional<TbProduct> optTbProduct = tbProductRepository.findOne(Example.of(exampleTbProduct));
@@ -197,10 +197,10 @@ public class ProductService {
 							tbProduct.setTbpSku(exampleTbProduct.getTbpSku());
 						}
 						
-						tbProduct.setTbbBrand((String) getData(row, column, "Brand"));
+						tbProduct.setTbbBrand(String.valueOf(getData(row, column, "Brand")));
 						tbProduct.setTbbBrandId(tbProduct.getTbbBrand().equals("BEBE") ? tbProduct.getTbbBrand().substring(0, 4).toUpperCase() + "B" : tbProduct.getTbbBrand().substring(0, 5).toUpperCase());							
-						tbProduct.setTbpItem((String) getData(row, column, "Item"));
-						tbProduct.setTbpCode((String) getData(row, column, "Code"));
+						tbProduct.setTbpItem(String.valueOf(getData(row, column, "Item")));
+						tbProduct.setTbpCode(String.valueOf(getData(row, column, "Code")));
 						tbProduct.setTbpType(TbProductRepository.Sellable);
 						tbProduct.setTbpStatus(null);
 						
@@ -211,7 +211,7 @@ public class ProductService {
 						
 						TbProductBundle exampleTbProductBundle = new TbProductBundle();
 						exampleTbProductBundle.setTbpbSku(exampleTbProduct.getTbpSku());
-						exampleTbProductBundle.setTbpSku((String) getData(row, column, "Sku"));
+						exampleTbProductBundle.setTbpSku(String.valueOf(getData(row, column, "Sku")));
 						
 						Optional<TbProductBundle> optTbProductBundle = tbProductBundleRepository.findOne(Example.of(exampleTbProductBundle));
 						
@@ -224,8 +224,8 @@ public class ProductService {
 							tbProductBundle.setTbpbCreateDate(Date.from(LocalDateTime.now(ZoneOffset.UTC).toInstant(ZoneOffset.UTC)));
 							tbProductBundle.setTbpbCreateId(optTbUser.get().getTbuId());
 							tbProductBundle.setTbpbSku(tbProduct.getTbpSku());
-							tbProductBundle.setTbpbItem((String) getData(row, column, "Item"));
-							tbProductBundle.setTbpSku((String) getData(row, column, "Sku"));								
+							tbProductBundle.setTbpbItem(String.valueOf(getData(row, column, "Item")));
+							tbProductBundle.setTbpSku(String.valueOf(getData(row, column, "Sku")));								
 							if (getData(row, column, "Qty Type").equals("INI")) tbProductBundle.setTbpQty(((Double) getData(row, column, "Qty")).intValue());
 							if (getData(row, column, "Qty Type").equals("ADD")) tbProductBundle.setTbpQty(tbProductBundle.getTbpQty() + ((Double) getData(row, column, "Qty")).intValue());
 							
@@ -343,11 +343,12 @@ public class ProductService {
 						if (getData(row, column, "Sku") == null || getData(row, column, "Sku").equals("")) {
 							exampleTbProduct.setTbpSku(uid.generateString(10));
 						} else {
-							if (getData(row, column, "Sku").getClass().equals(Double.valueOf(0).getClass())) {
-								exampleTbProduct.setTbpSku(new BigDecimal((Double) getData(row, column, "Sku")).toString());								
-							} else if (getData(row, column, "Sku").getClass().equals("".getClass())) {
-								exampleTbProduct.setTbpSku((String) getData(row, column, "Sku"));
-							}
+							if (getData(row, column, "Sku") instanceof Double) {
+								double skuValue = (Double) getData(row, column, "Sku");
+								exampleTbProduct.setTbpSku(BigDecimal.valueOf(skuValue).toPlainString());
+							} else if (getData(row, column, "Sku") instanceof String) {
+								exampleTbProduct.setTbpSku(String.valueOf(getData(row, column, "Sku")));
+							}							
 						}
 						
 						Optional<TbProduct> optTbProduct = tbProductRepository.findOne(Example.of(exampleTbProduct));
@@ -369,7 +370,7 @@ public class ProductService {
 							tbProduct.setTbpSku(exampleTbProduct.getTbpSku());
 						}
 						
-						tbProduct.setTbbBrand((String) getData(row, column, "Brand"));
+						tbProduct.setTbbBrand(String.valueOf(getData(row, column, "Brand")));
 						
 						int a = tbProduct.getTbbBrand().length();
 						String strBrand = tbProduct.getTbbBrand().trim().replaceAll(" ", "").replaceAll("&", "N");
@@ -380,14 +381,19 @@ public class ProductService {
 							tbProduct.setTbbBrandId(strBrand.substring(0, 5).toUpperCase());
 						}
 						
-						tbProduct.setTbpItem((String) getData(row, column, "Item"));
-						tbProduct.setTbpCode((String) getData(row, column, "Code"));
-						tbProduct.setTbpLoc((String) getData(row, column, "Loc"));						
+						tbProduct.setTbpItem(String.valueOf(getData(row, column, "Item")));
+						if (getData(row, column, "Code") instanceof Double) {
+							double codeValue = (Double) getData(row, column, "Code");
+							tbProduct.setTbpCode(BigDecimal.valueOf(codeValue).toPlainString());
+						} else if (getData(row, column, "Code") instanceof String) {
+							tbProduct.setTbpCode(String.valueOf(getData(row, column, "Code")));
+						}
+						tbProduct.setTbpLoc(String.valueOf(getData(row, column, "Loc")));						
 						if (getData(row, column, "Qty Type").equals("INI")) tbProduct.setTbpQty(((Double) getData(row, column, "Qty")).intValue());
 						if (getData(row, column, "Qty Type").equals("ADD")) tbProduct.setTbpQty(tbProduct.getTbpQty() + ((Double) getData(row, column, "Qty")).intValue());
 						
 						tbProduct.setTbpUnitPrice(new BigDecimal((Double) getData(row, column, "Unit Price")));
-						tbProduct.setTbpType((String) getData(row, column, "Type"));
+						tbProduct.setTbpType(String.valueOf(getData(row, column, "Type")));
 						tbProduct.setTbpStatus(TbProductRepository.Sellable);
 						
 						lstTbProduct.add(tbProduct);						
