@@ -374,7 +374,7 @@ public class ReportService {
 				lstTbmMarketId.add(tbUserMarket.getTbmMarketId());
 			}
 
-			List<ViewStock> lstViewStock = viewStockRepository.find(lstTbmMarketId, brand, sku, item, PageRequest.of(Integer.valueOf(pageIndex), Integer.valueOf(pageSize), Sort.by("tbpSku").ascending()));
+			List<ViewStock> lstViewStock = viewStockRepository.find(lstTbmMarketId, brand, sku, item, PageRequest.of(Integer.valueOf(pageIndex), Integer.valueOf(pageSize), Sort.by("tbpSku", "tbpmQty").descending()));
 			
 			if (lstViewStock.size() > 0) {
 				responseModel.setLength(viewStockRepository.count(lstTbmMarketId, brand, sku, item));
