@@ -5,6 +5,7 @@ import java.util.List;
 import com.api.dms.product.db.entity.TbProduct;
 import com.api.dms.product.db.entity.TbProductBundle;
 import com.api.dms.product.db.entity.ViewGwpSkuProduct;
+import com.api.dms.product.db.entity.ViewProductMarket;
 import com.api.dms.product.model.ResponseModel;
 
 public class GetProductResponseModel extends ResponseModel {
@@ -18,6 +19,8 @@ public class GetProductResponseModel extends ResponseModel {
 	private List<ViewGwpSkuProduct> lstViewGwpSkuProduct;
 	
 	private List<TbProductBundle> lstTbProductBundle;
+
+	private List<ViewProductMarket> lstViewProductMarket;
 
 	public TbProduct getTbProduct() {
 		return tbProduct;
@@ -41,5 +44,13 @@ public class GetProductResponseModel extends ResponseModel {
 
 	public void setLstTbProductBundle(List<TbProductBundle> lstTbProductBundle) {
 		this.lstTbProductBundle = lstTbProductBundle;
+	}
+
+	public List<ViewProductMarket> getLstViewProductMarket() {
+		return lstViewProductMarket;
+	}
+
+	public void setLstViewProductMarket(List<ViewProductMarket> lstViewProductMarket) {
+		this.lstViewProductMarket = lstViewProductMarket;
 	}
 }

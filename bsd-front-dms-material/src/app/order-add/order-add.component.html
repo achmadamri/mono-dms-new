@@ -11,19 +11,24 @@
             <form>
 
               <div class="row">
-                <div class="col-md-4">
+                <div class="col-md-3">
                   <mat-form-field class="example-full-width">
                     <input matInput placeholder="Row" type="text" [(ngModel)]="postOrderAddRequest.tboRow" name="tboRow">
                   </mat-form-field>
                 </div>
-                <div class="col-md-4">
+                <div class="col-md-3">
                   <mat-form-field class="example-full-width">
                     <input matInput placeholder="Brand" type="text" [(ngModel)]="postOrderAddRequest.tboBrand" name="tboBrand">
                   </mat-form-field>
                 </div>
-                <div class="col-md-4">
+                <div class="col-md-3">
                   <mat-form-field class="example-full-width">
-                    <input matInput placeholder="Market" type="text" [(ngModel)]="postOrderAddRequest.tboMarket" name="tboMarket">
+                    <input matInput placeholder="Market ID" type="text" [(ngModel)]="postOrderAddRequest.tboMarketId" name="tboMarketId">
+                  </mat-form-field>
+                </div>
+                <div class="col-md-3">
+                  <mat-form-field class="example-full-width">
+                    <input matInput placeholder="Frontliner" type="text" [(ngModel)]="postOrderAddRequest.tboFrontliner" name="tboFrontliner">
                   </mat-form-field>
                 </div>
               </div>

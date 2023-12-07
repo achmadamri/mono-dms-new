@@ -1,3 +1,4 @@
+import { Location } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { Title } from '@angular/platform-browser';
@@ -19,7 +20,6 @@ import { Util } from 'app/util';
 @Component({
   selector: 'app-confirm-details',
   templateUrl: './confirm-details.component.html',
-  styleUrls: ['./confirm-details.component.css']
 })
 export class ConfirmDetailsComponent implements OnInit {
   clicked = false;
@@ -39,6 +39,7 @@ export class ConfirmDetailsComponent implements OnInit {
   skucode: string;
 
   constructor(
+    private location: Location,
     private router: Router,    
     private titleService: Title,
     private route: ActivatedRoute,
@@ -60,7 +61,7 @@ export class ConfirmDetailsComponent implements OnInit {
   }
 
   back() {
-    this.router.navigate(['/confirm']);
+    this.location.back();
   }
 
   getOrderPack() {

@@ -2,7 +2,7 @@ export class TbMarket {
 	tbmId: string;
 	tbmCreateDate: string;
 	tbmCreateId: number;
-	tbmMarket: string;
+	tbmMarketId: string;
 	tbmParentId: number;
 	tbmRole: string;
 	tbmUpdateDate: string;

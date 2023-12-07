@@ -13,7 +13,6 @@ import { Util } from 'app/util';
 @Component({
   selector: 'app-gwp',
   templateUrl: './gwp.component.html',
-  styleUrls: ['./gwp.component.css']
 })
 export class GwpComponent implements OnInit {
   clicked = false;
@@ -75,6 +74,8 @@ export class GwpComponent implements OnInit {
           }          
         },
         errorResponse => {
+          this.length = 0;
+
           this.clicked = !this.clicked;
           
           this.getGwpListResponse = new GetGwpListResponse();

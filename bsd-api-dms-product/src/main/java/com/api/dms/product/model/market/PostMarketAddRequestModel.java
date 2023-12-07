@@ -6,20 +6,19 @@ import com.api.dms.product.model.RequestModel;
 
 public class PostMarketAddRequestModel extends RequestModel {	
 	@NotNull(message = "Market is not null")
-	private String tbmMarket;
+	private String tbmMarketId;
 	
 	@NotNull(message = "Role is not null")
 	private String tbmRole;
 	
-	@NotNull(message = "Parent Id is not null")
 	private String tbmParentId;
 
-	public String getTbmMarket() {
-		return tbmMarket;
+	public String getTbmMarketId() {
+		return tbmMarketId;
 	}
 
-	public void setTbmMarket(String tbmMarket) {
-		this.tbmMarket = tbmMarket;
+	public void setTbmMarketId(String tbmMarketId) {
+		this.tbmMarketId = tbmMarketId;
 	}
 
 	public String getTbmRole() {

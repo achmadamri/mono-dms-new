@@ -61,10 +61,10 @@
             <table class="table table-hover">
               <thead class="text-warning">
                 <tr>
-                  <th scope="col" style="cursor: pointer;" (click)="checkAll();">Check All</th>
                   <th scope="col">Date</th>
                   <th scope="col">Brand</th>
-                  <th scope="col">Market</th>
+                  <th scope="col">Market ID</th>
+                  <th scope="col">Frontliner</th>
                   <th scope="col">Order No</th>
                   <th scope="col">Sku</th>
                   <th scope="col">Code</th>
@@ -78,19 +78,10 @@
               </thead>
               <tbody *ngIf="this.getOrderListResponse.lstTbOrder[0].tboBrand != undefined">
                 <tr *ngFor="let tbOrder of getOrderListResponse.lstTbOrder; let i = index">
-                  <td>
-                    <div class="form-check">
-                      <label class="form-check-label">
-                          <input class="form-check-input" type="checkbox" [(ngModel)]="tbOrder.check">
-                          <span class="form-check-sign">
-                              <span class="check" style="width: 16px; height: 16px;"></span>
-                          </span>
-                      </label>
-                    </div>
-                  </td>
                   <td>{{tbOrder.tboCreateDate | date: 'M/dd/yyyy'}}</td>
                   <td>{{tbOrder.tboBrand}}</td>
-                  <td>{{tbOrder.tboMarket}}</td>
+                  <td>{{tbOrder.tboMarketId}}</td>
+                  <td>{{tbOrder.tboFrontliner}}</td>
                   <td>{{tbOrder.tboOrderNo}}</td>
                   <td>{{tbOrder.tboSku}}</td>
                   <td>{{tbOrder.tboCode}}</td>
@@ -106,8 +97,7 @@
               </tbody>
             </table>
             <mat-paginator [length]="length" [pageSize]="pageSize" [pageSizeOptions]="pageSizeOptions" (page)="getPage($event)" [disabled]="clicked"></mat-paginator>
-            <input type="button" class="btn btn-success pull-right" value="Download Packing List" [disabled]="clicked || !download" (click)="downloadFilePacking();" />
-            <input type="button" class="btn btn-success pull-right" value="Confirm" [disabled]="clicked" (click)="confirm();" />
+            <input type="button" class="btn btn-success pull-right" value="Download Packing List" [disabled]="clicked || !download" (click)="downloadFilePacking();" />            
             <input type="button" class="btn btn-success pull-right" value="Manual Stock Out" [disabled]="clicked" (click)="orderManual();" />
             <input type="button" class="btn btn-success pull-right" value="Upload File" [disabled]="clicked" (click)="uploadFile();" />
             <input type="button" class="btn btn-success pull-right" value="Download File" [disabled]="clicked || !download" (click)="downloadFileOrder();" />

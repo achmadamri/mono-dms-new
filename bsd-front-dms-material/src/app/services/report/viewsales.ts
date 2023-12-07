@@ -3,7 +3,8 @@ export class ViewSales {
 	tboCreateDate: Date;
 	tboCreateId: number;
 	tboItem: string;
-	tboMarket: string;
+	tboMarketId: string;
+	tboFrontliner: string;
 	tboOrderNo: string;
 	tboQty: number;
 	tboSku: string;

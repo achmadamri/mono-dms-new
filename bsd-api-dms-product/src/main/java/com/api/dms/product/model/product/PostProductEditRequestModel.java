@@ -1,9 +1,11 @@
 package com.api.dms.product.model.product;
 
 import java.math.BigDecimal;
+import java.util.List;
 
 import javax.validation.constraints.NotNull;
 
+import com.api.dms.product.db.entity.ViewProductMarket;
 import com.api.dms.product.model.RequestModel;
 
 public class PostProductEditRequestModel extends RequestModel {
@@ -33,6 +35,8 @@ public class PostProductEditRequestModel extends RequestModel {
 	
 	@NotNull(message = "Type is not null")
 	private String tbpType;
+
+	private List<ViewProductMarket> lstViewProductMarket;
 
 	public String getTbpId() {
 		return tbpId;
@@ -104,5 +108,13 @@ public class PostProductEditRequestModel extends RequestModel {
 
 	public void setTbpType(String tbpType) {
 		this.tbpType = tbpType;
+	}
+
+	public List<ViewProductMarket> getLstViewProductMarket() {
+		return lstViewProductMarket;
+	}
+
+	public void setLstViewProductMarket(List<ViewProductMarket> lstViewProductMarket) {
+		this.lstViewProductMarket = lstViewProductMarket;
 	}
 }

@@ -4,7 +4,7 @@ export class TbOrderPack {
 	tbopCreateDate: Date;
 	tbopCreateId: number;
 	tbopBrand: string;
-	tbopMarket: string;
+	tbopMarketId: string;
 	tbopName: string;
 	tbopNotes: string;
 	tbopOrderNo: string;
@@ -13,4 +13,5 @@ export class TbOrderPack {
 	tbopUpdateDate: Date;
 	tbopUpdateId: number;
 	tbopType: string;
+	tbopFrontliner: string;
 }

@@ -10,7 +10,6 @@ import { Util } from 'app/util';
 @Component({
   selector: 'app-order-upload-file',
   templateUrl: './order-upload-file.component.html',
-  styleUrls: ['./order-upload-file.component.css']
 })
 export class OrderUploadFileComponent implements OnInit {
   clicked = false;

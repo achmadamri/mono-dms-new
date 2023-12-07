@@ -12,9 +12,11 @@ import java.time.ZoneOffset;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.Set;
 
 import org.apache.commons.collections4.map.HashedMap;
 import org.apache.poi.ss.usermodel.Cell;
@@ -43,18 +45,24 @@ import com.api.dms.order.db.entity.TbBrand;
 import com.api.dms.order.db.entity.TbOrder;
 import com.api.dms.order.db.entity.TbOrderPack;
 import com.api.dms.order.db.entity.TbOrderPackDetail;
+import com.api.dms.order.db.entity.TbOrderStatus;
 import com.api.dms.order.db.entity.TbUser;
+import com.api.dms.order.db.entity.TbUserBrand;
 import com.api.dms.order.db.entity.ViewOrderConfirm;
 import com.api.dms.order.db.entity.ViewOrderPack;
 import com.api.dms.order.db.repository.TbBrandRepository;
 import com.api.dms.order.db.repository.TbOrderPackDetailRepository;
 import com.api.dms.order.db.repository.TbOrderPackRepository;
 import com.api.dms.order.db.repository.TbOrderRepository;
+import com.api.dms.order.db.repository.TbOrderStatusRepository;
+import com.api.dms.order.db.repository.TbUserBrandRepository;
 import com.api.dms.order.db.repository.TbUserRepository;
 import com.api.dms.order.db.repository.ViewOrderConfirmRepository;
 import com.api.dms.order.db.repository.ViewOrderPackRepository;
 import com.api.dms.order.model.order.GetOrderConfirmListRequestModel;
 import com.api.dms.order.model.order.GetOrderConfirmListResponseModel;
+import com.api.dms.order.model.order.GetOrderConfirmSumRequestModel;
+import com.api.dms.order.model.order.GetOrderConfirmSumResponseModel;
 import com.api.dms.order.model.order.GetOrderListRequestModel;
 import com.api.dms.order.model.order.GetOrderListResponseModel;
 import com.api.dms.order.model.order.GetOrderPackRequestModel;
@@ -92,7 +100,10 @@ import com.api.dms.order.model.order.PostUploadOrderResponseModel;
 import com.api.dms.order.model.product.GetProductResponseModel;
 import com.api.dms.order.model.product.LstViewGwpSkuProduct;
 import com.api.dms.order.model.product.PostProductConfirmRequestModel;
+import com.api.dms.order.model.product.ViewProductMarket;
+import com.api.dms.order.model.report.PostSyncConfirmOrderRequestModel;
 import com.api.dms.order.model.report.PostSyncOrderRequestModel;
+import com.api.dms.order.model.report.PostSyncOrderStatusRequestModel;
 import com.api.dms.order.util.SimpleMapper;
 import com.api.dms.order.util.TokenUtil;
 import com.api.dms.order.util.Uid;
@@ -129,6 +140,12 @@ public class OrderService {
 	@Autowired
 	private TbBrandRepository tbBrandRepository;
 	
+	@Autowired
+	private TbOrderStatusRepository tbOrderStatusRepository;
+	
+	@Autowired
+	private TbUserBrandRepository tbUserBrandRepository;
+	
 	public PostUploadOrderResponseModel postUploadOrder(PostUploadOrderRequestModel requestModel, MultipartFile file) throws Exception {
 		PostUploadOrderResponseModel responseModel = new PostUploadOrderResponseModel(requestModel);
 
@@ -157,6 +174,9 @@ public class OrderService {
 			String dataExistsString = "";
 			
 			List<TbOrder> lstTbOrder = new ArrayList<TbOrder>();
+			List<TbOrderStatus> lstTbOrderStatus = new ArrayList<TbOrderStatus>();
+			List<TbOrderPack> lstTbOrderPack = new ArrayList<TbOrderPack>();
+			List<TbOrderPackDetail> lstTbOrderPackDetail = new ArrayList<TbOrderPackDetail>();
 			
 			for (Row row : sheet) {
 				if (rowNum == 0) {
@@ -170,10 +190,12 @@ public class OrderService {
 				} else {
 					if (row.getCell(0) != null) {
 						TbOrder exampleTbOrder = new TbOrder();
-						
-						if (getData(row, column, "Order No").getClass().equals(Double.valueOf(0).getClass())) {
-							exampleTbOrder.setTboOrderNo(String.format("%.0f", (Double) getData(row, column, "Order No")));								
-						} else if (getData(row, column, "Order No").getClass().equals("".getClass())) {
+						Object getData = null;
+
+						getData = getData(row, column, "Order No");
+						if (getData.getClass().equals(Double.valueOf(0).getClass())) {
+							exampleTbOrder.setTboOrderNo(String.format("%.0f", (Double) getData));								
+						} else if (getData.getClass().equals("".getClass())) {
 							exampleTbOrder.setTboOrderNo((String) getData(row, column, "Order No"));
 						}
 						
@@ -192,135 +214,153 @@ public class OrderService {
 							tbOrder.setTboType(TbOrderRepository.TypeOrder);							
 							tbOrder.setTboRow(((Double) getData(row, column, "Row")).intValue());
 							tbOrder.setTboBrand((String) getData(row, column, "Brand"));
-							tbOrder.setTboMarket((String) getData(row, column, "Market"));							
+							tbOrder.setTboMarketId((String) getData(row, column, "Market ID"));							
+							tbOrder.setTboFrontliner((String) getData(row, column, "Frontliner"));							
 							tbOrder.setTboQcId(((Double) getData(row, column, "QC ID")).intValue());
 							tbOrder.setTboSeq(((Double) getData(row, column, "SEQ")).intValue());
 							tbOrder.setTboMaxSeq(((Double) getData(row, column, "Max SEQ")).intValue());
 							tbOrder.setTboOrderSq((String) getData(row, column, "Order SQ"));
 							
-							if (getData(row, column, "Order No").getClass().equals(Double.valueOf(0).getClass())) {
-								tbOrder.setTboOrderNo(String.format("%.0f", (Double) getData(row, column, "Order No")));								
-							} else if (getData(row, column, "Order No").getClass().equals("".getClass())) {
-								tbOrder.setTboOrderNo((String) getData(row, column, "Order No"));
+							getData = getData(row, column, "Order No");
+							if (getData.getClass().equals(Double.valueOf(0).getClass())) {
+								tbOrder.setTboOrderNo(String.format("%.0f", (Double) getData));								
+							} else if (getData.getClass().equals("".getClass())) {
+								tbOrder.setTboOrderNo((String) getData);
 							}
 							
-							if (getData(row, column, "SKU").getClass().equals(Double.valueOf(0).getClass())) {
-								tbOrder.setTboSku(String.format("%.0f", (Double) getData(row, column, "SKU")));								
-							} else if (getData(row, column, "SKU").getClass().equals("".getClass())) {
-								tbOrder.setTboSku((String) getData(row, column, "SKU"));
+							getData = getData(row, column, "SKU");
+							if (getData.getClass().equals(Double.valueOf(0).getClass())) {
+								tbOrder.setTboSku(String.format("%.0f", (Double) getData));								
+							} else if (getData.getClass().equals("".getClass())) {
+								tbOrder.setTboSku((String) getData);
 							}
 							
 							tbOrder.setTboItem((String) getData(row, column, "ITEM"));
 							
-							if (getData(row, column, "Code").getClass().equals(Double.valueOf(0).getClass())) {
-								tbOrder.setTboCode(String.format("%.0f", (Double) getData(row, column, "Code")));								
-							} else if (getData(row, column, "Code").getClass().equals("".getClass())) {
-								tbOrder.setTboCode((String) getData(row, column, "Code"));
+							getData = getData(row, column, "Code");
+							if (getData.getClass().equals(Double.valueOf(0).getClass())) {
+								tbOrder.setTboCode(String.format("%.0f", (Double) getData));								
+							} else if (getData.getClass().equals("".getClass())) {
+								tbOrder.setTboCode((String) getData);
 							}
 							
-							if (getData(row, column, "LOC").getClass().equals(Double.valueOf(0).getClass())) {
-								tbOrder.setTboLoc(String.format("%.0f", (Double) getData(row, column, "LOC")));								
-							} else if (getData(row, column, "LOC").getClass().equals("".getClass())) {
-								tbOrder.setTboLoc((String) getData(row, column, "LOC"));
+							getData = getData(row, column, "LOC");
+							if (getData.getClass().equals(Double.valueOf(0).getClass())) {
+								tbOrder.setTboLoc(String.format("%.0f", (Double) getData));								
+							} else if (getData.getClass().equals("".getClass())) {
+								tbOrder.setTboLoc((String) getData);
 							}							
 							
 							tbOrder.setTboQty(((Double) getData(row, column, "Qty")).intValue());
 							
-							if (getData(row, column, "Diskon from Market") != null) {
-								if (getData(row, column, "Diskon from Market").getClass().equals(Double.valueOf(0).getClass())) {
-									tbOrder.setTboDiskonFromMarket(new BigDecimal((Double) getData(row, column, "Diskon from Market")));								
-								} else if (getData(row, column, "Diskon from Market").getClass().equals("".getClass())) {
+							getData = getData(row, column, "Diskon from Market");
+							if (getData != null) {
+								if (getData.getClass().equals(Double.valueOf(0).getClass())) {
+									tbOrder.setTboDiskonFromMarket(new BigDecimal((Double) getData));								
+								} else if (getData.getClass().equals("".getClass())) {
 									tbOrder.setTboDiskonFromMarket(null);
 								}
 							}
 							
-							if (getData(row, column, "Unit Price") != null) {
-								if (getData(row, column, "Unit Price").getClass().equals(Double.valueOf(0).getClass())) {
-									tbOrder.setTboUnitPrice(new BigDecimal((Double) getData(row, column, "Unit Price")));								
-								} else if (getData(row, column, "Unit Price").getClass().equals("".getClass())) {
+							getData = getData(row, column, "Unit Price");
+							if (getData != null) {
+								if (getData.getClass().equals(Double.valueOf(0).getClass())) {
+									tbOrder.setTboUnitPrice(new BigDecimal((Double) getData));								
+								} else if (getData.getClass().equals("".getClass())) {
 									tbOrder.setTboUnitPrice(null);
 								}								
 							}
 							
-							if (getData(row, column, "Diskon Total") != null) {
-								if (getData(row, column, "Diskon Total").getClass().equals(Double.valueOf(0).getClass())) {
-									tbOrder.setTboDiskonTotal(new BigDecimal((Double) getData(row, column, "Diskon Total")));								
-								} else if (getData(row, column, "Diskon Total").getClass().equals("".getClass())) {
+							getData = getData(row, column, "Diskon Total");
+							if (getData != null) {
+								if (getData.getClass().equals(Double.valueOf(0).getClass())) {
+									tbOrder.setTboDiskonTotal(new BigDecimal((Double) getData));								
+								} else if (getData.getClass().equals("".getClass())) {
 									tbOrder.setTboDiskonTotal(null);
 								}
 							}
 							
-							if (getData(row, column, "PAID Total") != null) {
-								if (getData(row, column, "PAID Total").getClass().equals(Double.valueOf(0).getClass())) {
-									tbOrder.setTboPaidTotal(new BigDecimal((Double) getData(row, column, "PAID Total")));								
-								} else if (getData(row, column, "PAID Total").getClass().equals("".getClass())) {
+							getData = getData(row, column, "PAID Total");
+							if (getData != null) {
+								if (getData.getClass().equals(Double.valueOf(0).getClass())) {
+									tbOrder.setTboPaidTotal(new BigDecimal((Double) getData));								
+								} else if (getData.getClass().equals("".getClass())) {
 									tbOrder.setTboPaidTotal(null);
 								}
 							}
 							
-							if (getData(row, column, "Order SUM") != null) {
-								if (getData(row, column, "Order SUM").getClass().equals(Double.valueOf(0).getClass())) {
-									tbOrder.setTboOrderSum(new BigDecimal((Double) getData(row, column, "Order SUM")));								
-								} else if (getData(row, column, "Order SUM").getClass().equals("".getClass())) {
+							getData = getData(row, column, "Order SUM");
+							if (getData != null) {
+								if (getData.getClass().equals(Double.valueOf(0).getClass())) {
+									tbOrder.setTboOrderSum(new BigDecimal((Double) getData));								
+								} else if (getData.getClass().equals("".getClass())) {
 									tbOrder.setTboOrderSum(null);
 								}
 							}
 							
-							if (getData(row, column, "Name").getClass().equals(Double.valueOf(0).getClass())) {
-								tbOrder.setTboName(String.format("%.0f", (Double) getData(row, column, "Name")));								
-							} else if (getData(row, column, "Name").getClass().equals("".getClass())) {
-								tbOrder.setTboName((String) getData(row, column, "Name"));
+							getData = getData(row, column, "Name");
+							if (getData.getClass().equals(Double.valueOf(0).getClass())) {
+								tbOrder.setTboName(String.format("%.0f", (Double) getData));								
+							} else if (getData.getClass().equals("".getClass())) {
+								tbOrder.setTboName((String) getData);
 							}
 							
-							if (getData(row, column, "HP").getClass().equals(Double.valueOf(0).getClass())) {
-								tbOrder.setTboHp(String.format("%.0f", (Double) getData(row, column, "HP")));								
-							} else if (getData(row, column, "HP").getClass().equals("".getClass())) {
-								tbOrder.setTboHp((String) getData(row, column, "HP"));
+							getData = getData(row, column, "HP");
+							if (getData.getClass().equals(Double.valueOf(0).getClass())) {
+								tbOrder.setTboHp(String.format("%.0f", (Double) getData));								
+							} else if (getData.getClass().equals("".getClass())) {
+								tbOrder.setTboHp((String) getData);
 							}
 							
-							if (getData(row, column, "Address1").getClass().equals(Double.valueOf(0).getClass())) {
-								tbOrder.setTboAddress1(String.format("%.0f", (Double) getData(row, column, "Address1")));								
-							} else if (getData(row, column, "Address1").getClass().equals("".getClass())) {
-								tbOrder.setTboAddress1((String) getData(row, column, "Address1"));
+							getData = getData(row, column, "Address1");
+							if (getData.getClass().equals(Double.valueOf(0).getClass())) {
+								tbOrder.setTboAddress1(String.format("%.0f", (Double) getData));								
+							} else if (getData.getClass().equals("".getClass())) {
+								tbOrder.setTboAddress1((String) getData);
 							}
 							
-							if (getData(row, column, "Address2").getClass().equals(Double.valueOf(0).getClass())) {
-								tbOrder.setTboAddress2(String.format("%.0f", (Double) getData(row, column, "Address2")));								
-							} else if (getData(row, column, "Address2").getClass().equals("".getClass())) {
-								tbOrder.setTboAddress2((String) getData(row, column, "Address2"));
+							getData = getData(row, column, "Address2");
+							if (getData.getClass().equals(Double.valueOf(0).getClass())) {
+								tbOrder.setTboAddress2(String.format("%.0f", (Double) getData));								
+							} else if (getData.getClass().equals("".getClass())) {
+								tbOrder.setTboAddress2((String) getData);
 							}
 							
-							if (getData(row, column, "Address3").getClass().equals(Double.valueOf(0).getClass())) {
-								tbOrder.setTboAddress3(String.format("%.0f", (Double) getData(row, column, "Address3")));								
-							} else if (getData(row, column, "Address3").getClass().equals("".getClass())) {
-								tbOrder.setTboAddress3((String) getData(row, column, "Address3"));
+							getData = getData(row, column, "Address3");
+							if (getData.getClass().equals(Double.valueOf(0).getClass())) {
+								tbOrder.setTboAddress3(String.format("%.0f", (Double) getData));								
+							} else if (getData.getClass().equals("".getClass())) {
+								tbOrder.setTboAddress3((String) getData);
 							}
 							
-							if (getData(row, column, "Address4").getClass().equals(Double.valueOf(0).getClass())) {
-								tbOrder.setTboAddress4(String.format("%.0f", (Double) getData(row, column, "Address4")));								
-							} else if (getData(row, column, "Address4").getClass().equals("".getClass())) {
-								tbOrder.setTboAddress4((String) getData(row, column, "Address4"));
+							getData = getData(row, column, "Address4");
+							if (getData.getClass().equals(Double.valueOf(0).getClass())) {
+								tbOrder.setTboAddress4(String.format("%.0f", (Double) getData));								
+							} else if (getData.getClass().equals("".getClass())) {
+								tbOrder.setTboAddress4((String) getData);
 							}
 							
-							if (getData(row, column, "Address5").getClass().equals(Double.valueOf(0).getClass())) {
-								tbOrder.setTboAddress5(String.format("%.0f", (Double) getData(row, column, "Address5")));								
-							} else if (getData(row, column, "Address5").getClass().equals("".getClass())) {
-								tbOrder.setTboAddress5((String) getData(row, column, "Address5"));
+							getData = getData(row, column, "Address5");
+							if (getData.getClass().equals(Double.valueOf(0).getClass())) {
+								tbOrder.setTboAddress5(String.format("%.0f", (Double) getData));								
+							} else if (getData.getClass().equals("".getClass())) {
+								tbOrder.setTboAddress5((String) getData);
 							}
 							
-							if (getData(row, column, "Full Address").getClass().equals(Double.valueOf(0).getClass())) {
-								tbOrder.setTboFullAddress(String.format("%.0f", (Double) getData(row, column, "Full Address")));								
-							} else if (getData(row, column, "Full Address").getClass().equals("".getClass())) {
-								tbOrder.setTboFullAddress((String) getData(row, column, "Full Address"));
+							getData = getData(row, column, "Full Address");
+							if (getData.getClass().equals(Double.valueOf(0).getClass())) {
+								tbOrder.setTboFullAddress(String.format("%.0f", (Double) getData));								
+							} else if (getData.getClass().equals("".getClass())) {
+								tbOrder.setTboFullAddress((String) getData);
 							}
 							
 							if (map.get(tbOrder.getTboOrderNo()) == null) map.put(tbOrder.getTboOrderNo(), uid.generateString(15).toUpperCase());
 							tbOrder.setTboAwb(map.get(tbOrder.getTboOrderNo()));
 							//tbOrder.setTboAwb((String) getData(row, column, "AWB"));
 							
-							tbOrder.setTboStatus(TbOrderRepository.StatusNotConfirmed);
+							tbOrder.setTboStatus(TbOrderRepository.StatusPacked);
 							
-							tbOrder.setTboCheck(TbOrderRepository.CheckNotOk);
+							tbOrder.setTboCheck(TbOrderRepository.CheckOk);
 							
 							tbOrder.setTboTypeNotPacked(TbOrderRepository.TypeNotPackedOrder);
 							
@@ -349,16 +389,159 @@ public class OrderService {
 			} else {
 				tbOrderRepository.saveAll(lstTbOrder);
 				
+				for (TbOrder tbOrder : lstTbOrder) {
+					TbOrderStatus tbOrderStatus = new TbOrderStatus();
+					tbOrderStatus.setTbosCreateDate(Date.from(LocalDateTime.now(ZoneOffset.UTC).toInstant(ZoneOffset.UTC)));
+					tbOrderStatus.setTbosCreateId(optTbUser.get().getTbuId());
+					tbOrderStatus.setTboId(tbOrder.getTboId());
+					tbOrderStatus.setTbosStatus(tbOrder.getTboStatus());
+					lstTbOrderStatus.add(tbOrderStatus);
+				}
+				tbOrderStatusRepository.saveAll(lstTbOrderStatus);
+
+				Set<String> uniqueOrderNumbers = new HashSet<>();
+				for (TbOrder tbOrder : lstTbOrder) {
+					// Check if the order number is unique
+					if (uniqueOrderNumbers.add(tbOrder.getTboOrderNo())) {
+						// If it's unique, add the order pack to the result list
+						TbOrderPack tbOrderPack = new TbOrderPack();
+						tbOrderPack.setTbopCreateDate(Date.from(LocalDateTime.now(ZoneOffset.UTC).toInstant(ZoneOffset.UTC)));
+						tbOrderPack.setTbopCreateId(optTbUser.get().getTbuId());
+						tbOrderPack.setTbopQcId(tbOrder.getTboQcId());
+						tbOrderPack.setTbopAwb(tbOrder.getTboAwb());
+						tbOrderPack.setTbopBrand(tbOrder.getTboBrand());
+						tbOrderPack.setTbopMarket(tbOrder.getTboMarketId());					
+						tbOrderPack.setTbopFrontliner(tbOrder.getTboFrontliner());
+						tbOrderPack.setTbopOrderNo(tbOrder.getTboOrderNo());
+						tbOrderPack.setTbopName(tbOrder.getTboName());
+						tbOrderPack.setTbopStatus(TbOrderPackRepository.StatusPacked);
+						tbOrderPack.setTbopType(TbOrderPackRepository.TypeOrder);
+						lstTbOrderPack.add(tbOrderPack);
+					}
+				}
+				tbOrderPackRepository.saveAll(lstTbOrderPack);
+
+				for (TbOrder tbOrder : lstTbOrder) {
+					TbOrderPack exampleTbOrderPack = new TbOrderPack();
+					exampleTbOrderPack.setTbopOrderNo(tbOrder.getTboOrderNo());
+					Optional<TbOrderPack> opTbOrderPack = tbOrderPackRepository.findOne(Example.of(exampleTbOrderPack));
+
+					TbOrderPackDetail tbOrderPackDetail = new TbOrderPackDetail();
+					tbOrderPackDetail.setTbopdCreateDate(Date.from(LocalDateTime.now(ZoneOffset.UTC).toInstant(ZoneOffset.UTC)));
+					tbOrderPackDetail.setTbopdCreateId(optTbUser.get().getTbuId());
+					tbOrderPackDetail.setTbopId(opTbOrderPack.get().getTbopId());
+					tbOrderPackDetail.setTbopdType(TbOrderPackDetailRepository.TypeProduct);
+					tbOrderPackDetail.setTbopdOrderNo(tbOrder.getTboOrderNo());
+					tbOrderPackDetail.setTbopdBrand(tbOrder.getTboBrand());
+					tbOrderPackDetail.setTbopdSku(tbOrder.getTboSku());
+					tbOrderPackDetail.setTbopdCode(tbOrder.getTboCode());
+					tbOrderPackDetail.setTbopdItem(tbOrder.getTboItem());
+					tbOrderPackDetail.setTbopdStatus(TbOrderPackDetailRepository.StatusPacked);
+					tbOrderPackDetail.setTbopdCheck(TbOrderPackDetailRepository.CheckOk);
+					tbOrderPackDetail.setTbopdQty(tbOrder.getTboQty());
+					tbOrderPackDetail.setTbopdQtyPack(tbOrder.getTboQty());
+					tbOrderPackDetail.setTbopdMarket(tbOrder.getTboMarketId());
+					lstTbOrderPackDetail.add(tbOrderPackDetail);
+				}
+				tbOrderPackDetailRepository.saveAll(lstTbOrderPackDetail);
+
+				for (TbOrder tbOrder : lstTbOrder) {
+					RestTemplate restTemplate = new RestTemplate();
+					String requestParam = "" + 
+							"email=" + requestModel.getEmail() +
+							"&token=" + requestModel.getToken() +
+							"&requestDate=" + requestModel.getRequestDate() +
+							"&requestId=" + requestModel.getRequestId() +
+							"&tbpIdSkuCode=" + tbOrder.getTboSku();
+					ResponseEntity<String> response = restTemplate.getForEntity(env.getProperty("services.bsd.api.dms.product") + "/getproduct?" + requestParam, String.class);
+
+					ObjectMapper mapper = new ObjectMapper();
+					GetProductResponseModel getProductResponseModel = mapper.readValue(response.getBody(), GetProductResponseModel.class);			
+
+					for (LstViewGwpSkuProduct lstViewGwpSkuProduct : getProductResponseModel.getLstViewGwpSkuProduct()) {
+						TbOrder tbOrderGwpBundleDetail = new TbOrder();							
+						tbOrderGwpBundleDetail.setTboCreateDate(Date.from(LocalDateTime.now(ZoneOffset.UTC).toInstant(ZoneOffset.UTC)));
+						tbOrderGwpBundleDetail.setTboCreateId(optTbUser.get().getTbuId());
+						tbOrderGwpBundleDetail.setTboOrderNo(tbOrder.getTboOrderNo());
+						tbOrderGwpBundleDetail.setTboSku(lstViewGwpSkuProduct.getTbgSku());
+						tbOrderGwpBundleDetail.setTboItem(lstViewGwpSkuProduct.getTbpgTbpItem());
+						tbOrderGwpBundleDetail.setTboCode(lstViewGwpSkuProduct.getTbpgTbpCode());
+						tbOrderGwpBundleDetail.setTboLoc(lstViewGwpSkuProduct.getTbpgTbpLoc());
+						tbOrderGwpBundleDetail.setTboQty(lstViewGwpSkuProduct.getTbgsQty());
+						tbOrderGwpBundleDetail.setTboName(tbOrder.getTboName());
+						tbOrderGwpBundleDetail.setTboAwb(tbOrder.getTboAwb());
+						tbOrderGwpBundleDetail.setTboStatus(TbOrderRepository.StatusPacked);
+						tbOrderGwpBundleDetail.setTboCheck(TbOrderRepository.CheckOk);
+						tbOrderGwpBundleDetail.setTboTypeNotPacked(TbOrderRepository.TypeOrder);
+						tbOrderGwpBundleDetail.setTboType(TbOrderRepository.TypeOrder);							
+						tbOrderGwpBundleDetail.setTboBrand(lstViewGwpSkuProduct.getTbpgTbpBrand());						
+						tbOrderGwpBundleDetail.setTboMarketId(tbOrder.getTboMarketId());
+						tbOrderGwpBundleDetail.setTboRow(tbOrder.getTboRow());
+						tbOrderGwpBundleDetail.setTboBrand(lstViewGwpSkuProduct.getTbpgTbpBrand());
+						tbOrderGwpBundleDetail.setTboQcId(tbOrder.getTboQcId());
+						tbOrderGwpBundleDetail.setTboSeq(tbOrder.getTboSeq());
+						tbOrderGwpBundleDetail.setTboMaxSeq(tbOrder.getTboMaxSeq());
+						tbOrderGwpBundleDetail.setTboOrderSq(tbOrder.getTboOrderSq());
+						tbOrderGwpBundleDetail.setTboHp(tbOrder.getTboHp());
+						tbOrderGwpBundleDetail.setTboAddress1(tbOrder.getTboAddress1());
+						tbOrderGwpBundleDetail.setTboAddress2(tbOrder.getTboAddress2());
+						tbOrderGwpBundleDetail.setTboAddress3(tbOrder.getTboAddress3());
+						tbOrderGwpBundleDetail.setTboAddress4(tbOrder.getTboAddress4());
+						tbOrderGwpBundleDetail.setTboAddress5(tbOrder.getTboAddress5());
+						tbOrderGwpBundleDetail.setTboFullAddress(tbOrder.getTboFullAddress());
+						tbOrderGwpBundleDetail.setTboFile(tbOrder.getTboFile());
+						tbOrderGwpBundleDetail.setTboFrontliner(tbOrder.getTboFrontliner());
+
+						tbOrderRepository.save(tbOrderGwpBundleDetail);
+
+						TbOrderPackDetail tbOrderPackGwpBundleDetail = new TbOrderPackDetail();
+						tbOrderPackGwpBundleDetail.setTbopdCreateDate(Date.from(LocalDateTime.now(ZoneOffset.UTC).toInstant(ZoneOffset.UTC)));
+						tbOrderPackGwpBundleDetail.setTbopdCreateId(optTbUser.get().getTbuId());
+						tbOrderPackGwpBundleDetail.setTbopId(tbOrder.getTboId());
+						tbOrderPackGwpBundleDetail.setTbopdOrderNo(tbOrder.getTboOrderNo());
+						tbOrderPackGwpBundleDetail.setTbopdBrand(lstViewGwpSkuProduct.getTbpgTbpBrand());
+						tbOrderPackGwpBundleDetail.setTbopdSku(lstViewGwpSkuProduct.getTbgSku());
+						tbOrderPackGwpBundleDetail.setTbopdSkuAdditional(lstViewGwpSkuProduct.getTbgsSku());
+						tbOrderPackGwpBundleDetail.setTbopdItem(lstViewGwpSkuProduct.getTbpgTbpItem());
+						tbOrderPackGwpBundleDetail.setTbopdCode(lstViewGwpSkuProduct.getTbpgTbpCode());
+						if (lstViewGwpSkuProduct.getTbgsMin() == 0 || lstViewGwpSkuProduct.getTbgsMinAccu() == 0) {
+							tbOrderPackGwpBundleDetail.setTbopdStatus(TbOrderPackDetailRepository.StatusAdditionalPacked);
+							tbOrderPackGwpBundleDetail.setTbopdType(TbOrderPackDetailRepository.TypeBundle);
+						} else {
+							tbOrderPackGwpBundleDetail.setTbopdStatus(TbOrderPackDetailRepository.StatusAdditionalPacked);
+							tbOrderPackGwpBundleDetail.setTbopdType(TbOrderPackDetailRepository.TypeGwp);
+						}
+						tbOrderPackGwpBundleDetail.setTbopdCheck(TbOrderPackDetailRepository.CheckOk);
+						tbOrderPackGwpBundleDetail.setTbopdTypeNotPacked(TbOrderPackDetailRepository.TypeNotPackedItem);
+						tbOrderPackGwpBundleDetail.setTbopdQty(lstViewGwpSkuProduct.getTbgsQty());
+						tbOrderPackGwpBundleDetail.setTbopdQtyPack(lstViewGwpSkuProduct.getTbgsQty());
+						tbOrderPackGwpBundleDetail.setTbopdMarket(tbOrder.getTboMarketId());
+
+						lstTbOrderPackDetail.add(tbOrderPackGwpBundleDetail);
+					}					
+				}
+				tbOrderPackDetailRepository.saveAll(lstTbOrderPackDetail);
+				
 				PostSyncOrderRequestModel postSyncOrderRequestModel = new PostSyncOrderRequestModel();
 				postSyncOrderRequestModel.setRequestDate(requestModel.getRequestDate());
 				postSyncOrderRequestModel.setRequestId(requestModel.getRequestId());
 				postSyncOrderRequestModel.setEmail(requestModel.getEmail());
 				postSyncOrderRequestModel.setLstTbOrder(lstTbOrder);
 				
-				HttpEntity<PostSyncOrderRequestModel> request = new HttpEntity<>(postSyncOrderRequestModel);
 				RestTemplate restTemplate = new RestTemplate();
-				restTemplate.postForEntity(env.getProperty("services.bsd.api.dms.report.postsyncorder"), request, String.class);
+
+				HttpEntity<PostSyncOrderRequestModel> requestPostsyncorder = new HttpEntity<>(postSyncOrderRequestModel);				
+				restTemplate.postForEntity(env.getProperty("services.bsd.api.dms.report.postsyncorder"), requestPostsyncorder, String.class);
+
+				PostSyncOrderStatusRequestModel PostSyncOrderStatusRequestModel = new PostSyncOrderStatusRequestModel();
+				PostSyncOrderStatusRequestModel.setRequestDate(requestModel.getRequestDate());
+				PostSyncOrderStatusRequestModel.setRequestId(requestModel.getRequestId());
+				PostSyncOrderStatusRequestModel.setEmail(requestModel.getEmail());
+				PostSyncOrderStatusRequestModel.setLstTbOrderStatus(lstTbOrderStatus);
 				
+				HttpEntity<PostSyncOrderStatusRequestModel> requestPostsyncorderstatus = new HttpEntity<>(PostSyncOrderStatusRequestModel);
+				restTemplate.postForEntity(env.getProperty("services.bsd.api.dms.report.postsyncorderstatus"), requestPostsyncorderstatus, String.class);
+
 				responseModel.setStatus("200");
 				responseModel.setMessage("Upload ok");				
 			}
@@ -502,6 +685,34 @@ public class OrderService {
 				responseModel.setLength(viewOrderConfirmRepository.count(optTbUser.get().getTbuId(), orderNo, sku, status, type, brand, new SimpleDateFormat("yyyy-MM-dd hh:mm:ss").parse(startDate + " 00:00:00"), new SimpleDateFormat("yyyy-MM-dd hh:mm:ss").parse(endDate + " 23:59:50")));
 				responseModel.setLstViewOrderConfirm(lstViewOrderConfirm);
 				
+				responseModel.setStatus("200");
+				responseModel.setMessage("Get Order List ok");
+			} else {
+				responseModel.setStatus("404");
+				responseModel.setMessage("Not found");
+			}
+		} else {
+			responseModel.setStatus("404");
+			responseModel.setMessage("Not found");
+		}
+		
+		return responseModel;
+	}
+
+	public GetOrderConfirmSumResponseModel getOrderConfirmSum(String orderNo, String sku, String status, String type, String brand, String startDate, String endDate, String length, String pageSize, String pageIndex, GetOrderConfirmSumRequestModel requestModel) throws Exception {
+		GetOrderConfirmSumResponseModel responseModel = new GetOrderConfirmSumResponseModel(requestModel);
+		
+		tokenUtil.claims(requestModel);
+		
+		TbUser exampleTbUser = new TbUser();
+		exampleTbUser.setTbuEmail(requestModel.getEmail());
+		exampleTbUser.setTbuStatus(TbUserRepository.Active);
+		Optional<TbUser> optTbUser = tbUserRepository.findOne(Example.of(exampleTbUser));
+		
+		if (optTbUser.isPresent()) {
+			List<ViewOrderConfirm> lstViewOrderConfirm = viewOrderConfirmRepository.find(optTbUser.get().getTbuId(), orderNo, sku, status, type, brand, new SimpleDateFormat("yyyy-MM-dd hh:mm:ss").parse(startDate + " 00:00:00"), new SimpleDateFormat("yyyy-MM-dd hh:mm:ss").parse(endDate + " 23:59:50"), PageRequest.of(Integer.valueOf(pageIndex), Integer.valueOf(pageSize), Sort.by("tboId").ascending()));
+			
+			if (lstViewOrderConfirm.size() > 0) {
 				responseModel.setSumAll(viewOrderConfirmRepository.count(optTbUser.get().getTbuId(), orderNo, sku, "", type, brand, new SimpleDateFormat("yyyy-MM-dd hh:mm:ss").parse(startDate + " 00:00:00"), new SimpleDateFormat("yyyy-MM-dd hh:mm:ss").parse(endDate + " 23:59:50")));
 				responseModel.setSumPacked(viewOrderConfirmRepository.count(optTbUser.get().getTbuId(), orderNo, sku, "Packed", type, brand, new SimpleDateFormat("yyyy-MM-dd hh:mm:ss").parse(startDate + " 00:00:00"), new SimpleDateFormat("yyyy-MM-dd hh:mm:ss").parse(endDate + " 23:59:50")));
 				responseModel.setSumAdditionalPacked(viewOrderConfirmRepository.count(optTbUser.get().getTbuId(), orderNo, sku, "Additional Packed", type, brand, new SimpleDateFormat("yyyy-MM-dd hh:mm:ss").parse(startDate + " 00:00:00"), new SimpleDateFormat("yyyy-MM-dd hh:mm:ss").parse(endDate + " 23:59:50")));
@@ -510,7 +721,7 @@ public class OrderService {
 				responseModel.setSumNotConfirmed(viewOrderConfirmRepository.count(optTbUser.get().getTbuId(), orderNo, sku, "Not Confirmed", type, brand, new SimpleDateFormat("yyyy-MM-dd hh:mm:ss").parse(startDate + " 00:00:00"), new SimpleDateFormat("yyyy-MM-dd hh:mm:ss").parse(endDate + " 23:59:50")));
 				
 				responseModel.setStatus("200");
-				responseModel.setMessage("Get Order List ok");
+				responseModel.setMessage("Get Order Sum ok");
 			} else {
 				responseModel.setStatus("404");
 				responseModel.setMessage("Not found");
@@ -556,7 +767,7 @@ public class OrderService {
 			intCell = 0;
 			
 			cell = row.createCell(intCell++);
-			cell.setCellValue(viewOrderPack.getTboMarket());
+			cell.setCellValue(viewOrderPack.getTboMarketId());
 			
 			cell = row.createCell(intCell++);
 			cell.setCellValue(viewOrderPack.getTboOrderNo());
@@ -641,7 +852,7 @@ public class OrderService {
 			cell.setCellValue(tbOrder.getTboBrand());
 			
 			cell = row.createCell(intCell++);
-			cell.setCellValue(tbOrder.getTboMarket());
+			cell.setCellValue(tbOrder.getTboMarketId());
 			
 			cell = row.createCell(intCell++);
 			cell.setCellValue(tbOrder.getTboOrderNo());
@@ -763,9 +974,9 @@ public class OrderService {
 		
 		if (optTbUser.isPresent()) {
 			boolean check = true;
-			int i = 0;
-			for (TbOrder tbOrder : requestModel.getTbOrder()) {
-				i++;
+			int maxSeq = 0;
+			for (int i = 0; i < requestModel.getTbOrder().length; i++) {
+				maxSeq++;
 				TbOrder exampleTbOrder = new TbOrder();
 				exampleTbOrder.setTboOrderNo(requestModel.getDetails());
 				exampleTbOrder.setTboOrderSq(String.valueOf(i));
@@ -775,16 +986,15 @@ public class OrderService {
 			}
 			
 			if (check) {
-				int ii = 0;
-				for (TbOrder tbOrder : requestModel.getTbOrder()) {
-					ii++;
+				for (int i = 0; i < requestModel.getTbOrder().length; i++) {
+					TbOrder tbOrder = requestModel.getTbOrder()[i];
 					tbOrder.setTboCreateDate(new Date());
 					tbOrder.setTboCreateId(optTbUser.get().getTbuId());
 					tbOrder.setTboBrand(requestModel.getTboBrand());
 					tbOrder.setTboOrderNo(requestModel.getDetails());
-					tbOrder.setTboSeq(ii);
-					tbOrder.setTboMaxSeq(i);
-					tbOrder.setTboOrderSq(String.valueOf(ii));
+					tbOrder.setTboSeq(i);
+					tbOrder.setTboMaxSeq(maxSeq);
+					tbOrder.setTboOrderSq(String.valueOf(i));
 					
 					RestTemplate restTemplate = new RestTemplate();
 					String requestParam = "" + 
@@ -843,6 +1053,7 @@ public class OrderService {
 					tbOrderPackDetail.setTbopdType(TbOrderPackDetailRepository.TypeProduct);
 					tbOrderPackDetail.setTbopdQty(tbOrder.getTboQty());
 					tbOrderPackDetail.setTbopdQtyPack(tbOrder.getTboQty());
+					tbOrderPackDetail.setTbopdMarket(tbOrder.getTboMarketId());
 					
 					tbOrderPackDetailRepository.save(tbOrderPackDetail);
 				}
@@ -1003,7 +1214,8 @@ public class OrderService {
 						tbOrderPack.setTbopAwb(optViewOrderPack.get().getTboAwb());
 						tbOrderPack.setTbopQcId(optViewOrderPack.get().getTboQcId());
 						tbOrderPack.setTbopBrand(optViewOrderPack.get().getTboBrand());
-						tbOrderPack.setTbopMarket(optViewOrderPack.get().getTboMarket());
+						tbOrderPack.setTbopMarket(optViewOrderPack.get().getTboMarketId());						
+						tbOrderPack.setTbopFrontliner(optViewOrderPack.get().getTboFrontliner());
 						tbOrderPack.setTbopOrderNo(optViewOrderPack.get().getTboOrderNo());
 						tbOrderPack.setTbopName(optViewOrderPack.get().getTboName());
 						tbOrderPack.setTbopType(TbOrderPackRepository.TypeOrder);
@@ -1177,7 +1389,7 @@ public class OrderService {
 					tbOrder.setTboCreateId(optTbUser.get().getTbuId());
 					tbOrder.setTboRow(lstTbOrder.get(0).getTboRow() + 1);
 					tbOrder.setTboBrand(getProductResponseModel.getTbProduct().getTbbBrand());
-					tbOrder.setTboMarket(lstTbOrder.get(0).getTboMarket());
+					tbOrder.setTboMarketId(lstTbOrder.get(0).getTboMarketId());
 					tbOrder.setTboQcId(lstTbOrder.get(0).getTboQcId());
 					tbOrder.setTboSeq(lstTbOrder.get(0).getTboSeq() + 1);
 					tbOrder.setTboMaxSeq(lstTbOrder.get(0).getTboMaxSeq() + 1);
@@ -1281,6 +1493,7 @@ public class OrderService {
 							tbOrderPackDetail.setTbopdCheck(optTbOrder.get().getTboCheck());
 						}
 					}
+					tbOrderPackDetail.setTbopdMarket(optTbOrder.get().getTboMarketId());
 					
 					tbOrderPackDetailRepository.save(tbOrderPackDetail);
 					
@@ -1307,7 +1520,8 @@ public class OrderService {
 					}
 					tbOrderPackGwpBundleDetail.setTbopdCheck(tbOrderPackDetail.getTbopdCheck());
 					tbOrderPackGwpBundleDetail.setTbopdTypeNotPacked(TbOrderPackDetailRepository.TypeNotPackedItem);
-					
+					tbOrderPackGwpBundleDetail.setTbopdMarket(tbOrderPackDetail.getTbopdMarket());
+
 					tbOrderPackDetailRepository.save(tbOrderPackGwpBundleDetail);
 				}
 				
@@ -1534,135 +1748,148 @@ public class OrderService {
 		PostConfirmResponseModel responseModel = new PostConfirmResponseModel(requestModel);
 		
 		tokenUtil.claims(requestModel);
-		
-		TbUser exampleTbUser = new TbUser();
-		exampleTbUser.setTbuEmail(requestModel.getEmail());
-		exampleTbUser.setTbuStatus(TbUserRepository.Active);
-		Optional<TbUser> optTbUser = tbUserRepository.findOne(Example.of(exampleTbUser));
-		
-		if (optTbUser.isPresent()) {
-			boolean ok = true;
-			
-			for (int i = 0; i < requestModel.getOrderNo().length; i++) {
-				TbOrderPackDetail exampleTbOrderPackDetail = new TbOrderPackDetail();
-				exampleTbOrderPackDetail.setTbopdOrderNo(requestModel.getOrderNo()[i]);
-				exampleTbOrderPackDetail.setTbopdSku(requestModel.getSku()[i]);
-				exampleTbOrderPackDetail.setTbopdStatus(TbOrderPackDetailRepository.StatusPacked);
-				Optional<TbOrderPackDetail> optTbOrderPackDetail = tbOrderPackDetailRepository.findOne(Example.of(exampleTbOrderPackDetail));
+
+		if (requestModel.getOrderNo().length > 0) {
+			TbUser exampleTbUser = new TbUser();
+			exampleTbUser.setTbuEmail(requestModel.getEmail());
+			exampleTbUser.setTbuStatus(TbUserRepository.Active);
+			Optional<TbUser> optTbUser = tbUserRepository.findOne(Example.of(exampleTbUser));
+
+			if (optTbUser.isPresent()) {
+				String messageOk = "";
+				String messageFail = "";
 				
-				if (optTbOrderPackDetail.isPresent() == false) {
-					exampleTbOrderPackDetail = new TbOrderPackDetail();
-					exampleTbOrderPackDetail.setTbopdOrderNo(requestModel.getOrderNo()[i]);
-					exampleTbOrderPackDetail.setTbopdSku(requestModel.getSku()[i]);
-					exampleTbOrderPackDetail.setTbopdStatus(TbOrderPackDetailRepository.StatusAdditionalPacked);
-					optTbOrderPackDetail = tbOrderPackDetailRepository.findOne(Example.of(exampleTbOrderPackDetail));
-					
-					if (optTbOrderPackDetail.isPresent() == false) {
-						ok = false;
-					}
-				}
-			}
-			
-			if (ok) {
-				Map<String, String> orderNo = new HashMap<String, String>();
-				
+				List<TbOrder> lstTbOrder = new ArrayList<TbOrder>();
+				List<TbOrderStatus> lstTbOrderStatus = new ArrayList<TbOrderStatus>();
+
 				for (int i = 0; i < requestModel.getOrderNo().length; i++) {
 					TbOrderPackDetail exampleTbOrderPackDetail = new TbOrderPackDetail();
 					exampleTbOrderPackDetail.setTbopdOrderNo(requestModel.getOrderNo()[i]);
 					exampleTbOrderPackDetail.setTbopdSku(requestModel.getSku()[i]);
 					exampleTbOrderPackDetail.setTbopdStatus(TbOrderPackDetailRepository.StatusPacked);
 					Optional<TbOrderPackDetail> optTbOrderPackDetail = tbOrderPackDetailRepository.findOne(Example.of(exampleTbOrderPackDetail));
-					
+
 					if (optTbOrderPackDetail.isPresent() == false) {
-						exampleTbOrderPackDetail = new TbOrderPackDetail();
-						exampleTbOrderPackDetail.setTbopdOrderNo(requestModel.getOrderNo()[i]);
-						exampleTbOrderPackDetail.setTbopdSku(requestModel.getSku()[i]);
 						exampleTbOrderPackDetail.setTbopdStatus(TbOrderPackDetailRepository.StatusAdditionalPacked);
 						optTbOrderPackDetail = tbOrderPackDetailRepository.findOne(Example.of(exampleTbOrderPackDetail));
 					}
-					
-					if (optTbOrderPackDetail.isPresent()) {
-						orderNo.put(requestModel.getOrderNo()[i], requestModel.getOrderNo()[i]);
-						
-						optTbOrderPackDetail.get().setTbopdStatus(TbOrderPackDetailRepository.StatusDelivered);
-						tbOrderPackDetailRepository.save(optTbOrderPackDetail.get());
 
-						TbOrder exampleTbOrder = new TbOrder();
-						exampleTbOrder.setTboOrderNo(requestModel.getOrderNo()[i]);
-						exampleTbOrder.setTboSku(requestModel.getSku()[i]);
-						exampleTbOrder.setTboStatus(TbOrderRepository.StatusPacked);
-						Optional<TbOrder> optTbOrder = tbOrderRepository.findOne(Example.of(exampleTbOrder));
-						
-						if (optTbOrder.isPresent() == false) {
-							exampleTbOrder = new TbOrder();
+					if (optTbOrderPackDetail.isPresent() == false) {
+							messageFail = messageFail + requestModel.getOrderNo()[i] + "/" + requestModel.getSku()[i] + " not found<br>";						
+					} else {
+						RestTemplate restTemplateGetproduct = new RestTemplate();
+						String requestParamGetproduct = "" + 
+								"email=" + requestModel.getEmail() +
+								"&token=" + requestModel.getToken() +
+								"&requestDate=" + requestModel.getRequestDate() +
+								"&requestId=" + requestModel.getRequestId() +
+								"&tbpIdSkuCode=" + requestModel.getSku()[i];
+						ResponseEntity<String> responseGetproduct = restTemplateGetproduct.getForEntity(env.getProperty("services.bsd.api.dms.product") + "/getproduct?" + requestParamGetproduct, String.class);
+
+						ObjectMapper mapper = new ObjectMapper();
+						GetProductResponseModel getProductResponseModel = mapper.readValue(responseGetproduct.getBody(), GetProductResponseModel.class);
+						ViewProductMarket viewProductMarket = new ViewProductMarket();						
+
+						for (ViewProductMarket viewProductMarket_ : getProductResponseModel.getLstViewProductMarket()) {
+							if (viewProductMarket_.getTbmMarketId().equals(optTbOrderPackDetail.get().getTbopdMarket())) {
+								viewProductMarket = viewProductMarket_;
+							}
+						}
+
+						if (viewProductMarket.getTbpmQty() < optTbOrderPackDetail.get().getTbopdQty()) {
+							messageFail = messageFail + requestModel.getOrderNo()[i] + "/" + requestModel.getSku()[i] + "/" + optTbOrderPackDetail.get().getTbopdMarket() + " no qty (" + optTbOrderPackDetail.get().getTbopdQty() + " / " + viewProductMarket.getTbpmQty() + ")<br>";
+						} else {
+							TbOrder exampleTbOrder = new TbOrder();
 							exampleTbOrder.setTboOrderNo(requestModel.getOrderNo()[i]);
 							exampleTbOrder.setTboSku(requestModel.getSku()[i]);
-							exampleTbOrder.setTboStatus(TbOrderRepository.StatusAdditionalPacked);
-							optTbOrder = tbOrderRepository.findOne(Example.of(exampleTbOrder));
+							exampleTbOrder.setTboStatus(TbOrderRepository.StatusPacked);
+							Optional<TbOrder> optTbOrder = tbOrderRepository.findOne(Example.of(exampleTbOrder));
+
+							if (optTbOrder.isPresent() == false) {
+								exampleTbOrder = new TbOrder();
+								exampleTbOrder.setTboOrderNo(requestModel.getOrderNo()[i]);
+								exampleTbOrder.setTboSku(requestModel.getSku()[i]);
+								exampleTbOrder.setTboStatus(TbOrderRepository.StatusAdditionalPacked);
+								optTbOrder = tbOrderRepository.findOne(Example.of(exampleTbOrder));
+							}							
+
+							if (optTbOrder.isPresent() == false) {
+								messageFail = messageFail + "Order " + requestModel.getOrderNo()[i] + " not found<br>";
+							} else {
+								optTbOrder.get().setTboStatus(TbOrderRepository.StatusDelivered);
+								tbOrderRepository.save(optTbOrder.get());
+
+								lstTbOrder.add(optTbOrder.get());
+
+								optTbOrderPackDetail.get().setTbopdStatus(TbOrderPackDetailRepository.StatusDelivered);
+								tbOrderPackDetailRepository.save(optTbOrderPackDetail.get());
+
+								TbOrderStatus tbOrderStatus = new TbOrderStatus();
+								tbOrderStatus.setTbosCreateDate(Date.from(LocalDateTime.now(ZoneOffset.UTC).toInstant(ZoneOffset.UTC)));
+								tbOrderStatus.setTbosCreateId(optTbUser.get().getTbuId());
+								tbOrderStatus.setTboId(optTbOrder.get().getTboId());
+								tbOrderStatus.setTbosStatus(TbOrderStatusRepository.StatusDelivered);						
+								tbOrderStatusRepository.save(tbOrderStatus);
+
+								lstTbOrderStatus.add(tbOrderStatus);
+
+								RestTemplate restTemplatePostproductconfirm = new RestTemplate();
+								
+								PostProductConfirmRequestModel postProductConfirmRequestModel = new PostProductConfirmRequestModel();
+								postProductConfirmRequestModel.setEmail(requestModel.getEmail());
+								postProductConfirmRequestModel.setRequestDate(requestModel.getRequestDate());
+								postProductConfirmRequestModel.setRequestId(requestModel.getRequestId());
+								postProductConfirmRequestModel.setToken(requestModel.getToken());
+								postProductConfirmRequestModel.setTbpcOrderNo(optTbOrder.get().getTboOrderNo());
+								postProductConfirmRequestModel.setTbpcSku(optTbOrder.get().getTboSku());
+								postProductConfirmRequestModel.setTbpcQty(optTbOrder.get().getTboQty());
+								postProductConfirmRequestModel.setTbpcMarket(optTbOrder.get().getTboMarketId());
+								
+								HttpEntity<PostProductConfirmRequestModel> requestPostProductConfirmRequestModel = new HttpEntity<>(postProductConfirmRequestModel);
+								restTemplatePostproductconfirm.postForEntity(env.getProperty("services.bsd.api.dms.product") + "/postproductconfirm?", requestPostProductConfirmRequestModel, String.class);
+
+								List<com.api.dms.order.model.report.TbOrder> lstTbOrderReport = new ArrayList<com.api.dms.order.model.report.TbOrder>();
+								
+								SimpleMapper simpleMapper = new SimpleMapper();
+								
+								for (TbOrder tbOrder : lstTbOrder) {
+									com.api.dms.order.model.report.TbOrder tbOrderReport = new com.api.dms.order.model.report.TbOrder();
+									tbOrderReport = (com.api.dms.order.model.report.TbOrder) simpleMapper.assign(tbOrder, tbOrderReport);
+									lstTbOrderReport.add(tbOrderReport);
+								}
+
+								PostSyncConfirmOrderRequestModel postSyncConfirmOrderRequestModel = new PostSyncConfirmOrderRequestModel();
+								postSyncConfirmOrderRequestModel.setRequestDate(requestModel.getRequestDate());
+								postSyncConfirmOrderRequestModel.setRequestId(requestModel.getRequestId());
+								postSyncConfirmOrderRequestModel.setEmail(requestModel.getEmail());
+								postSyncConfirmOrderRequestModel.setLstTbOrder(lstTbOrderReport);
+								
+								RestTemplate restTemplatePostsyncconfirmorder = new RestTemplate();
+
+								HttpEntity<PostSyncConfirmOrderRequestModel> requestPostsyncconfirmorder = new HttpEntity<>(postSyncConfirmOrderRequestModel);				
+								restTemplatePostsyncconfirmorder.postForEntity(env.getProperty("services.bsd.api.dms.report.postsyncconfirmorder"), requestPostsyncconfirmorder, String.class);
+
+								messageOk = messageOk + "Order " + requestModel.getOrderNo()[i] + " with product " + requestModel.getSku()[i] + " delivered<br>";
+							}
 						}
-						
-						optTbOrder.get().setTboStatus(TbOrderRepository.StatusDelivered);
-						tbOrderRepository.save(optTbOrder.get());
-						
-						RestTemplate restTemplate = new RestTemplate();
-						
-						List<TbOrder> lstTbOrder = new ArrayList<TbOrder>();
-						lstTbOrder.add(optTbOrder.get());
-						PostSyncOrderRequestModel postSyncOrderRequestModel = new PostSyncOrderRequestModel();
-						postSyncOrderRequestModel.setRequestDate(requestModel.getRequestDate());
-						postSyncOrderRequestModel.setRequestId(requestModel.getRequestId());
-						postSyncOrderRequestModel.setEmail(requestModel.getEmail());
-						postSyncOrderRequestModel.setLstTbOrder(lstTbOrder);
-						
-						HttpEntity<PostSyncOrderRequestModel> request = new HttpEntity<>(postSyncOrderRequestModel);
-						restTemplate.postForEntity(env.getProperty("services.bsd.api.dms.report.postsyncorder"), request, String.class);
-						
-						PostProductConfirmRequestModel postProductConfirmRequestModel = new PostProductConfirmRequestModel();
-						postProductConfirmRequestModel.setEmail(requestModel.getEmail());
-						postProductConfirmRequestModel.setRequestDate(requestModel.getRequestDate());
-						postProductConfirmRequestModel.setRequestId(requestModel.getRequestId());
-						postProductConfirmRequestModel.setToken(requestModel.getToken());
-						postProductConfirmRequestModel.setTbpcOrderNo(optTbOrder.get().getTboOrderNo());
-						postProductConfirmRequestModel.setTbpcSku(optTbOrder.get().getTboSku());
-						postProductConfirmRequestModel.setTbpcQty(optTbOrder.get().getTboQty());
-						HttpEntity<PostProductConfirmRequestModel> requestPostProductConfirmRequestModel = new HttpEntity<>(postProductConfirmRequestModel);
-						ResponseEntity<String> response = restTemplate.postForEntity(env.getProperty("services.bsd.api.dms.product") + "/postproductconfirm?", requestPostProductConfirmRequestModel, String.class);
 					}
 				}
-				
-				for (Map.Entry<String, String> set : orderNo.entrySet()) {
-		            TbOrderPackDetail exampleTbOrderPackDetail = new TbOrderPackDetail();
-					exampleTbOrderPackDetail.setTbopdOrderNo(set.getValue());
-					List<TbOrderPackDetail> lstTbOrderPackDetail = tbOrderPackDetailRepository.findAll(Example.of(exampleTbOrderPackDetail));
-					
-					boolean okAll = true;
-					
-					for (TbOrderPackDetail tbOrderPackDetail : lstTbOrderPackDetail) {
-						if (!tbOrderPackDetail.getTbopdStatus().equals(TbOrderPackDetailRepository.StatusDelivered)) {
-							okAll = false;
-						}
-					}
-					
-					if (okAll) {
-						TbOrderPack exampleTbOrderPack = new TbOrderPack();
-						exampleTbOrderPack.setTbopOrderNo(set.getValue());
-						exampleTbOrderPack.setTbopStatus(TbOrderPackRepository.StatusPacked);
-						Optional<TbOrderPack> optTbOrderPack = tbOrderPackRepository.findOne(Example.of(exampleTbOrderPack));
-						optTbOrderPack.get().setTbopStatus(TbOrderPackRepository.StatusDelivered);
-						tbOrderPackRepository.save(optTbOrderPack.get());
-					}
-		        }
-				
-				responseModel.setStatus("200");
-				responseModel.setMessage("Confirm ok");
+
+				if (messageFail == "") {
+					responseModel.setStatus("200");
+					responseModel.setMessage(messageOk + "<br>" + messageFail);
+				} else {
+					responseModel.setStatus("404");
+					responseModel.setMessage(messageOk + "<br>" + messageFail);
+				}
 			} else {
 				responseModel.setStatus("404");
-				responseModel.setMessage("Confirm failed");
+				responseModel.setMessage("Not found");
 			}
 		} else {
 			responseModel.setStatus("404");
-			responseModel.setMessage("Not found");
-		}
+			responseModel.setMessage("Confirm Failed");
+		}		
 		
 		return responseModel;
 	}
@@ -1693,7 +1920,7 @@ public class OrderService {
 			}
 			
 			if (ok) {
-				for (int i = 0; i < requestModel.getOrderNo().length; i++) {
+								for (int i = 0; i < requestModel.getOrderNo().length; i++) {
 					TbOrder exampleTbOrder = new TbOrder();
 					exampleTbOrder.setTboOrderNo(requestModel.getOrderNo()[i]);
 					exampleTbOrder.setTboSku(requestModel.getSku()[i]);
@@ -1702,7 +1929,7 @@ public class OrderService {
 					
 					optTbOrder.get().setTboStatus(TbOrderRepository.StatusNotPacked);
 					tbOrderRepository.save(optTbOrder.get());
-				}
+}
 				
 				responseModel.setStatus("200");
 				responseModel.setMessage("Confirm ok");
@@ -1731,7 +1958,7 @@ public class OrderService {
 			
 			for (com.api.dms.order.model.order.TbBrand tbBrandOrder : requestModel.getLstTbBrand()) {
 				TbBrand exampleTbBrand = new TbBrand();
-				exampleTbBrand.setTbbBrand(tbBrandOrder.getTbbBrand());
+				exampleTbBrand.setTbbBrandId(tbBrandOrder.getTbbBrandId());
 				
 				Optional<TbBrand> optTbBrand = tbBrandRepository.findOne(Example.of(exampleTbBrand));
 				
@@ -1740,6 +1967,21 @@ public class OrderService {
 					tbBrand = (TbBrand) simpleMapper.assign(tbBrandOrder, tbBrand);
 					
 					tbBrandRepository.save(tbBrand);
+				}
+			}
+			
+			for (com.api.dms.order.model.order.TbUserBrand tbUserBrandOrder : requestModel.getLstTbUserBrand()) {
+				TbUserBrand exampleTbUserBrand = new TbUserBrand();
+				exampleTbUserBrand.setTbuId(tbUserBrandOrder.getTbuId());
+				exampleTbUserBrand.setTbbBrandId(tbUserBrandOrder.getTbbBrandId());
+				
+				Optional<TbUserBrand> optTbUserBrand = tbUserBrandRepository.findOne(Example.of(exampleTbUserBrand));
+				
+				if (optTbUserBrand.isPresent() == false) {
+					TbUserBrand tbUserBrand = new TbUserBrand();
+					tbUserBrand = (TbUserBrand) simpleMapper.assign(tbUserBrandOrder, tbUserBrand);
+					
+					tbUserBrandRepository.save(tbUserBrand);
 				}
 			}
 			

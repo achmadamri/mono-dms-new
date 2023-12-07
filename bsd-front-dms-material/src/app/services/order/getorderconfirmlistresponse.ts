@@ -10,10 +10,4 @@ export class GetOrderConfirmListResponse {
     message: string;
     lstViewOrderConfirm: ViewOrderConfirm[] = Array(new ViewOrderConfirm());
     length: number;
-    sumAll: number;
-    sumPacked: number;
-    sumAdditionalPacked: number;
-    sumNotPacked: number;
-    sumDelivered : number;
-    sumNotConfirmed : number;
 }

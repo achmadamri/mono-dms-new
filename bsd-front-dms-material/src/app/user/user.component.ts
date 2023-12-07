@@ -13,7 +13,6 @@ import { Util } from 'app/util';
 @Component({
   selector: 'app-user',
   templateUrl: './user.component.html',
-  styleUrls: ['./user.component.css']
 })
 export class UserComponent implements OnInit {
   clicked = false;
@@ -64,6 +63,8 @@ export class UserComponent implements OnInit {
           }          
         },
         errorResponse => {
+          this.length = 0;
+
           this.clicked = !this.clicked;
           
           this.getUserListResponse = new GetUserListResponse();

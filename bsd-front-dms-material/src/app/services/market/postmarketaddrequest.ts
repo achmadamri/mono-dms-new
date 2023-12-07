@@ -3,7 +3,7 @@ export class PostMarketAddRequest {
     token: string;
     requestId: string;
     requestDate: string;
-	tbmMarket: string;
+	tbmMarketId: string;
 	tbmRole: string;
 	tbmParentId: string;
 }

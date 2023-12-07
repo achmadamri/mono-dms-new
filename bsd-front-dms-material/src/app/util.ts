@@ -67,7 +67,7 @@ export class Util {
 
         }, {
                 type: type,
-                timer: 5000,
+                timer: 1000 * 5,
                 placement: {
                     from: from,
                     align: align

@@ -17,7 +17,7 @@ export class PostOrderEditRequest {
     tboHp: string;
     tboItem: string;
     tboLoc: string;
-    tboMarket: string;
+    tboMarketId: string;
     tboMaxSeq: number;
     tboName: string;
     tboOrderNo: string;
@@ -31,4 +31,5 @@ export class PostOrderEditRequest {
     tboSku: string;
     tboUnitPrice: number;
     tboNotes: string;
+    tboFrontliner: string;
 }

@@ -1,5 +1,6 @@
 package com.api.dms.order.controller;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 
 import org.slf4j.Logger;
@@ -40,42 +41,42 @@ public class UserController {
 	
 	@PostMapping("/postuseradd")
 	@Transactional
-	public HttpEntity<?> postUserAdd(@Valid @RequestBody PostUserAddRequestModel requestModel) throws Exception {
+	public HttpEntity<?> postUserAdd(HttpServletRequest request, @Valid @RequestBody PostUserAddRequestModel requestModel) throws Exception {
 		String fid = new Uid().generateString(20);
-		log.info("[fid:" + fid + "] requestModel : " + objectMapper.writeValueAsString(requestModel));
+		log.info(request.getRequestURL().toString() + "[fid:" + fid + "] requestModel : " + objectMapper.writeValueAsString(requestModel));
 		
 		PostUserAddResponseModel responseModel = userService.postUserAdd(requestModel);
 		
 		ResponseEntity<?> responseEntity = new ResponseEntity<>(responseModel, responseModel.getStatus().equals("403") ? HttpStatus.FORBIDDEN : (responseModel.getStatus().equals("200") ? HttpStatus.OK : HttpStatus.NOT_FOUND));
-		log.info("[fid:" + fid + "] responseEntity : " + objectMapper.writeValueAsString(responseEntity));
+		log.info(request.getRequestURL().toString() + "[fid:" + fid + "] responseEntity : " + objectMapper.writeValueAsString(responseEntity));
 
 		return responseEntity;
 	}
 	
 	@PostMapping("/postuseredit")
 	@Transactional
-	public HttpEntity<?> postUserEdit(@Valid @RequestBody PostUserEditRequestModel requestModel) throws Exception {
+	public HttpEntity<?> postUserEdit(HttpServletRequest request, @Valid @RequestBody PostUserEditRequestModel requestModel) throws Exception {
 		String fid = new Uid().generateString(20);
-		log.info("[fid:" + fid + "] requestModel : " + objectMapper.writeValueAsString(requestModel));
+		log.info(request.getRequestURL().toString() + "[fid:" + fid + "] requestModel : " + objectMapper.writeValueAsString(requestModel));
 		
 		PostUserEditResponseModel responseModel = userService.postUserEdit(requestModel);
 		
 		ResponseEntity<?> responseEntity = new ResponseEntity<>(responseModel, responseModel.getStatus().equals("403") ? HttpStatus.FORBIDDEN : (responseModel.getStatus().equals("200") ? HttpStatus.OK : HttpStatus.NOT_FOUND));
-		log.info("[fid:" + fid + "] responseEntity : " + objectMapper.writeValueAsString(responseEntity));
+		log.info(request.getRequestURL().toString() + "[fid:" + fid + "] responseEntity : " + objectMapper.writeValueAsString(responseEntity));
 
 		return responseEntity;
 	}
 	
 	@PostMapping("/postuserchangepassword")
 	@Transactional
-	public HttpEntity<?> postUserChangePassword(@Valid @RequestBody PostUserChangePasswordRequestModel requestModel) throws Exception {
+	public HttpEntity<?> postUserChangePassword(HttpServletRequest request, @Valid @RequestBody PostUserChangePasswordRequestModel requestModel) throws Exception {
 		String fid = new Uid().generateString(20);
-		log.info("[fid:" + fid + "] requestModel : " + objectMapper.writeValueAsString(requestModel));
+		log.info(request.getRequestURL().toString() + "[fid:" + fid + "] requestModel : " + objectMapper.writeValueAsString(requestModel));
 		
 		PostUserChangePasswordResponseModel responseModel = userService.postUserChangePassword(requestModel);
 		
 		ResponseEntity<?> responseEntity = new ResponseEntity<>(responseModel, responseModel.getStatus().equals("403") ? HttpStatus.FORBIDDEN : (responseModel.getStatus().equals("200") ? HttpStatus.OK : HttpStatus.NOT_FOUND));
-		log.info("[fid:" + fid + "] responseEntity : " + objectMapper.writeValueAsString(responseEntity));
+		log.info(request.getRequestURL().toString() + "[fid:" + fid + "] responseEntity : " + objectMapper.writeValueAsString(responseEntity));
 
 		return responseEntity;
 	}

@@ -1,5 +1,6 @@
 package com.api.dms.order.controller;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 
 import org.slf4j.Logger;
@@ -36,14 +37,14 @@ public class TokenController {
 	
 	@PostMapping("/postsync")
 	@Transactional
-	public HttpEntity<?> postSync(@Valid @RequestBody PostSyncRequestModel requestModel) throws Exception {
+	public HttpEntity<?> postSync(HttpServletRequest request, @Valid @RequestBody PostSyncRequestModel requestModel) throws Exception {
 		String fid = new Uid().generateString(20);
-		log.info("[fid:" + fid + "] requestModel : " + objectMapper.writeValueAsString(requestModel));
+		log.info(request.getRequestURL().toString() + " [fid:" + fid + "] requestModel : " + objectMapper.writeValueAsString(requestModel));
 		
 		PostSyncResponseModel responseModel = tokenService.postSync(requestModel);
 		
 		ResponseEntity<?> responseEntity = new ResponseEntity<>(responseModel, responseModel.getStatus().equals("200") ? HttpStatus.OK : HttpStatus.NOT_FOUND);
-		log.info("[fid:" + fid + "] responseEntity : " + objectMapper.writeValueAsString(responseEntity));
+		log.info(request.getRequestURL().toString() + " [fid:" + fid + "] responseEntity : " + objectMapper.writeValueAsString(responseEntity));
 
 		return responseEntity;
 	}

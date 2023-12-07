@@ -8,7 +8,7 @@ public class TbProductMarket implements Serializable {
 
 	private Integer tbpmId;
 
-	private String tbmMarket;
+	private String tbmMarketId;
 
 	private Integer tbmMarketCheck;
 
@@ -24,6 +24,8 @@ public class TbProductMarket implements Serializable {
 
 	private Integer tbpmUpdateId;
 
+	private Integer tbpmQty;
+
 	public TbProductMarket() {
 	}
 
@@ -35,12 +37,12 @@ public class TbProductMarket implements Serializable {
 		this.tbpmId = tbpmId;
 	}
 
-	public String getTbmMarket() {
-		return tbmMarket;
+	public String getTbmMarketId() {
+		return tbmMarketId;
 	}
 
-	public void setTbmMarket(String tbmMarket) {
-		this.tbmMarket = tbmMarket;
+	public void setTbmMarketId(String tbmMarketId) {
+		this.tbmMarketId = tbmMarketId;
 	}
 
 	public Integer getTbmMarketCheck() {
@@ -97,6 +99,14 @@ public class TbProductMarket implements Serializable {
 
 	public void setTbpmUpdateId(Integer tbpmUpdateId) {
 		this.tbpmUpdateId = tbpmUpdateId;
+	}
+
+	public Integer getTbpmQty() {
+		return tbpmQty;
+	}
+
+	public void setTbpmQty(Integer tbpmQty) {
+		this.tbpmQty = tbpmQty;
 	}
 
 }

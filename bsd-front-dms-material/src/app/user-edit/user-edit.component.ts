@@ -25,7 +25,6 @@ export interface Country {
 @Component({
   selector: 'app-user-edit',
   templateUrl: './user-edit.component.html',
-  styleUrls: ['./user-edit.component.css']
 })
 export class UserEditComponent implements OnInit {
   clicked = false;
@@ -112,86 +111,6 @@ export class UserEditComponent implements OnInit {
           this.getMarketListResponse = successResponse;
 
           this.userEditRequest.lstTbMarket = this.getMarketListResponse.lstTbMarket;
-
-          this.userEditRequest.lstTbMarket.forEach((element) => {
-            element.check = 1;
-          });
-
-          this.userEditRequest.lstViewUserBrand.forEach((element) => {
-            element.tbbBrandCheck = 1;
-          });
-
-          if (this.userEditRequest.tbUser.tbuRole == 'ADMIN') {
-            this.userEditRequest.lstViewUserMenu.forEach((element) => {
-              if (element.tbmName == 'Confirm') element.tbumView = 1;
-              if (element.tbmName == 'Market') element.tbumView = 1;
-              if (element.tbmName == 'Order') element.tbumView = 1;
-              if (element.tbmName == 'Packing') element.tbumView = 1;
-              if (element.tbmName == 'Product') element.tbumView = 1;
-              if (element.tbmName == 'Report') element.tbumView = 1;
-              if (element.tbmName == 'User') element.tbumView = 1;
-            });
-          }  
-
-          if (this.userEditRequest.tbUser.tbuRole == 'PRINCIPAL') {
-            this.userEditRequest.lstViewUserMenu.forEach((element) => {
-              if (element.tbmName == 'Confirm') element.tbumView = 1;
-              if (element.tbmName == 'Market') element.tbumView = 1;
-              if (element.tbmName == 'Order') element.tbumView = 1;
-              if (element.tbmName == 'Packing') element.tbumView = 1;
-              if (element.tbmName == 'Product') element.tbumView = 1;
-              if (element.tbmName == 'Report') element.tbumView = 1;
-              if (element.tbmName == 'User') element.tbumView = 0;
-            });
-          }   
-
-          if (this.userEditRequest.tbUser.tbuRole == 'DISTRIBUTOR') {
-            this.userEditRequest.lstViewUserMenu.forEach((element) => {
-              if (element.tbmName == 'Confirm') element.tbumView = 1;
-              if (element.tbmName == 'Market') element.tbumView = 0;
-              if (element.tbmName == 'Order') element.tbumView = 1;
-              if (element.tbmName == 'Packing') element.tbumView = 1;
-              if (element.tbmName == 'Product') element.tbumView = 1;
-              if (element.tbmName == 'Report') element.tbumView = 1;
-              if (element.tbmName == 'User') element.tbumView = 0;
-            });
-          }
-
-          if (this.userEditRequest.tbUser.tbuRole == 'SUBDIST') {
-            this.userEditRequest.lstViewUserMenu.forEach((element) => {
-              if (element.tbmName == 'Confirm') element.tbumView = 1;
-              if (element.tbmName == 'Market') element.tbumView = 0;
-              if (element.tbmName == 'Order') element.tbumView = 1;
-              if (element.tbmName == 'Packing') element.tbumView = 1;
-              if (element.tbmName == 'Product') element.tbumView = 0;
-              if (element.tbmName == 'Report') element.tbumView = 1;
-              if (element.tbmName == 'User') element.tbumView = 0;
-            });
-          }
-
-          if (this.userEditRequest.tbUser.tbuRole == 'GROSIR') {
-            this.userEditRequest.lstViewUserMenu.forEach((element) => {
-              if (element.tbmName == 'Confirm') element.tbumView = 1;
-              if (element.tbmName == 'Market') element.tbumView = 0;
-              if (element.tbmName == 'Order') element.tbumView = 0;
-              if (element.tbmName == 'Packing') element.tbumView = 1;
-              if (element.tbmName == 'Product') element.tbumView = 0;
-              if (element.tbmName == 'Report') element.tbumView = 1;
-              if (element.tbmName == 'User') element.tbumView = 0;
-            });
-          }
-          
-          if (this.userEditRequest.tbUser.tbuRole == 'MOTORIST') {
-            this.userEditRequest.lstViewUserMenu.forEach((element) => {
-              if (element.tbmName == 'Confirm') element.tbumView = 0;
-              if (element.tbmName == 'Market') element.tbumView = 0;
-              if (element.tbmName == 'Order') element.tbumView = 1;
-              if (element.tbmName == 'Packing') element.tbumView = 0;
-              if (element.tbmName == 'Product') element.tbumView = 0;
-              if (element.tbmName == 'Report') element.tbumView = 1;
-              if (element.tbmName == 'User') element.tbumView = 0;
-            });
-          }
         },
         errorResponse => {          
           this.getMarketListResponse = new GetMarketListResponse();
@@ -202,7 +121,7 @@ export class UserEditComponent implements OnInit {
   ngOnInit() {
     this.titleService.setTitle('DMS - User Edit');
 
-    this.role = ['ADMIN', 'PRINCIPAL', 'DISTRIBUTOR', 'SUBDIST', 'GROSIR', 'MOTORIST'];
+    this.role = ['ADMIN', 'PRINCIPAL', 'AREA', 'DISTRIBUTOR', 'SUBDIST', 'GROSIR', 'MOTORIST'];
 
     this.route.paramMap.subscribe(params => {
       this.userGetRequest.tbuId = params.get('tbuId') == null ? '0' : params.get('tbuId');
@@ -262,7 +181,7 @@ export class UserEditComponent implements OnInit {
       
                 this.userEditRequest.lstTbMarket.forEach((element1) => {
                   this.userEditRequest.lstTbUserMarket.forEach((element2) => {
-                    if (element1.tbmMarket == element2.tbmMarket) {
+                    if (element1.tbmMarketId == element2.tbmMarketId) {
                       element1.check = element2.tbmMarketCheck;
                     }                                      
                   });  

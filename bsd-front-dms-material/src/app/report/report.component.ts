@@ -19,7 +19,6 @@ import { GetSalesListResponse } from 'app/services/report/getsaleslistresponse';
 @Component({
   selector: 'app-report',
   templateUrl: './report.component.html',
-  styleUrls: ['./report.component.css'],
   providers: [ DatePipe ]
 })
 export class ReportComponent implements OnInit {
@@ -91,6 +90,24 @@ export class ReportComponent implements OnInit {
   ) { }
 
   ngOnInit() {
+    const thirtyDaysAgo = new Date();
+    thirtyDaysAgo.setDate(thirtyDaysAgo.getDate() - 30);
+
+    this.rangeOrder = new FormGroup({
+      start: new FormControl(thirtyDaysAgo), // 30 days ago from the current date
+      end: new FormControl(new Date()) // Current date
+    });
+
+    this.rangeStock = new FormGroup({
+      start: new FormControl(thirtyDaysAgo), // 30 days ago from the current date
+      end: new FormControl(new Date()) // Current date
+    });
+
+    this.rangeSales = new FormGroup({
+      start: new FormControl(thirtyDaysAgo), // 30 days ago from the current date
+      end: new FormControl(new Date()) // Current date
+    });
+
     this.titleService.setTitle('DMS - Report');
     this.productService.getBrand(this.getBrandRequest)
     .subscribe(
@@ -193,6 +210,8 @@ export class ReportComponent implements OnInit {
           }          
         },
         errorResponse => {
+          this.lengthOrder = 0;
+
           this.clicked = !this.clicked;
           
           this.getOrderListResponse = new GetOrderListResponse();
@@ -237,6 +256,8 @@ export class ReportComponent implements OnInit {
           }          
         },
         errorResponse => {
+          this.lengthStock = 0;
+
           this.clicked = !this.clicked;
           
           this.getStockListResponse = new GetStockListResponse();
@@ -281,6 +302,8 @@ export class ReportComponent implements OnInit {
           }          
         },
         errorResponse => {
+          this.lengthSales = 0;
+
           this.clicked = !this.clicked;
           
           this.getSalesListResponse = new GetSalesListResponse();

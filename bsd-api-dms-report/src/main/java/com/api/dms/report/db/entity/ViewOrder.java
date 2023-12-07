@@ -1,6 +1,7 @@
 package com.api.dms.report.db.entity;
 
 import java.io.Serializable;
+import java.math.BigDecimal;
 import java.util.Date;
 
 import javax.persistence.Column;
@@ -38,8 +39,11 @@ public class ViewOrder implements Serializable {
 	@Column(name="tbo_hp")
 	private String tboHp;
 
-	@Column(name="tbo_market")
-	private String tboMarket;
+	@Column(name="tbo_market_id")
+	private String tboMarketId;
+
+	@Column(name="tbo_frontliner")
+	private String tboFrontliner;
 
 	@Column(name="tbo_name")
 	private String tboName;
@@ -56,6 +60,12 @@ public class ViewOrder implements Serializable {
 
 	@Column(name="tbu_id")
 	private Integer tbuId;
+
+	@Column(name="tbo_order_sum")
+	private BigDecimal tboOrderSum;
+
+	@Column(name="tbo_status")
+	private String tboStatus;
 	
 	@Id
 	@Column(name="uuid")
@@ -104,12 +114,20 @@ public class ViewOrder implements Serializable {
 		this.tboHp = tboHp;
 	}
 
-	public String getTboMarket() {
-		return this.tboMarket;
+	public String getTboMarketId() {
+		return this.tboMarketId;
 	}
 
-	public void setTboMarket(String tboMarket) {
-		this.tboMarket = tboMarket;
+	public void setTboMarketId(String tboMarketId) {
+		this.tboMarketId = tboMarketId;
+	}
+
+	public String getTboFrontliner() {
+		return tboFrontliner;
+	}
+
+	public void setTboFrontliner(String tboFrontliner) {
+		this.tboFrontliner = tboFrontliner;
 	}
 
 	public String getTboName() {
@@ -142,6 +160,22 @@ public class ViewOrder implements Serializable {
 
 	public void setTboUpdateId(Integer tboUpdateId) {
 		this.tboUpdateId = tboUpdateId;
+	}
+
+	public BigDecimal getTboOrderSum() {
+		return tboOrderSum;
+	}
+
+	public void setTboOrderSum(BigDecimal tboOrderSum) {
+		this.tboOrderSum = tboOrderSum;
+	}
+
+	public String getTboStatus() {
+		return tboStatus;
+	}
+
+	public void setTboStatus(String tboStatus) {
+		this.tboStatus = tboStatus;
 	}
 
 	public String getUuid() {

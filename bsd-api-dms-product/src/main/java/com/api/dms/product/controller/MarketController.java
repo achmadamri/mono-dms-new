@@ -1,5 +1,6 @@
 package com.api.dms.product.controller;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 
 import org.slf4j.Logger;
@@ -45,7 +46,7 @@ public class MarketController {
     private MarketService productService;
 	
 	@GetMapping("/getmarketlistbyrole")
-	public HttpEntity<?> getMarketListByRole(String tbmRole, @RequestParam String email, @RequestParam String token, @RequestParam String requestId, @RequestParam String requestDate) throws Exception {
+	public HttpEntity<?> getMarketListByRole(HttpServletRequest request, String tbmRole, @RequestParam String email, @RequestParam String token, @RequestParam String requestId, @RequestParam String requestDate) throws Exception {
 		GetMarketListRequestModel requestModel = new GetMarketListRequestModel();
 		requestModel.setEmail(email);
 		requestModel.setToken(token);
@@ -53,18 +54,18 @@ public class MarketController {
 		requestModel.setRequestDate(requestDate);
 		
 		String fid = new Uid().generateString(20);
-		log.info("[fid:" + fid + "] requestModel : " + objectMapper.writeValueAsString(requestModel));
+		log.info(request.getRequestURL().toString() + " [fid:" + fid + "] requestModel : " + objectMapper.writeValueAsString(requestModel));
 		
 		GetMarketListResponseModel responseModel = productService.getMarketListByRole(tbmRole, requestModel);
 		
 		ResponseEntity<?> responseEntity = new ResponseEntity<>(responseModel, responseModel.getStatus().equals("200") ? HttpStatus.OK : HttpStatus.NOT_FOUND);
-		log.info("[fid:" + fid + "] responseEntity : " + objectMapper.writeValueAsString(responseEntity));
+		log.info(request.getRequestURL().toString() + " [fid:" + fid + "] responseEntity : " + objectMapper.writeValueAsString(responseEntity));
 
 		return responseEntity;
 	}
 	
 	@GetMapping("/getmarketlist")
-	public HttpEntity<?> getMarketList(String tbmMarket, @RequestParam String length, @RequestParam String pageSize, @RequestParam String pageIndex, @RequestParam String email, @RequestParam String token, @RequestParam String requestId, @RequestParam String requestDate) throws Exception {
+	public HttpEntity<?> getMarketList(HttpServletRequest request, String tbmMarketId, @RequestParam String length, @RequestParam String pageSize, @RequestParam String pageIndex, @RequestParam String email, @RequestParam String token, @RequestParam String requestId, @RequestParam String requestDate) throws Exception {
 		GetMarketListRequestModel requestModel = new GetMarketListRequestModel();
 		requestModel.setEmail(email);
 		requestModel.setToken(token);
@@ -72,32 +73,32 @@ public class MarketController {
 		requestModel.setRequestDate(requestDate);
 		
 		String fid = new Uid().generateString(20);
-		log.info("[fid:" + fid + "] requestModel : " + objectMapper.writeValueAsString(requestModel));
+		log.info(request.getRequestURL().toString() + " [fid:" + fid + "] requestModel : " + objectMapper.writeValueAsString(requestModel));
 		
-		GetMarketListResponseModel responseModel = productService.getMarketList(tbmMarket, length, pageSize, pageIndex, requestModel);
+		GetMarketListResponseModel responseModel = productService.getMarketList(tbmMarketId, length, pageSize, pageIndex, requestModel);
 		
 		ResponseEntity<?> responseEntity = new ResponseEntity<>(responseModel, responseModel.getStatus().equals("200") ? HttpStatus.OK : HttpStatus.NOT_FOUND);
-		log.info("[fid:" + fid + "] responseEntity : " + objectMapper.writeValueAsString(responseEntity));
+		log.info(request.getRequestURL().toString() + " [fid:" + fid + "] responseEntity : " + objectMapper.writeValueAsString(responseEntity));
 
 		return responseEntity;
 	}
 	
 	@PostMapping("/postmarketadd")
 	@Transactional
-	public HttpEntity<?> postMarketAdd(@Valid @RequestBody PostMarketAddRequestModel requestModel) throws Exception {
+	public HttpEntity<?> postMarketAdd(HttpServletRequest request, @Valid @RequestBody PostMarketAddRequestModel requestModel) throws Exception {
 		String fid = new Uid().generateString(20);
-		log.info("[fid:" + fid + "] requestModel : " + objectMapper.writeValueAsString(requestModel));
+		log.info(request.getRequestURL().toString() + " [fid:" + fid + "] requestModel : " + objectMapper.writeValueAsString(requestModel));
 		
 		PostMarketAddResponseModel responseModel = productService.postMarketAdd(requestModel);
 		
 		ResponseEntity<?> responseEntity = new ResponseEntity<>(responseModel, responseModel.getStatus().equals("403") ? HttpStatus.FORBIDDEN : (responseModel.getStatus().equals("200") ? HttpStatus.OK : HttpStatus.NOT_FOUND));
-		log.info("[fid:" + fid + "] responseEntity : " + objectMapper.writeValueAsString(responseEntity));
+		log.info(request.getRequestURL().toString() + " [fid:" + fid + "] responseEntity : " + objectMapper.writeValueAsString(responseEntity));
 
 		return responseEntity;
 	}
 	
 	@GetMapping("/getmarket")
-	public HttpEntity<?> getMarket(@RequestParam String tbmId, @RequestParam String email, @RequestParam String token, @RequestParam String requestId, @RequestParam String requestDate) throws Exception {
+	public HttpEntity<?> getMarket(HttpServletRequest request, @RequestParam String tbmId, @RequestParam String email, @RequestParam String token, @RequestParam String requestId, @RequestParam String requestDate) throws Exception {
 		GetMarketRequestModel requestModel = new GetMarketRequestModel();
 		requestModel.setEmail(email);
 		requestModel.setToken(token);
@@ -105,40 +106,40 @@ public class MarketController {
 		requestModel.setRequestDate(requestDate);
 		
 		String fid = new Uid().generateString(20);
-		log.info("[fid:" + fid + "] requestModel : " + objectMapper.writeValueAsString(requestModel));
+		log.info(request.getRequestURL().toString() + " [fid:" + fid + "] requestModel : " + objectMapper.writeValueAsString(requestModel));
 		
 		GetMarketResponseModel responseModel = productService.getMarket(tbmId, requestModel);
 		
 		ResponseEntity<?> responseEntity = new ResponseEntity<>(responseModel, responseModel.getStatus().equals("200") ? HttpStatus.OK : HttpStatus.NOT_FOUND);
-		log.info("[fid:" + fid + "] responseEntity : " + objectMapper.writeValueAsString(responseEntity));
+		log.info(request.getRequestURL().toString() + " [fid:" + fid + "] responseEntity : " + objectMapper.writeValueAsString(responseEntity));
 
 		return responseEntity;
 	}
 	
 	@PostMapping("/postmarketedit")
 	@Transactional
-	public HttpEntity<?> postMarketEdit(@Valid @RequestBody PostMarketEditRequestModel requestModel) throws Exception {
+	public HttpEntity<?> postMarketEdit(HttpServletRequest request, @Valid @RequestBody PostMarketEditRequestModel requestModel) throws Exception {
 		String fid = new Uid().generateString(20);
-		log.info("[fid:" + fid + "] requestModel : " + objectMapper.writeValueAsString(requestModel));
+		log.info(request.getRequestURL().toString() + " [fid:" + fid + "] requestModel : " + objectMapper.writeValueAsString(requestModel));
 		
 		PostMarketEditResponseModel responseModel = productService.postMarketEdit(requestModel);
 		
 		ResponseEntity<?> responseEntity = new ResponseEntity<>(responseModel, responseModel.getStatus().equals("403") ? HttpStatus.FORBIDDEN : (responseModel.getStatus().equals("200") ? HttpStatus.OK : HttpStatus.NOT_FOUND));
-		log.info("[fid:" + fid + "] responseEntity : " + objectMapper.writeValueAsString(responseEntity));
+		log.info(request.getRequestURL().toString() + " [fid:" + fid + "] responseEntity : " + objectMapper.writeValueAsString(responseEntity));
 
 		return responseEntity;
 	}
 	
 	@PostMapping("/postmarketdelete")
 	@Transactional
-	public HttpEntity<?> postMarketDelete(@Valid @RequestBody PostMarketDeleteRequestModel requestModel) throws Exception {
+	public HttpEntity<?> postMarketDelete(HttpServletRequest request, @Valid @RequestBody PostMarketDeleteRequestModel requestModel) throws Exception {
 		String fid = new Uid().generateString(20);
-		log.info("[fid:" + fid + "] requestModel : " + objectMapper.writeValueAsString(requestModel));
+		log.info(request.getRequestURL().toString() + " [fid:" + fid + "] requestModel : " + objectMapper.writeValueAsString(requestModel));
 		
 		PostMarketDeleteResponseModel responseModel = productService.postMarketDelete(requestModel);
 		
 		ResponseEntity<?> responseEntity = new ResponseEntity<>(responseModel, responseModel.getStatus().equals("403") ? HttpStatus.FORBIDDEN : (responseModel.getStatus().equals("200") ? HttpStatus.OK : HttpStatus.NOT_FOUND));
-		log.info("[fid:" + fid + "] responseEntity : " + objectMapper.writeValueAsString(responseEntity));
+		log.info(request.getRequestURL().toString() + " [fid:" + fid + "] responseEntity : " + objectMapper.writeValueAsString(responseEntity));
 
 		return responseEntity;
 	}

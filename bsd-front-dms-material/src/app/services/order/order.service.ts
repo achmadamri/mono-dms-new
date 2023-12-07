@@ -32,6 +32,8 @@ import { PostConfirmRequest } from './postconfirmrequest';
 import { PostConfirmResponse } from './postconfirmresponse';
 import { PostConfirmOrderRequest } from './postconfirmorderrequest';
 import { PostConfirmOrderResponse } from './postconfirmorderresponse';
+import { GetOrderConfirmSumResponse } from './getorderconfirmsumresponse';
+import { GetOrderConfirmSumRequest } from './getorderconfirmsumrequest';
 
 @Injectable({
   providedIn: 'root'
@@ -92,6 +94,30 @@ export class OrderService {
       ;
 
     return this.httpClient.get<GetOrderConfirmListResponse>(`${this.apiUrl}/getorderconfirmlist`, { headers, params });
+  }
+
+  getOrderConfirmSum(orderNo: string, sku: string, status: string, type: string, brand: string, start: string, end: string, length: number, pageSize: number, pageIndex: number, getOrderConfirmSumRequest: GetOrderConfirmSumRequest): Observable<GetOrderConfirmSumResponse> {
+    const headers = new HttpHeaders()
+      .set('Content-Type', 'application/json');
+
+    const params = new HttpParams()
+      .set('requestId', this.util.randomString(10))
+      .set('requestDate', ((new Date(Date.now() - ((new Date()).getTimezoneOffset() * 60000))).toISOString().slice(0, -1)) + '000')
+      .set('email', localStorage.getItem('email'))
+      .set('token', localStorage.getItem('token'))
+      .set('length', length.toString())
+      .set('pageSize', pageSize.toString())
+      .set('pageIndex', pageIndex.toString())
+      .set('orderNo', orderNo)
+      .set('sku', sku)
+      .set('status', status)
+      .set('brand', brand)
+      .set('type', type)
+      .set('start', start)
+      .set('end', end)
+      ;
+
+    return this.httpClient.get<GetOrderConfirmSumResponse>(`${this.apiUrl}/getorderconfirmsum`, { headers, params });
   }
 
   getOrderList(orderNo: string, start: string, end: string, status: string, length: number, pageSize: number, pageIndex: number, getOrderListRequest: GetOrderListRequest): Observable<GetOrderListResponse> {
