@@ -38,7 +38,7 @@ export class MarketService {
     return this.httpClient.get<GetMarketListResponse>(`${this.apiUrl}/getmarketlistbyrole`, { headers, params });
   }
 
-  getMarketList(tbmMarket: string, length: number, pageSize: number, pageIndex: number, getMarketListRequest: GetMarketListRequest): Observable<GetMarketListResponse> {
+  getMarketList(tbmMarketId: string, length: number, pageSize: number, pageIndex: number, getMarketListRequest: GetMarketListRequest): Observable<GetMarketListResponse> {
     const headers = new HttpHeaders()
       .set('Content-Type', 'application/json');
 
@@ -50,7 +50,7 @@ export class MarketService {
       .set('length', length.toString())
       .set('pageSize', pageSize.toString())
       .set('pageIndex', pageIndex.toString())
-      .set('tbmMarket', tbmMarket)
+      .set('tbmMarketId', tbmMarketId)
       ;
 
     return this.httpClient.get<GetMarketListResponse>(`${this.apiUrl}/getmarketlist`, { headers, params });

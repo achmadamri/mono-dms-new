@@ -41,7 +41,7 @@ export class MarketEditComponent implements OnInit {
   ngOnInit() {
     this.titleService.setTitle('DMS - Market Edit');
 
-    this.role = ['ADMIN', 'PRINCIPAL', 'DISTRIBUTOR', 'SUBDIST', 'GROSIR', 'MOTORIST'];
+    this.role = ['ADMIN', 'PRINCIPAL', 'AREA', 'DISTRIBUTOR', 'SUBDIST', 'GROSIR', 'MOTORIST'];
 
     this.route.paramMap.subscribe(params => {
       this.postMarketEditRequest.tbmId = params.get('tbmId') == null ? '0' : params.get('tbmId');
@@ -105,7 +105,7 @@ export class MarketEditComponent implements OnInit {
           this.getMarketResponse = successResponse;
 
           this.postMarketEditRequest.tbmId = this.getMarketResponse.tbMarket.tbmId;
-          this.postMarketEditRequest.tbmMarket = this.getMarketResponse.tbMarket.tbmMarket;
+          this.postMarketEditRequest.tbmMarketId = this.getMarketResponse.tbMarket.tbmMarketId;
           this.postMarketEditRequest.tbmParentId = this.getMarketResponse.tbMarket.tbmParentId;
           this.postMarketEditRequest.tbmRole = this.getMarketResponse.tbMarket.tbmRole;
 

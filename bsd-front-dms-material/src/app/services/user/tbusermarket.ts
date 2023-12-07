@@ -1,6 +1,6 @@
 export class TbUserMarket {	
 	tbumId: number;
-	tbmMarket: string;
+	tbmMarketId: string;
 	tbmMarketCheck: number;
 	tbuId: number;
 	tbumCreateDate: string;

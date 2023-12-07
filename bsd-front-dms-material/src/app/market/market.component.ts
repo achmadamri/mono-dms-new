@@ -23,7 +23,7 @@ export class MarketComponent implements OnInit {
   getMarketListRequest: GetMarketListRequest = new GetMarketListRequest();
   getMarketListResponse: GetMarketListResponse = new GetMarketListResponse();
   role: string[];
-  tbmMarket = "";
+  tbmMarketId = "";
 
   constructor(
     private router: Router,
@@ -34,7 +34,7 @@ export class MarketComponent implements OnInit {
   ngOnInit() {
     this.titleService.setTitle('DMS - Market');
 
-    this.role = ['ADMIN', 'PRINCIPAL', 'DISTRIBUTOR', 'SUBDIST', 'GROSIR', 'MOTORIST'];
+    this.role = ['ADMIN', 'PRINCIPAL', 'AREA', 'DISTRIBUTOR', 'SUBDIST', 'GROSIR', 'MOTORIST'];
 
     this.getMarketList(null);
   }
@@ -42,7 +42,7 @@ export class MarketComponent implements OnInit {
   getMarketList(pageEvent: PageEvent) {
     this.clicked = !this.clicked;
 
-    this.marketService.getMarketList(this.tbmMarket, pageEvent != null ? pageEvent.length : this.length, pageEvent != null ? pageEvent.pageSize : this.pageSize, pageEvent != null ? pageEvent.pageIndex : this.pageIndex, this.getMarketListRequest)
+    this.marketService.getMarketList(this.tbmMarketId, pageEvent != null ? pageEvent.length : this.length, pageEvent != null ? pageEvent.pageSize : this.pageSize, pageEvent != null ? pageEvent.pageIndex : this.pageIndex, this.getMarketListRequest)
       .subscribe(
         successResponse => {
           this.clicked = !this.clicked;

@@ -3,10 +3,11 @@ export class ViewStock {
 	tbpCreateDate: Date;
 	tbpCreateId: number;
 	tbpItem: string;
-	tbpQty: number;
+	tbpmQty: number;
 	tbpSku: string;
 	tbpCode: string;
 	tbpUpdateDate: Date;
 	tbpUpdateId: number;
 	uuid: string;
+	tbmMarketId: string;
 }

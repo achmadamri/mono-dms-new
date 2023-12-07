@@ -73,6 +73,9 @@ public class TbOrderPackDetail implements Serializable {
 	@Column(name="tbopd_update_id")
 	private Integer tbopdUpdateId;
 
+	@Column(name="tbopd_market_id")
+	private String tbopdMarketId;
+
 	public TbOrderPackDetail() {
 	}
 
@@ -218,6 +221,14 @@ public class TbOrderPackDetail implements Serializable {
 
 	public void setTbopdUpdateId(Integer tbopdUpdateId) {
 		this.tbopdUpdateId = tbopdUpdateId;
+	}
+
+	public String getTbopdMarket() {
+		return tbopdMarketId;
+	}
+
+	public void setTbopdMarket(String tbopdMarketId) {
+		this.tbopdMarketId = tbopdMarketId;
 	}
 
 }

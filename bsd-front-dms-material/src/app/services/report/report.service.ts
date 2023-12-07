@@ -8,6 +8,8 @@ import { GetStockListRequest } from './getstocklistrequest';
 import { GetStockListResponse } from './getstocklistresponse';
 import { GetSalesListRequest } from './getsaleslistrequest';
 import { GetSalesListResponse } from './getsaleslistresponse';
+import { GetDashboardRequest } from './getdashboardrequest';
+import { GetDashboardResponse } from './getdashboardresponse';
 
 @Injectable({
   providedIn: 'root'
@@ -17,6 +19,21 @@ export class ReportService {
   apiUrl = isDevMode() ? 'http://localhost:2085/report' : 'https://dms.id-trec.com/2085/report';
 
   constructor(private httpClient: HttpClient) { }  
+
+  getDashboard(geDashboardRequest: GetDashboardRequest): Observable<GetDashboardResponse> {
+    const headers = new HttpHeaders()
+      .set('Content-Type', 'application/json');
+
+    const params = new HttpParams()
+      .set('requestId', this.util.randomString(10))
+      .set('requestDate', ((new Date(Date.now() - ((new Date()).getTimezoneOffset() * 60000))).toISOString().slice(0, -1)) + '000')
+      .set('email', localStorage.getItem('email'))
+      .set('token', localStorage.getItem('token'))
+      .set('length', length.toString())
+      ;
+
+    return this.httpClient.get<GetDashboardResponse>(`${this.apiUrl}/getdashboard`, { headers, params });
+  }
 
   getOrderList(brand: string, orderNo: string, start: string, end: string, length: number, pageSize: number, pageIndex: number, getOrderListRequest: GetOrderListRequest): Observable<GetOrderListResponse> {
     const headers = new HttpHeaders()

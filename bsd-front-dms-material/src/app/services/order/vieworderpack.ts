@@ -2,7 +2,7 @@ export class ViewOrderPack {
 	tboAwb: string;
 	tboBrand: string;
 	tboHp: string;
-	tboMarket: string;
+	tboMarketId: string;
 	tboName: string;
     tboNameShort: string;
 	tboOrderNo: string;

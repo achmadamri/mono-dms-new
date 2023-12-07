@@ -50,7 +50,7 @@ public class PostOrderEditRequestModel extends RequestModel {
 	private String tboLoc;
 
 	@NotNull(message = "Market is not null")
-	private String tboMarket;
+	private String tboMarketId;
 
 	@NotNull(message = "Max Seq is not null")
 	private Integer tboMaxSeq;
@@ -202,12 +202,12 @@ public class PostOrderEditRequestModel extends RequestModel {
 		this.tboLoc = tboLoc;
 	}
 
-	public String getTboMarket() {
-		return tboMarket;
+	public String getTboMarketId() {
+		return tboMarketId;
 	}
 
-	public void setTboMarket(String tboMarket) {
-		this.tboMarket = tboMarket;
+	public void setTboMarketId(String tboMarketId) {
+		this.tboMarketId = tboMarketId;
 	}
 
 	public Integer getTboMaxSeq() {

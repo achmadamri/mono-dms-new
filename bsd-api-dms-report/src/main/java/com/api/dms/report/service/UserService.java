@@ -76,6 +76,21 @@ public class UserService {
 				tbUser.setTbuRole(requestModel.getTbUser().getTbuRole());
 				tbUserRepository.save(tbUser);
 				
+				TbUserMarket exampleTbUserMarket = new TbUserMarket();
+				exampleTbUserMarket.setTbuId(tbUser.getTbuId());
+				List<TbUserMarket> lstTbUserMarket = tbUserMarketRepository.findAll(Example.of(exampleTbUserMarket));
+				tbUserMarketRepository.deleteAll(lstTbUserMarket);
+				for (com.api.dms.report.model.user.TbUserMarket tbUserMarket_ : requestModel.getLstTbUserMarket()) {
+					TbUserMarket tbUserMarket = new TbUserMarket();
+					tbUserMarket.setTbumCreateDate(new Date());
+					tbUserMarket.setTbumCreateId(optTbUser.get().getTbuId());
+					tbUserMarket.setTbuId(tbUser.getTbuId());
+					tbUserMarket.setTbmMarketId(tbUserMarket_.getTbmMarketId());					
+					tbUserMarket.setTbmMarketCheck(tbUserMarket_.getTbmMarketCheck());
+					tbUserMarketRepository.save(tbUserMarket);
+				}
+				lstTbUserMarket = tbUserMarketRepository.findAll(Example.of(exampleTbUserMarket));
+				
 				for (com.api.dms.report.model.user.TbUserBrand tbUserBrand_ : requestModel.getLstTbUserBrand()) {
 					com.api.dms.report.db.entity.TbUserBrand tbUserBrand = new com.api.dms.report.db.entity.TbUserBrand();
 					tbUserBrand.setTbubCreateDate(new Date());
@@ -135,7 +150,7 @@ public class UserService {
 					tbUserMarket_.setTbumCreateDate(new Date());
 					tbUserMarket_.setTbumCreateId(optTbUser.get().getTbuId());
 					tbUserMarket_.setTbuId(optTbUserExisting.get().getTbuId());
-					tbUserMarket_.setTbmMarket(tbUserMarket.getTbmMarket());					
+					tbUserMarket_.setTbmMarketId(tbUserMarket.getTbmMarketId());					
 					tbUserMarket_.setTbmMarketCheck(tbUserMarket.getTbmMarketCheck());
 					tbUserMarketRepository.save(tbUserMarket_);
 				}

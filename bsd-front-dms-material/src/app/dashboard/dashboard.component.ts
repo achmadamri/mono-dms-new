@@ -1,5 +1,10 @@
 import { Component, OnInit } from '@angular/core';
 import { Title } from '@angular/platform-browser';
+import { Router } from '@angular/router';
+import { GetDashboardRequest } from 'app/services/report/getdashboardrequest';
+import { GetDashboardResponse } from 'app/services/report/getdashboardresponse';
+import { ReportService } from 'app/services/report/report.service';
+import { Util } from 'app/util';
 import * as Chartist from 'chartist';
 
 @Component({
@@ -7,9 +12,16 @@ import * as Chartist from 'chartist';
   templateUrl: './dashboard.component.html',
 })
 export class DashboardComponent implements OnInit {
+  util: Util = new Util();
+  getDashboardRequest: GetDashboardRequest = new GetDashboardRequest();
+  getDashboardResponse: GetDashboardResponse = new GetDashboardResponse();
+  percentageTodaySales: number;
+  percentageTodayMarket: number;
 
   constructor(    
+    private router: Router,
     private titleService: Title,
+    private reportService: ReportService,
   ) { }
   startAnimationForLineChart(chart) {
     let seq: any, delays: any, durations: any;
@@ -71,59 +83,119 @@ export class DashboardComponent implements OnInit {
   ngOnInit() {
     this.titleService.setTitle('DMS - Dashboard');
 
-    /* ----------==========     Daily Sales Chart initialization For Documentation    ==========---------- */
+    this.reportService.getDashboard(this.getDashboardRequest)
+    .subscribe(
+      successResponse => {
+        this.getDashboardResponse = successResponse;
 
-    const dataDailySalesChart: any = {
-      labels: ['M', 'T', 'W', 'T', 'F', 'S', 'S'],
-      series: [
-        [12, 17, 7, 17, 23, 18, 38]
-      ]
-    };
+        /* ----------==========     Daily Sales Chart initialization For Documentation    ==========---------- */
 
-    const optionsDailySalesChart: any = {
-      lineSmooth: Chartist.Interpolation.cardinal({
-        tension: 0
-      }),
-      low: 0,
-      high: 50, // creative tim: we recommend you to set the high sa the biggest value + something for a better look
-      chartPadding: { top: 0, right: 0, bottom: 0, left: 0 },
-    }
+        const lstDailySales = this.getDashboardResponse.lstDailySales; // Assuming lstDailySales is an array in the response
 
-    var dailySalesChart = new Chartist.Line('#dailySalesChart', dataDailySalesChart, optionsDailySalesChart);
+        const labels = lstDailySales.map(item => {
+          const date = new Date(item[0]); // Assuming the timestamp is the first item in each array
+          return `${date.getMonth() + 1}/${date.getDate()}/${date.getFullYear()}`;
+        });
 
-    this.startAnimationForLineChart(dailySalesChart);
+        const series = [lstDailySales.map(item => item[1])];
 
-    /* ----------==========     Team Performance Chart initialization    ==========---------- */
+        const dataDailySalesChart = {
+          labels: labels,
+          series: series
+        };
 
-    var datateamPerformanceChart = {
-      labels: ['J', 'F', 'M', 'A', 'M', 'J', 'J', 'A', 'S', 'O', 'N', 'D'],
-      series: [
-        [542, 443, 320, 780, 553, 453, 326, 434, 568, 610, 756, 895]
+        // Assuming the timestamp is the first item in each array and today's date is the last item in the array
+        const todaySales = lstDailySales[lstDailySales.length - 1][1];
 
-      ]
-    };
-    var optionsteamPerformanceChart = {
-      axisX: {
-        showGrid: false
+        // Assuming you want to calculate the increase based on the previous day's sales
+        const yesterdaySales = lstDailySales[lstDailySales.length - 2][1];
+
+        // Calculate the increase
+        const increaseSales = todaySales - yesterdaySales;
+
+        // Format the label
+        this.percentageTodaySales = ((increaseSales / yesterdaySales) * 100);     
+
+        // Assuming you have already calculated your 'series' data as shown in your previous code
+
+        // Calculate the maximum value in 'series'
+        const maxDataValue = Math.max(...series[0]);
+
+        // Set the 'high' option based on the maximum value with some extra padding (e.g., 10%)
+        const extraPadding = 0.1; // You can adjust this as needed
+        const highValue = maxDataValue * (1 + extraPadding);
+
+        // Define your options with the dynamically calculated 'high' value
+        const optionsDailySalesChart = {
+          lineSmooth: Chartist.Interpolation.cardinal({
+            tension: 0
+          }),
+          low: 0,
+          high: highValue,
+          chartPadding: { top: 0, right: 0, bottom: 0, left: 0 },
+        };   
+
+        var dailySalesChart = new Chartist.Line('#dailySalesChart', dataDailySalesChart, optionsDailySalesChart);
+
+        this.startAnimationForLineChart(dailySalesChart);
+
+        // ------------------------------------------------------------------------------------------------------
+        /* ----------==========     Market Performance Chart initialization    ==========---------- */
+
+        const lstMarketPerformance = this.getDashboardResponse.lstMarketPerformance; // Assuming lstMarketPerformance is an array in the response
+
+        const labelsMarketPerformance = lstMarketPerformance.map(item => {
+          const date = new Date(item[0]); // Assuming the timestamp is the first item in each array
+          return `${date.getMonth() + 1}/${date.getDate()}/${date.getFullYear()}`;
+        });
+
+        const seriesMarketPerformance = [lstMarketPerformance.map(item => item[1])];
+
+        const dataMarketPerformanceChart = {
+          labels: labelsMarketPerformance,
+          series: seriesMarketPerformance
+        };
+
+        // Assuming you have already calculated your 'series' data as shown in your previous code
+
+        // Calculate the maximum value in 'series'
+        const maxDataValueMarketPerformance = Math.max(...seriesMarketPerformance[0]);
+
+        // Set the 'high' option based on the maximum value with some extra padding (e.g., 10%)
+        const extraPaddingMarketPerformance = 0.1; // You can adjust this as needed
+        const highValueMarketPerformance = maxDataValueMarketPerformance * (1 + extraPaddingMarketPerformance);
+
+        // Define your options with the dynamically calculated 'high' value
+        const optionsMarketPerformanceChart = {
+          lineSmooth: Chartist.Interpolation.cardinal({
+          tension: 0
+          }),
+          low: 0,
+          high: highValueMarketPerformance,
+          chartPadding: { top: 0, right: 0, bottom: 0, left: 0 },
+        };
+
+        // Assuming the timestamp is the first item in each array and today's date is the last item in the array
+        const todayMarket = lstMarketPerformance[lstMarketPerformance.length - 1][1];
+
+        // Assuming you want to calculate the increase based on the previous day's sales
+        const yesterdayMarket = lstMarketPerformance[lstMarketPerformance.length - 2][1];
+
+        // Calculate the increase
+        const increaseMarket = todayMarket - yesterdayMarket;
+
+        // Format the label
+        this.percentageTodayMarket = ((increaseMarket / yesterdayMarket) * 100);  
+
+        var marketPerformanceChart = new Chartist.Line('#marketPerformanceChart', dataMarketPerformanceChart, optionsMarketPerformanceChart);
+
+        this.startAnimationForLineChart(marketPerformanceChart);
       },
-      low: 0,
-      high: 1000,
-      chartPadding: { top: 0, right: 5, bottom: 0, left: 0 }
-    };
-    var responsiveOptions: any[] = [
-      ['screen and (max-width: 640px)', {
-        seriesBarDistance: 5,
-        axisX: {
-          labelInterpolationFnc: function (value) {
-            return value[0];
-          }
-        }
-      }]
-    ];
-    var teamPerformanceChart = new Chartist.Bar('#teamPerformanceChart', datateamPerformanceChart, optionsteamPerformanceChart, responsiveOptions);
-
-    //start animation for the Emails Subscription Chart
-    this.startAnimationForBarChart(teamPerformanceChart);
+      errorResponse => {
+        this.util.showNotification('danger', 'top', 'center', errorResponse.error.error + '<br>' + errorResponse.error.message);
+        this.router.navigate(['/user-login']);
+      }
+    );    
   }
 
 }

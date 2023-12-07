@@ -30,7 +30,7 @@ export class MarketAddComponent implements OnInit {
   ngOnInit() {
     this.titleService.setTitle('DMS - Market Add');
 
-    this.role = ['ADMIN', 'PRINCIPAL', 'DISTRIBUTOR', 'SUBDIST', 'GROSIR', 'MOTORIST'];
+    this.role = ['ADMIN', 'PRINCIPAL', 'AREA', 'DISTRIBUTOR', 'SUBDIST', 'GROSIR', 'MOTORIST'];
 
     this.marketService.getMarketListByRole('ADMIN', this.getMarketListRequest)
       .subscribe(

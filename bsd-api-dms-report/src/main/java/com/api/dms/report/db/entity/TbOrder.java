@@ -79,8 +79,8 @@ public class TbOrder implements Serializable {
 	@Column(name="tbo_loc")
 	private String tboLoc;
 
-	@Column(name="tbo_market")
-	private String tboMarket;
+	@Column(name="tbo_market_id")
+	private String tboMarketId;
 
 	@Column(name="tbo_max_seq")
 	private Integer tboMaxSeq;
@@ -142,6 +142,9 @@ public class TbOrder implements Serializable {
 
 	@Column(name="tbo_type_not_packed")
 	private String tboTypeNotPacked;
+
+	@Column(name="tbo_frontliner")
+	private String tboFrontliner;
 
 	public TbOrder() {
 	}
@@ -282,12 +285,12 @@ public class TbOrder implements Serializable {
 		this.tboLoc = tboLoc;
 	}
 
-	public String getTboMarket() {
-		return tboMarket;
+	public String getTboMarketId() {
+		return tboMarketId;
 	}
 
-	public void setTboMarket(String tboMarket) {
-		this.tboMarket = tboMarket;
+	public void setTboMarketId(String tboMarketId) {
+		this.tboMarketId = tboMarketId;
 	}
 
 	public Integer getTboMaxSeq() {
@@ -448,6 +451,14 @@ public class TbOrder implements Serializable {
 
 	public void setTboTypeNotPacked(String tboTypeNotPacked) {
 		this.tboTypeNotPacked = tboTypeNotPacked;
+	}
+
+	public String getTboFrontliner() {
+		return tboFrontliner;
+	}
+
+	public void setTboFrontliner(String tboFrontliner) {
+		this.tboFrontliner = tboFrontliner;
 	}
 
 }

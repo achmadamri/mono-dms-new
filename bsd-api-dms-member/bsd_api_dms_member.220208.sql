@@ -101,7 +101,7 @@ CREATE TABLE `tb_user` (
   UNIQUE KEY `tb_user_tbu_email_uindex` (`tbu_email`),
   UNIQUE KEY `tb_user_tbu_uid_uindex` (`tbu_uid`),
   KEY `tb_user_tbu_status_index` (`tbu_status`)
-) ENGINE=InnoDB AUTO_INCREMENT=9 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=9 DEFAULT CHARSET=utf8mb4;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --

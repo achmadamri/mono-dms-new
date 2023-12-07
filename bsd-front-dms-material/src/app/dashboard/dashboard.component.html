@@ -8,7 +8,7 @@
                             <i class="material-icons">content_copy</i>
                         </div>
                         <p class="card-category">Sku</p>
-                        <h3 class="card-title">5/29</h3>
+                        <h3 class="card-title">{{getDashboardResponse.sku}}</h3>
                     </div>
                     <div class="card-footer">
                         <div class="stats">
@@ -24,7 +24,7 @@
                             <i class="material-icons">store</i>
                         </div>
                         <p class="card-category">Revenue</p>
-                        <h3 class="card-title">Rp 34.245.090.000</h3>
+                        <h3 class="card-title">Rp {{getDashboardResponse.revenue}}</h3>
                     </div>
                     <div class="card-footer">
                         <div class="stats">
@@ -40,7 +40,7 @@
                             <i class="material-icons">assignment_late</i>
                         </div>
                         <p class="card-category">Order Pending</p>
-                        <h3 class="card-title">75/3219</h3>
+                        <h3 class="card-title">{{getDashboardResponse.orderPending}}</h3>
                     </div>
                     <div class="card-footer">
                         <div class="stats">
@@ -56,7 +56,7 @@
                             <i class="material-icons">add_shopping_carts</i>
                         </div>
                         <p class="card-category">Order Delivered</p>
-                        <h3 class="card-title">+245</h3>
+                        <h3 class="card-title">{{getDashboardResponse.orderDelivered}}</h3>
                     </div>
                     <div class="card-footer">
                         <div class="stats">
@@ -74,8 +74,12 @@
                     </div>
                     <div class="card-body">
                         <h4 class="card-title">Daily Sales</h4>
-                        <p class="card-category">
-                            <span class="text"><i class="fa fa-long-arrow-up"></i> 55% </span> increase in today
+                        <p class="card-category" *ngIf="percentageTodaySales > 0">
+                            <span class="text"><i class="fa fa-long-arrow-up"></i> <b>{{percentageTodaySales.toFixed(2)}}%</b> </span> increase in today
+                            sales.
+                        </p>
+                        <p class="card-category" *ngIf="percentageTodaySales <= 0">
+                            <span class="text"><i class="fa fa-long-arrow-down"></i> <b>{{percentageTodaySales.toFixed(2)}}%</b> </span> increase in today
                             sales.
                         </p>
                     </div>
@@ -89,13 +93,17 @@
             <div class="col-md-6">
                 <div class="card card-chart">
                     <div class="card-header card-header-success">
-                        <div class="ct-chart" id="teamPerformanceChart"></div>
+                        <div class="ct-chart" id="marketPerformanceChart"></div>
                     </div>
                     <div class="card-body">
-                        <h4 class="card-title">Team Performance</h4>
-                        <p class="card-category">
-                            <span class="text"><i class="fa fa-long-arrow-up"></i> 55% </span> increase in today
-                            sales.
+                        <h4 class="card-title">Market Performance</h4>
+                        <p class="card-category" *ngIf="percentageTodayMarket > 0">
+                            <span class="text"><i class="fa fa-long-arrow-up"></i> <b>{{percentageTodayMarket.toFixed(2)}}%</b> </span> increase in today
+                            market.
+                        </p>
+                        <p class="card-category" *ngIf="percentageTodayMarket <= 0">
+                            <span class="text"><i class="fa fa-long-arrow-down"></i> <b>{{percentageTodayMarket.toFixed(2)}}%</b> </span> increase in today
+                            market.
                         </p>
                     </div>
                     <div class="card-footer">
@@ -109,42 +117,24 @@
         <div class="row">
             <div class="col-lg-6 col-md-12">
                 <div class="card">
-                    <div class="card-header card-header-primary">
-                        <h4 class="card-title">Market Stats</h4>
-                        <p class="card-category">Last order on 15th September, 2023</p>
+                    <div class="card-header card-header-warning">
+                        <h4 class="card-title">Low Skus</h4>
                     </div>
-                    <div class="card-body table-responsive">
+                    <div class="card-body table-responsive" style="max-height: 250px;">
                         <table class="table table-hover">
-                            <thead class="text-primary">
-                                <th>ID</th>
-                                <th>Parent</th>
-                                <th>Name</th>
-                                <th>Amount</th>
+                            <thead class="text-warning">
+                                <th>Sku</th>
+                                <th>Market</th>
+                                <th>Quantity</th>
                             </thead>
-                            <tbody>
-                                <tr>
-                                    <td>1</td>
-                                    <td>Distributor A</td>
-                                    <td>Subdist A</td>
-                                    <td>Rp 36.738.000</td>
-                                </tr>
-                                <tr>
-                                    <td>1</td>
-                                    <td>Distributor A</td>
-                                    <td>Subdist A</td>
-                                    <td>Rp 36.738.000</td>
-                                </tr>
-                                <tr>
-                                    <td>1</td>
-                                    <td>Distributor A</td>
-                                    <td>Subdist A</td>
-                                    <td>Rp 36.738.000</td>
-                                </tr>
-                                <tr>
-                                    <td>1</td>
-                                    <td>Distributor A</td>
-                                    <td>Subdist A</td>
-                                    <td>Rp 36.738.000</td>
+                            <tbody *ngIf="this.getDashboardResponse.lstLowSku[0] != undefined">
+                                <tr *ngFor="let lowSku of getDashboardResponse.lstLowSku; let i = index">
+                                    <td>{{lowSku.tbpSku}}</td>
+                                    <td>{{lowSku.tbmMarketId}}</td>
+                                    <td>{{lowSku.tbpmQty === null ? 0 : lowSku.tbpmQty}}</td>
+                                    <td>
+                                        <input type="button" style="padding: 2px 15px;" class="btn btn-warning" value="view" [disabled]="clicked" [routerLink]="['/product-edit', lowSku.tbpSku]"/>
+                                    </td>
                                 </tr>
                             </tbody>
                         </table>
@@ -154,47 +144,30 @@
             <div class="col-lg-6 col-md-12">
                 <div class="card">
                     <div class="card-header card-header-warning">
-                        <h4 class="card-title">Low Skus</h4>
-                        <p class="card-category">Last low skus on 15th September, 2023</p>
+                        <h4 class="card-title">Market Stats</h4>
                     </div>
-                    <div class="card-body table-responsive">
+                    <div class="card-body table-responsive" style="max-height: 250px;">
                         <table class="table table-hover">
                             <thead class="text-warning">
-                                <th>Sku</th>
+                                <th>ID</th>
                                 <th>Market</th>
-                                <th>Name</th>
-                                <th>Quantity</th>
+                                <th>Frontliner</th>
+                                <th>Amount</th>
                             </thead>
-                            <tbody>
-                                <tr>
-                                    <td>4.140402.016</td>
-                                    <td>Subdist A</td>
-                                    <td>Lemonilo Chimi Jagung Bakar 24x50Gr </td>
-                                    <td>5</td>
-                                </tr>
-                                <tr>
-                                    <td>4.140402.016</td>
-                                    <td>Subdist A</td>
-                                    <td>Lemonilo Chimi Jagung Bakar 24x50Gr </td>
-                                    <td>5</td>
-                                </tr>
-                                <tr>
-                                    <td>4.140402.016</td>
-                                    <td>Subdist A</td>
-                                    <td>Lemonilo Chimi Jagung Bakar 24x50Gr </td>
-                                    <td>5</td>
-                                </tr>
-                                <tr>
-                                    <td>4.140402.016</td>
-                                    <td>Subdist A</td>
-                                    <td>Lemonilo Chimi Jagung Bakar 24x50Gr </td>
-                                    <td>5</td>
+                            <tbody *ngIf="this.getDashboardResponse.lstMarketStats[0] != undefined">
+                                <tr *ngFor="let lstMarketStats of getDashboardResponse.lstMarketStats; let i = index">
+                                    <td>{{lstMarketStats.tboMarketId}}</td>
+                                    <td>{{lstMarketStats.tboFrontliner}}</td>
+                                    <td>{{lstMarketStats.tboOrderSum}}</td>
+                                    <td>
+                                        <input type="button" style="padding: 2px 15px;" class="btn btn-warning" value="view" [disabled]="clicked" [routerLink]="['/confirm-details', lstMarketStats.tboOrderNo]"/>
+                                    </td>
                                 </tr>
                             </tbody>
                         </table>
                     </div>
                 </div>
-            </div>
+            </div>            
         </div>
     </div>
 </div>

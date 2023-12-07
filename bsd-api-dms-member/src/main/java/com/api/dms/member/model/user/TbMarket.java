@@ -17,7 +17,7 @@ public class TbMarket implements Serializable {
 
 	private Integer tbmCreateId;
 
-	private String tbmMarket;
+	private String tbmMarketId;
 
 	private Integer tbmParentId;
 
@@ -56,12 +56,12 @@ public class TbMarket implements Serializable {
 		this.tbmCreateId = tbmCreateId;
 	}
 
-	public String getTbmMarket() {
-		return tbmMarket;
+	public String getTbmMarketId() {
+		return tbmMarketId;
 	}
 
-	public void setTbmMarket(String tbmMarket) {
-		this.tbmMarket = tbmMarket;
+	public void setTbmMarketId(String tbmMarketId) {
+		this.tbmMarketId = tbmMarketId;
 	}
 
 	public Integer getTbmParentId() {

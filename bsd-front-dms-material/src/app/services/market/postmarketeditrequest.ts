@@ -4,7 +4,7 @@ export class PostMarketEditRequest {
     requestId: string;
     requestDate: string;
 	tbmId: string;
-	tbmMarket: string;
+	tbmMarketId: string;
 	tbmRole: string;
 	tbmParentId: number;
 }

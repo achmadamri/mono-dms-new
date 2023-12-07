@@ -65,7 +65,7 @@ public class MarketController {
 	}
 	
 	@GetMapping("/getmarketlist")
-	public HttpEntity<?> getMarketList(HttpServletRequest request, String tbmMarket, @RequestParam String length, @RequestParam String pageSize, @RequestParam String pageIndex, @RequestParam String email, @RequestParam String token, @RequestParam String requestId, @RequestParam String requestDate) throws Exception {
+	public HttpEntity<?> getMarketList(HttpServletRequest request, String tbmMarketId, @RequestParam String length, @RequestParam String pageSize, @RequestParam String pageIndex, @RequestParam String email, @RequestParam String token, @RequestParam String requestId, @RequestParam String requestDate) throws Exception {
 		GetMarketListRequestModel requestModel = new GetMarketListRequestModel();
 		requestModel.setEmail(email);
 		requestModel.setToken(token);
@@ -75,7 +75,7 @@ public class MarketController {
 		String fid = new Uid().generateString(20);
 		log.info(request.getRequestURL().toString() + " [fid:" + fid + "] requestModel : " + objectMapper.writeValueAsString(requestModel));
 		
-		GetMarketListResponseModel responseModel = productService.getMarketList(tbmMarket, length, pageSize, pageIndex, requestModel);
+		GetMarketListResponseModel responseModel = productService.getMarketList(tbmMarketId, length, pageSize, pageIndex, requestModel);
 		
 		ResponseEntity<?> responseEntity = new ResponseEntity<>(responseModel, responseModel.getStatus().equals("200") ? HttpStatus.OK : HttpStatus.NOT_FOUND);
 		log.info(request.getRequestURL().toString() + " [fid:" + fid + "] responseEntity : " + objectMapper.writeValueAsString(responseEntity));

@@ -10,19 +10,24 @@
           <div class="card-body">
             <form>
               <div class="row">
-                <div class="col-md-4">
+                <div class="col-md-3">
                   <mat-form-field class="example-full-width">
                     <input matInput placeholder="Row" type="text" [(ngModel)]="postOrderEditRequest.tboRow" name="tboRow">
                   </mat-form-field>
                 </div>
-                <div class="col-md-4">
+                <div class="col-md-3">
                   <mat-form-field class="example-full-width">
                     <input matInput placeholder="Brand" type="text" [(ngModel)]="postOrderEditRequest.tboBrand" name="tboBrand">
                   </mat-form-field>
                 </div>
-                <div class="col-md-4">
+                <div class="col-md-3">
                   <mat-form-field class="example-full-width">
-                    <input matInput placeholder="Market" type="text" [(ngModel)]="postOrderEditRequest.tboMarket" name="tboMarket">
+                    <input matInput placeholder="Market ID" type="text" [(ngModel)]="postOrderEditRequest.tboMarketId" name="tboMarketId">
+                  </mat-form-field>
+                </div>
+                <div class="col-md-3">
+                  <mat-form-field class="example-full-width">
+                    <input matInput placeholder="Frontliner" type="text" [(ngModel)]="postOrderEditRequest.tboFrontliner" name="tboFrontliner">
                   </mat-form-field>
                 </div>
               </div>

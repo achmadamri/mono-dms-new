@@ -105,86 +105,6 @@ export class UserAddComponent implements OnInit {
           this.getMarketListResponse = successResponse;
 
           this.userAddRequest.lstTbMarket = this.getMarketListResponse.lstTbMarket;
-
-          this.userAddRequest.lstTbMarket.forEach((element) => {
-            element.check = 1;
-          });
-
-          this.userAddRequest.lstTbBrand.forEach((element) => {
-            element.check = 1;
-          });
-
-          if (this.userAddRequest.tbUser.tbuRole == 'ADMIN') {
-            this.userAddRequest.lstViewUserMenu.forEach((element) => {
-              if (element.tbmName == 'Confirm') element.tbumView = 1;
-              if (element.tbmName == 'Market') element.tbumView = 1;
-              if (element.tbmName == 'Order') element.tbumView = 1;
-              if (element.tbmName == 'Packing') element.tbumView = 1;
-              if (element.tbmName == 'Product') element.tbumView = 1;
-              if (element.tbmName == 'Report') element.tbumView = 1;
-              if (element.tbmName == 'User') element.tbumView = 1;
-            });
-          }  
-
-          if (this.userAddRequest.tbUser.tbuRole == 'PRINCIPAL') {
-            this.userAddRequest.lstViewUserMenu.forEach((element) => {
-              if (element.tbmName == 'Confirm') element.tbumView = 1;
-              if (element.tbmName == 'Market') element.tbumView = 1;
-              if (element.tbmName == 'Order') element.tbumView = 1;
-              if (element.tbmName == 'Packing') element.tbumView = 1;
-              if (element.tbmName == 'Product') element.tbumView = 1;
-              if (element.tbmName == 'Report') element.tbumView = 1;
-              if (element.tbmName == 'User') element.tbumView = 0;
-            });
-          }   
-
-          if (this.userAddRequest.tbUser.tbuRole == 'DISTRIBUTOR') {
-            this.userAddRequest.lstViewUserMenu.forEach((element) => {
-              if (element.tbmName == 'Confirm') element.tbumView = 1;
-              if (element.tbmName == 'Market') element.tbumView = 0;
-              if (element.tbmName == 'Order') element.tbumView = 1;
-              if (element.tbmName == 'Packing') element.tbumView = 1;
-              if (element.tbmName == 'Product') element.tbumView = 1;
-              if (element.tbmName == 'Report') element.tbumView = 1;
-              if (element.tbmName == 'User') element.tbumView = 0;
-            });
-          }
-
-          if (this.userAddRequest.tbUser.tbuRole == 'SUBDIST') {
-            this.userAddRequest.lstViewUserMenu.forEach((element) => {
-              if (element.tbmName == 'Confirm') element.tbumView = 1;
-              if (element.tbmName == 'Market') element.tbumView = 0;
-              if (element.tbmName == 'Order') element.tbumView = 1;
-              if (element.tbmName == 'Packing') element.tbumView = 1;
-              if (element.tbmName == 'Product') element.tbumView = 0;
-              if (element.tbmName == 'Report') element.tbumView = 1;
-              if (element.tbmName == 'User') element.tbumView = 0;
-            });
-          }
-
-          if (this.userAddRequest.tbUser.tbuRole == 'GROSIR') {
-            this.userAddRequest.lstViewUserMenu.forEach((element) => {
-              if (element.tbmName == 'Confirm') element.tbumView = 1;
-              if (element.tbmName == 'Market') element.tbumView = 0;
-              if (element.tbmName == 'Order') element.tbumView = 0;
-              if (element.tbmName == 'Packing') element.tbumView = 1;
-              if (element.tbmName == 'Product') element.tbumView = 0;
-              if (element.tbmName == 'Report') element.tbumView = 1;
-              if (element.tbmName == 'User') element.tbumView = 0;
-            });
-          }
-          
-          if (this.userAddRequest.tbUser.tbuRole == 'MOTORIST') {
-            this.userAddRequest.lstViewUserMenu.forEach((element) => {
-              if (element.tbmName == 'Confirm') element.tbumView = 0;
-              if (element.tbmName == 'Market') element.tbumView = 0;
-              if (element.tbmName == 'Order') element.tbumView = 1;
-              if (element.tbmName == 'Packing') element.tbumView = 0;
-              if (element.tbmName == 'Product') element.tbumView = 0;
-              if (element.tbmName == 'Report') element.tbumView = 1;
-              if (element.tbmName == 'User') element.tbumView = 0;
-            });
-          }
         },
         errorResponse => {          
           this.getMarketListResponse = new GetMarketListResponse();
@@ -195,7 +115,7 @@ export class UserAddComponent implements OnInit {
   ngOnInit() {
     this.titleService.setTitle('DMS - User Add');
 
-    this.role = ['ADMIN', 'PRINCIPAL', 'DISTRIBUTOR', 'SUBDIST', 'GROSIR', 'MOTORIST'];
+    this.role = ['ADMIN', 'PRINCIPAL', 'AREA', 'DISTRIBUTOR', 'SUBDIST', 'GROSIR', 'MOTORIST'];
 
     this.userService.getUserMenuList('', this.getUserMenuListRequest)
       .subscribe(

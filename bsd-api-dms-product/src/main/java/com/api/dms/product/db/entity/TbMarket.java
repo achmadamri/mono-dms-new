@@ -27,8 +27,8 @@ public class TbMarket implements Serializable {
 	@Column(name="tbm_create_id")
 	private Integer tbmCreateId;
 
-	@Column(name="tbm_market")
-	private String tbmMarket;
+	@Column(name="tbm_market_id")
+	private String tbmMarketId;
 
 	@Column(name="tbm_parent_id")
 	private Integer tbmParentId;
@@ -70,12 +70,12 @@ public class TbMarket implements Serializable {
 		this.tbmCreateId = tbmCreateId;
 	}
 
-	public String getTbmMarket() {
-		return this.tbmMarket;
+	public String getTbmMarketId() {
+		return this.tbmMarketId;
 	}
 
-	public void setTbmMarket(String tbmMarket) {
-		this.tbmMarket = tbmMarket;
+	public void setTbmMarketId(String tbmMarketId) {
+		this.tbmMarketId = tbmMarketId;
 	}
 
 	public Integer getTbmParentId() {
