@@ -257,10 +257,10 @@ public class ReportService {
 				lstTbmMarketId.add(tbUserMarket.getTbmMarketId());
 			}
 			
-			List<ViewOrder> lstViewOrder = viewOrderRepository.find(lstTbmMarketId, brand, orderNo, new SimpleDateFormat("yyyy-MM-dd hh:mm:ss").parse(startDate + " 00:00:00"), new SimpleDateFormat("yyyy-MM-dd hh:mm:ss").parse(endDate + " 23:59:50"), PageRequest.of(Integer.valueOf(pageIndex), Integer.valueOf(pageSize), Sort.by("tboCreateDate").ascending()));
+			List<ViewOrder> lstViewOrder = viewOrderRepository.find(optTbUser.get().getTbuId(), lstTbmMarketId, brand, orderNo, new SimpleDateFormat("yyyy-MM-dd hh:mm:ss").parse(startDate + " 00:00:00"), new SimpleDateFormat("yyyy-MM-dd hh:mm:ss").parse(endDate + " 23:59:50"), PageRequest.of(Integer.valueOf(pageIndex), Integer.valueOf(pageSize), Sort.by("tboCreateDate").ascending()));
 			
 			if (lstViewOrder.size() > 0) {
-				responseModel.setLength(viewOrderRepository.count(lstTbmMarketId, brand, orderNo, new SimpleDateFormat("yyyy-MM-dd hh:mm:ss").parse(startDate + " 00:00:00"), new SimpleDateFormat("yyyy-MM-dd hh:mm:ss").parse(endDate + " 23:59:50")));
+				responseModel.setLength(viewOrderRepository.count(optTbUser.get().getTbuId(), lstTbmMarketId, brand, orderNo, new SimpleDateFormat("yyyy-MM-dd hh:mm:ss").parse(startDate + " 00:00:00"), new SimpleDateFormat("yyyy-MM-dd hh:mm:ss").parse(endDate + " 23:59:50")));
 				responseModel.setLstViewOrder(lstViewOrder);
 				
 				responseModel.setStatus("200");
@@ -473,10 +473,10 @@ public class ReportService {
 				lstTbmMarketId.add(tbUserMarket.getTbmMarketId());
 			}
 
-			List<ViewSales> lstViewSales = viewSalesRepository.find(lstTbmMarketId, brand, orderNo, sku, new SimpleDateFormat("yyyy-MM-dd hh:mm:ss").parse(startDate + " 00:00:00"), new SimpleDateFormat("yyyy-MM-dd hh:mm:ss").parse(endDate + " 23:59:50"), PageRequest.of(Integer.valueOf(pageIndex), Integer.valueOf(pageSize), Sort.by("tboCreateDate").ascending()));
+			List<ViewSales> lstViewSales = viewSalesRepository.find(optTbUser.get().getTbuId(), lstTbmMarketId, brand, orderNo, sku, new SimpleDateFormat("yyyy-MM-dd hh:mm:ss").parse(startDate + " 00:00:00"), new SimpleDateFormat("yyyy-MM-dd hh:mm:ss").parse(endDate + " 23:59:50"), PageRequest.of(Integer.valueOf(pageIndex), Integer.valueOf(pageSize), Sort.by("tboCreateDate").ascending()));
 			
 			if (lstViewSales.size() > 0) {
-				responseModel.setLength(viewSalesRepository.count(lstTbmMarketId, brand, orderNo, sku, new SimpleDateFormat("yyyy-MM-dd hh:mm:ss").parse(startDate + " 00:00:00"), new SimpleDateFormat("yyyy-MM-dd hh:mm:ss").parse(endDate + " 23:59:50")));
+				responseModel.setLength(viewSalesRepository.count(optTbUser.get().getTbuId(), lstTbmMarketId, brand, orderNo, sku, new SimpleDateFormat("yyyy-MM-dd hh:mm:ss").parse(startDate + " 00:00:00"), new SimpleDateFormat("yyyy-MM-dd hh:mm:ss").parse(endDate + " 23:59:50")));
 				responseModel.setLstViewSales(lstViewSales);
 				
 				responseModel.setStatus("200");
