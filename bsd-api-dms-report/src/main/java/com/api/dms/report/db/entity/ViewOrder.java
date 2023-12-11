@@ -48,6 +48,9 @@ public class ViewOrder implements Serializable {
 	@Column(name="tbo_name")
 	private String tboName;
 
+	@Column(name="tbo_order_sq")
+	private String tboOrderSq;
+
 	@Column(name="tbo_order_no")
 	private String tboOrderNo;
 
@@ -136,6 +139,14 @@ public class ViewOrder implements Serializable {
 
 	public void setTboName(String tboName) {
 		this.tboName = tboName;
+	}
+
+	public String getTboOrderSq() {
+		return tboOrderSq;
+	}
+
+	public void setTboOrderSq(String tboOrderSq) {
+		this.tboOrderSq = tboOrderSq;
 	}
 
 	public String getTboOrderNo() {

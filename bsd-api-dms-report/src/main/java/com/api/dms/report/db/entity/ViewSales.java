@@ -41,6 +41,9 @@ public class ViewSales implements Serializable {
 	@Column(name="tbo_frontliner")
 	private String tboFrontliner;
 
+	@Column(name="tbo_order_sq")
+	private String tboOrderSq;
+
 	@Column(name="tbo_order_no")
 	private String tboOrderNo;
 
@@ -119,6 +122,14 @@ public class ViewSales implements Serializable {
 
 	public void setTboFrontliner(String tboFrontliner) {
 		this.tboFrontliner = tboFrontliner;
+	}
+
+	public String getTboOrderSq() {
+		return tboOrderSq;
+	}
+
+	public void setTboOrderSq(String tboOrderSq) {
+		this.tboOrderSq = tboOrderSq;
 	}
 
 	public String getTboOrderNo() {
