@@ -10,6 +10,7 @@ import { GetSellableProductRequest } from 'app/services/gwp/getsellableproductre
 import { GetSellableProductResponse } from 'app/services/gwp/getsellableproductresponse';
 import { TbGwpSku } from 'app/services/gwp/tbgwpsku';
 import { Title } from '@angular/platform-browser';
+import { Location } from '@angular/common';
 
 export interface Country {
   value: string;
@@ -31,6 +32,7 @@ export class GwpAddComponent implements OnInit {
   getSellableProductResponse: GetSellableProductResponse = new GetGwpProductResponse();  
 
   constructor(
+    private location: Location,
     private router: Router,
     private titleService: Title,
     private gwpService: GwpService
@@ -107,6 +109,6 @@ export class GwpAddComponent implements OnInit {
   }
 
   back() {
-    this.router.navigate(['/gwp']);
+    this.location.back();
   }
 }

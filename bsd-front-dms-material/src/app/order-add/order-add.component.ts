@@ -5,6 +5,7 @@ import { OrderService } from 'app/services/order/order.service';
 import { PostOrderAddRequest } from 'app/services/order/postorderaddrequest';
 import { PostOrderAddResponse } from 'app/services/order/postorderaddresponse';
 import { Util } from 'app/util';
+import { Location } from '@angular/common';
 
 @Component({
   selector: 'app-order-add',
@@ -17,6 +18,7 @@ export class OrderAddComponent implements OnInit {
   postOrderAddResponse: PostOrderAddResponse = new PostOrderAddResponse();
 
   constructor(
+    private location: Location,
     private router: Router,
     private titleService: Title,
     private orderService: OrderService
@@ -63,6 +65,6 @@ export class OrderAddComponent implements OnInit {
   }
 
   back() {
-    this.router.navigate(['/order']);
+    this.location.back();
   }
 }

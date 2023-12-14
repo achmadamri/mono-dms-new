@@ -16,6 +16,7 @@ import { MarketService } from 'app/services/market/market.service';
 import { GetMarketListRequest } from 'app/services/market/getmarketlistrequest';
 import { GetMarketListResponse } from 'app/services/market/getmarketlistresponse';
 import { ViewUserBrand } from 'app/services/user/viewuserbrand';
+import { Location } from '@angular/common';
 
 export interface Country {
   value: string;
@@ -42,6 +43,7 @@ export class UserEditComponent implements OnInit {
   role: string[];
 
   constructor(
+    private location: Location,
     private router: Router,
     private route: ActivatedRoute,
     private titleService: Title,
@@ -315,6 +317,6 @@ export class UserEditComponent implements OnInit {
   }
 
   back() {
-    this.router.navigate(['/user']);
+    this.location.back();
   }
 }

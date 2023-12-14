@@ -16,6 +16,7 @@ import { GetSellableProductRequest } from 'app/services/gwp/getsellableproductre
 import { GetSellableProductResponse } from 'app/services/gwp/getsellableproductresponse';
 import { TbGwpSku } from 'app/services/gwp/tbgwpsku';
 import { Title } from '@angular/platform-browser';
+import { Location } from '@angular/common';
 
 @Component({
   selector: 'app-gwp-edit',
@@ -36,6 +37,7 @@ export class GwpEditComponent implements OnInit {
   getSellableProductResponse: GetSellableProductResponse = new GetGwpProductResponse();  
 
   constructor(
+    private location: Location,
     private router: Router,
     private titleService: Title,
     private route: ActivatedRoute,
@@ -198,6 +200,6 @@ export class GwpEditComponent implements OnInit {
   }
 
   back() {
-    this.router.navigate(['/gwp']);
+    this.location.back();
   }
 }

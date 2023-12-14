@@ -13,6 +13,7 @@ import { ProductService } from 'app/services/product/product.service';
 import { MarketService } from 'app/services/market/market.service';
 import { GetMarketListRequest } from 'app/services/market/getmarketlistrequest';
 import { GetMarketListResponse } from 'app/services/market/getmarketlistresponse';
+import { Location } from '@angular/common';
 
 export interface Country {
   value: string;
@@ -37,6 +38,7 @@ export class UserAddComponent implements OnInit {
   role: string[];
 
   constructor(
+    private location: Location,
     private router: Router,
     private titleService: Title,
     private userService: UserService,
@@ -249,6 +251,6 @@ export class UserAddComponent implements OnInit {
   }
 
   back() {
-    this.router.navigate(['/user']);
+    this.location.back();
   }
 }

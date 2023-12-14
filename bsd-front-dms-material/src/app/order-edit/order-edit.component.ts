@@ -11,6 +11,7 @@ import { PostOrderDeleteResponse } from 'app/services/order/postorderdeleterespo
 import { PostOrderEditRequest } from 'app/services/order/postordereditrequest';
 import { PostOrderEditResponse } from 'app/services/order/postordereditresponse';
 import { Util } from 'app/util';
+import { Location } from '@angular/common';
 
 @Component({
   selector: 'app-order-edit',
@@ -27,6 +28,7 @@ export class OrderEditComponent implements OnInit {
   getOrderResponse: GetOrderResponse = new GetOrderResponse();
 
   constructor(
+    private location: Location,
     private router: Router,
     private titleService: Title,
     private route: ActivatedRoute,
@@ -183,6 +185,6 @@ export class OrderEditComponent implements OnInit {
   }
 
   back() {
-    this.router.navigate(['/order']);
+    this.location.back();
   }
 }

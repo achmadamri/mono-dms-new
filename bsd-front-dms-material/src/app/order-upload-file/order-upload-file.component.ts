@@ -6,6 +6,7 @@ import { OrderService } from 'app/services/order/order.service';
 import { PostUploadOrderRequest } from 'app/services/order/postuploadorderrequest';
 import { PostUploadOrderResponse } from 'app/services/order/postuploadorderresponse';
 import { Util } from 'app/util';
+import { Location } from '@angular/common';
 
 @Component({
   selector: 'app-order-upload-file',
@@ -24,6 +25,7 @@ export class OrderUploadFileComponent implements OnInit {
   postUploadOrderResponse: PostUploadOrderResponse = new PostUploadOrderResponse();
 
   constructor(
+    private location: Location,
     private router: Router,
     private titleService: Title,
     private orderService: OrderService
@@ -75,7 +77,7 @@ export class OrderUploadFileComponent implements OnInit {
   }
 
   back() {
-    this.router.navigate(['/order']);
+    this.location.back();
   }
 
 }

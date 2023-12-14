@@ -13,6 +13,7 @@ import { TbOrder } from 'app/services/order/tborder';
 import { OrderService } from 'app/services/order/order.service';
 import { PostOrderManualRequest } from 'app/services/order/postordermanualrequest';
 import { PostOrderManualResponse } from 'app/services/order/postordermanualresponse';
+import { Location } from '@angular/common';
 
 @Component({
   selector: 'app-order-manual',
@@ -29,6 +30,7 @@ export class OrderManualComponent implements OnInit {
   postOrderManualResponse: PostOrderManualResponse = new PostOrderManualResponse();
 
   constructor(
+    private location: Location,
     private router: Router,
     private titleService: Title,
     private productService: ProductService,
@@ -107,6 +109,6 @@ export class OrderManualComponent implements OnInit {
   }
 
   back() {
-    this.router.navigate(['/order']);
+    this.location.back();
   }
 }

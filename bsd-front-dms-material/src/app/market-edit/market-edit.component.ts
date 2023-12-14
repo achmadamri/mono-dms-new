@@ -12,6 +12,7 @@ import { PostMarketDeleteRequest } from 'app/services/market/postmarketdeletereq
 import { PostMarketDeleteResponse } from 'app/services/market/postmarketdeleteresponse';
 import { GetMarketListRequest } from 'app/services/market/getmarketlistrequest';
 import { GetMarketListResponse } from 'app/services/market/getmarketlistresponse';
+import { Location } from '@angular/common';
 
 @Component({
   selector: 'app-market-edit',
@@ -31,6 +32,7 @@ export class MarketEditComponent implements OnInit {
   role: string[];
 
   constructor(
+    private location: Location,
     private router: Router,
     private titleService: Title,
     private route: ActivatedRoute,
@@ -126,6 +128,6 @@ export class MarketEditComponent implements OnInit {
   }
 
   back() {
-    this.router.navigate(['/market']);
+    this.location.back();
   }
 }

@@ -6,6 +6,7 @@ import { PostUploadProductBundleRequest } from 'app/services/product/postuploadp
 import { PostUploadProductBundleResponse } from 'app/services/product/postuploadproductbundleresponse';
 import { ProductService } from 'app/services/product/product.service';
 import { Util } from 'app/util';
+import { Location } from '@angular/common';
 
 @Component({
   selector: 'app-product-bundle-upload-file',
@@ -24,6 +25,7 @@ export class ProductBundleUploadFileComponent implements OnInit {
   postUploadProductBundleResponse: PostUploadProductBundleResponse = new PostUploadProductBundleResponse();
 
   constructor(
+    private location: Location,
     private router: Router,
     private titleService: Title,
     private productService: ProductService
@@ -75,7 +77,7 @@ export class ProductBundleUploadFileComponent implements OnInit {
   }
 
   back() {
-    this.router.navigate(['/product']);
+    this.location.back();
   }
 
 }

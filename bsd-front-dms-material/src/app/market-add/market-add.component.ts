@@ -7,6 +7,7 @@ import { PostMarketAddResponse } from 'app/services/market/postmarketaddresponse
 import { MarketService } from 'app/services/market/market.service';
 import { GetMarketListRequest } from 'app/services/market/getmarketlistrequest';
 import { GetMarketListResponse } from 'app/services/market/getmarketlistresponse';
+import { Location } from '@angular/common';
 
 @Component({
   selector: 'app-market-add',
@@ -22,6 +23,7 @@ export class MarketAddComponent implements OnInit {
   role: string[];
 
   constructor(
+    private location: Location,
     private router: Router,
     private titleService: Title,
     private marketService: MarketService
@@ -80,6 +82,6 @@ export class MarketAddComponent implements OnInit {
   }
 
   back() {
-    this.router.navigate(['/market']);
+    this.location.back();
   }
 }

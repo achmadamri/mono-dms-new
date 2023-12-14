@@ -7,6 +7,7 @@ import { GetBrandRequest } from 'app/services/product/getbrandrequest';
 import { GetBrandResponse } from 'app/services/product/getbrandresponse';
 import { Util } from 'app/util';
 import { Title } from '@angular/platform-browser';
+import { Location } from '@angular/common';
 
 @Component({
   selector: 'app-product-add',
@@ -21,6 +22,7 @@ export class ProductAddComponent implements OnInit {
   getBrandResponse: GetBrandResponse = new GetBrandResponse();
 
   constructor(
+    private location: Location,
     private router: Router,
     private titleService: Title,
     private productService: ProductService
@@ -78,6 +80,6 @@ export class ProductAddComponent implements OnInit {
   }
 
   back() {
-    this.router.navigate(['/product']);
+    this.location.back();
   }
 }
