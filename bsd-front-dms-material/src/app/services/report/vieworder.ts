@@ -1,4 +1,5 @@
 export class ViewOrder {
+	tboId: number;
 	tboBrand: string;
 	tboCreateDate: Date;
 	tboCreateId: number;
@@ -7,6 +8,7 @@ export class ViewOrder {
 	tboMarketId: string;
 	tboFrontliner: string;
 	tboName: string;
+	tboSku: string;
 	tboOrderSq: string;
 	tboOrderNo: string;
 	tboUpdateDate: Date;

@@ -10,7 +10,7 @@ export class GetDashboardResponse {
     error: string;
     message: string;
     sku: string;
-	revenue: string;
+	amount: string;
 	orderPending: string;
 	orderDelivered: string;    
     lstDailySales: ViewOrder[] = Array(new ViewOrder());

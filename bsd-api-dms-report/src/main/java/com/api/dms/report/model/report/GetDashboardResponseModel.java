@@ -14,7 +14,7 @@ public class GetDashboardResponseModel extends ResponseModel {
 
 	private String sku;
 
-	private String revenue;
+	private String amount;
 
 	private String orderPending;
 
@@ -36,12 +36,12 @@ public class GetDashboardResponseModel extends ResponseModel {
 		this.sku = sku;
 	}
 
-	public String getRevenue() {
-		return revenue;
+	public String getAmount() {
+		return amount;
 	}
 
-	public void setRevenue(String revenue) {
-		this.revenue = revenue;
+	public void setAmount(String amount) {
+		this.amount = amount;
 	}
 
 	public String getOrderPending() {

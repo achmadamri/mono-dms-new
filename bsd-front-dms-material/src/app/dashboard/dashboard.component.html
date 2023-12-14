@@ -23,8 +23,8 @@
                         <div class="card-icon">
                             <i class="material-icons">store</i>
                         </div>
-                        <p class="card-category">Revenue</p>
-                        <h3 class="card-title">Rp {{getDashboardResponse.revenue}}</h3>
+                        <p class="card-category">Amount</p>
+                        <h3 class="card-title">{{ getDashboardResponse.amount | currency:'IDR':'symbol-narrow' }}</h3>
                     </div>
                     <div class="card-footer">
                         <div class="stats">
@@ -124,13 +124,13 @@
                         <table class="table table-hover">
                             <thead class="text-warning">
                                 <th>Sku</th>
-                                <th>Market</th>
+                                <th>Market ID</th>
                                 <th>Quantity</th>
                             </thead>
                             <tbody *ngIf="this.getDashboardResponse.lstLowSku[0] != undefined">
                                 <tr *ngFor="let lowSku of getDashboardResponse.lstLowSku; let i = index">
                                     <td>{{lowSku.tbpSku}}</td>
-                                    <td>{{lowSku.tbmMarketId}}</td>
+                                    <td title="{{lowSku.tbmMarketId}}">{{ lowSku.tbmMarketId?.length > 10 ? (lowSku.tbmMarketId | slice:0:10) + '...' : lowSku.tbmMarketId }}</td>
                                     <td>{{lowSku.tbpmQty === null ? 0 : lowSku.tbpmQty}}</td>
                                     <td>
                                         <input type="button" style="padding: 2px 15px;" class="btn btn-warning" value="view" [disabled]="clicked" [routerLink]="['/product-edit', lowSku.tbpSku]"/>
@@ -149,18 +149,22 @@
                     <div class="card-body table-responsive" style="max-height: 250px;">
                         <table class="table table-hover">
                             <thead class="text-warning">
-                                <th>ID</th>
-                                <th>Market</th>
+                                <th>Market ID</th>
                                 <th>Frontliner</th>
-                                <th>Amount</th>
+                                <th>Order No</th>
+                                <th>Sku</th>
+                                <th>Order SUM</th>
+                                <th>Action</th>
                             </thead>
                             <tbody *ngIf="this.getDashboardResponse.lstMarketStats[0] != undefined">
                                 <tr *ngFor="let lstMarketStats of getDashboardResponse.lstMarketStats; let i = index">
-                                    <td>{{lstMarketStats.tboMarketId}}</td>
-                                    <td>{{lstMarketStats.tboFrontliner}}</td>
+                                    <td title="{{lstMarketStats.tboMarketId}}">{{ lstMarketStats.tboMarketId?.length > 10 ? (lstMarketStats.tboMarketId | slice:0:10) + '...' : lstMarketStats.tboMarketId }}</td>
+                                    <td title="{{lstMarketStats.tboFrontliner}}">{{ lstMarketStats.tboFrontliner?.length > 10 ? (lstMarketStats.tboFrontliner | slice:0:10) + '...' : lstMarketStats.tboFrontliner }}</td>
+                                    <td>{{lstMarketStats.tboOrderNo}}</td>
+                                    <td>{{lstMarketStats.tboSku}}</td>
                                     <td>{{lstMarketStats.tboOrderSum}}</td>
                                     <td>
-                                        <input type="button" style="padding: 2px 15px;" class="btn btn-warning" value="view" [disabled]="clicked" [routerLink]="['/confirm-details', lstMarketStats.tboOrderNo]"/>
+                                        <input type="button" style="padding: 2px 15px;" class="btn btn-warning" value="view" [disabled]="clicked" [routerLink]="['/order-edit', lstMarketStats.tboId]"/>
                                     </td>
                                 </tr>
                             </tbody>

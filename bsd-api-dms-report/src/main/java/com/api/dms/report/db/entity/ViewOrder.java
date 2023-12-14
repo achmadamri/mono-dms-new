@@ -23,6 +23,9 @@ import javax.persistence.TemporalType;
 public class ViewOrder implements Serializable {
 	private static final long serialVersionUID = 1L;
 
+	@Column(name="tbo_id")
+	private Integer tboId;
+
 	@Column(name="tbo_brand")
 	private String tboBrand;
 
@@ -47,6 +50,9 @@ public class ViewOrder implements Serializable {
 
 	@Column(name="tbo_name")
 	private String tboName;
+
+	@Column(name="tbo_sku")
+	private String tboSku;
 
 	@Column(name="tbo_order_sq")
 	private String tboOrderSq;
@@ -75,6 +81,14 @@ public class ViewOrder implements Serializable {
 	private String uuid;
 
 	public ViewOrder() {
+	}
+
+	public Integer getTboId() {
+		return this.tboId;
+	}
+
+	public void setTboId(String tboId) {
+		this.tboId = tboId;
 	}
 
 	public String getTboBrand() {
@@ -139,6 +153,14 @@ public class ViewOrder implements Serializable {
 
 	public void setTboName(String tboName) {
 		this.tboName = tboName;
+	}
+
+	public String getTboSku() {
+		return this.tboSku;
+	}
+
+	public void setTboSku(String tboSku) {
+		this.tboSku = tboSku;
 	}
 
 	public String getTboOrderSq() {

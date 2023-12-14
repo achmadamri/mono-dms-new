@@ -596,16 +596,16 @@ public class ReportService {
 			
 			Instant currentUtcInstant = Instant.now();
     		Date currentDateInUtc = Date.from(currentUtcInstant);
-			Long revenue = viewOrderRepository.dashboardCountRevenue(lstTbmMarketId, currentDateInUtc);
-			responseModel.setRevenue(String.valueOf(revenue == null ? 0 : revenue));
+			Long amount = viewOrderRepository.dashboardCountAmount(optTbUser.get().getTbuId(), lstTbmMarketId, currentDateInUtc);
+			responseModel.setAmount(String.valueOf(amount == null ? 0 : amount));
 
-			responseModel.setOrderPending(String.valueOf(viewOrderRepository.dashboardCountOrderPacked(lstTbmMarketId, currentDateInUtc)));
+			responseModel.setOrderPending(String.valueOf(viewOrderRepository.dashboardCountOrderPacked(optTbUser.get().getTbuId(), lstTbmMarketId, currentDateInUtc)));
 			
 			responseModel.setOrderDelivered(String.valueOf(viewOrderRepository.dashboardCountOrderDelivered(lstTbmMarketId, currentDateInUtc)));
 
 			responseModel.setLstLowSku(lstTbProductMarket);
 
-			List<ViewOrder> lstViewOrder = viewOrderRepository.dashboardMarketStats(lstTbmMarketId, currentDateInUtc);
+			List<ViewOrder> lstViewOrder = viewOrderRepository.dashboardMarketStats(optTbUser.get().getTbuId(), lstTbmMarketId, currentDateInUtc);
 			responseModel.setLstMarketStats(lstViewOrder);
 			
 			Instant sevenDaysAgoInstant = currentUtcInstant.minus(7, ChronoUnit.DAYS);
