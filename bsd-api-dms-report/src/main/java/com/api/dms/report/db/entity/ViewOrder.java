@@ -87,7 +87,7 @@ public class ViewOrder implements Serializable {
 		return this.tboId;
 	}
 
-	public void setTboId(String tboId) {
+	public void setTboId(Integer tboId) {
 		this.tboId = tboId;
 	}
 
