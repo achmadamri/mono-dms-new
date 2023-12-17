@@ -7,8 +7,13 @@ import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
 import java.text.SimpleDateFormat;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.ZoneId;
 import java.time.ZoneOffset;
+import java.time.ZonedDateTime;
+import java.time.temporal.ChronoUnit;
+import java.time.temporal.TemporalField;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
@@ -145,6 +150,14 @@ public class OrderService {
 	
 	@Autowired
 	private TbUserBrandRepository tbUserBrandRepository;
+
+	private static LocalDate convertExcelSerialDateToDate(double excelSerialDate) {
+        // Excel's base date (January 0, 1900)
+        LocalDate baseDate = LocalDate.of(1899, 12, 31);
+
+        // Adding days to base date (subtracting 1 for Excel's leap year bug)
+        return baseDate.plus((long) excelSerialDate - 1, ChronoUnit.DAYS);
+    }
 	
 	public PostUploadOrderResponseModel postUploadOrder(PostUploadOrderRequestModel requestModel, MultipartFile file) throws Exception {
 		PostUploadOrderResponseModel responseModel = new PostUploadOrderResponseModel(requestModel);
@@ -209,7 +222,15 @@ public class OrderService {
 						} else {
 							TbOrder tbOrder = new TbOrder();
 							
-							tbOrder.setTboCreateDate(Date.from(LocalDateTime.now(ZoneOffset.UTC).toInstant(ZoneOffset.UTC)));
+							getData = getData(row, column, "Date");
+							if (getData != null) {
+								LocalDate convertedDate = convertExcelSerialDateToDate((Double) getData);
+								Date date = java.sql.Date.valueOf(convertedDate);
+								tbOrder.setTboCreateDate(date);
+							} else {
+								tbOrder.setTboCreateDate(Date.from(LocalDateTime.now(ZoneOffset.UTC).toInstant(ZoneOffset.UTC)));
+							}
+							
 							tbOrder.setTboCreateId(optTbUser.get().getTbuId());
 							tbOrder.setTboType(TbOrderRepository.TypeOrder);							
 							tbOrder.setTboRow(((Double) getData(row, column, "Row")).intValue());
@@ -555,22 +576,26 @@ public class OrderService {
 	
 	@SuppressWarnings("deprecation")
 	private Object getData(Row row, Map<String, Integer> column, String key) {
-		log.info(key + " : " + row.getCell(column.get(key)));
+		try {
+			log.info(key + " : " + row.getCell(column.get(key)));
 		
-		Cell cell = row.getCell(column.get(key));
-		
-		if (cell != null) {
-			if (cell.getCellType() == Cell.CELL_TYPE_STRING) {
-				return cell.getStringCellValue();  
-			} else if (cell.getCellType() == Cell.CELL_TYPE_NUMERIC) {
-				return cell.getNumericCellValue(); 
-			} else if (cell.getCellType() == Cell.CELL_TYPE_FORMULA) {
-				return cell.getNumericCellValue();
+			Cell cell = row.getCell(column.get(key));
+			
+			if (cell != null) {
+				if (cell.getCellType() == Cell.CELL_TYPE_STRING) {
+					return cell.getStringCellValue();  
+				} else if (cell.getCellType() == Cell.CELL_TYPE_NUMERIC) {
+					return cell.getNumericCellValue(); 
+				} else if (cell.getCellType() == Cell.CELL_TYPE_FORMULA) {
+					return cell.getNumericCellValue();
+				} else {
+					return "";
+				}
 			} else {
 				return "";
 			}
-		} else {
-			return "";
+		} catch(Exception ex) {
+			return null;
 		}		
 	}
 	
