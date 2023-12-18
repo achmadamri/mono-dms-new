@@ -299,7 +299,10 @@ public class ReportService {
 		cell.setCellValue("Brand");
 		
 		cell = row.createCell(intCell++);
-		cell.setCellValue("Market");
+		cell.setCellValue("Market ID");
+		
+		cell = row.createCell(intCell++);
+		cell.setCellValue("Frontliner");
 
 		cell = row.createCell(intCell++);
 		cell.setCellValue("Order No");
@@ -331,6 +334,9 @@ public class ReportService {
 			
 			cell = row.createCell(intCell++);
 			cell.setCellValue(viewOrder.getTboMarketId());
+			
+			cell = row.createCell(intCell++);
+			cell.setCellValue(viewOrder.getTboFrontliner());
 			
 			cell = row.createCell(intCell++);
 			cell.setCellValue(viewOrder.getTboOrderNo());
@@ -413,7 +419,13 @@ public class ReportService {
 		cell.setCellValue("Brand");
 		
 		cell = row.createCell(intCell++);
+		cell.setCellValue("Market ID");
+		
+		cell = row.createCell(intCell++);
 		cell.setCellValue("Sku");
+		
+		cell = row.createCell(intCell++);
+		cell.setCellValue("Code");
 
 		cell = row.createCell(intCell++);
 		cell.setCellValue("Item");
@@ -435,7 +447,13 @@ public class ReportService {
 			cell.setCellValue(viewStock.getTbpBrand());
 			
 			cell = row.createCell(intCell++);
+			cell.setCellValue(viewStock.getTbmMarketId());
+			
+			cell = row.createCell(intCell++);
 			cell.setCellValue(viewStock.getTbpSku());
+			
+			cell = row.createCell(intCell++);
+			cell.setCellValue(viewStock.getTbpCode());
 			
 			cell = row.createCell(intCell++);
 			cell.setCellValue(viewStock.getTbpItem());
@@ -515,7 +533,10 @@ public class ReportService {
 		cell.setCellValue("Brand");
 		
 		cell = row.createCell(intCell++);
-		cell.setCellValue("Market");
+		cell.setCellValue("Market ID");
+		
+		cell = row.createCell(intCell++);
+		cell.setCellValue("Frontliner");
 
 		cell = row.createCell(intCell++);
 		cell.setCellValue("Order No");
@@ -547,6 +568,9 @@ public class ReportService {
 			
 			cell = row.createCell(intCell++);
 			cell.setCellValue(viewSales.getTboMarketId());
+			
+			cell = row.createCell(intCell++);
+			cell.setCellValue(viewSales.getTboFrontliner());
 			
 			cell = row.createCell(intCell++);
 			cell.setCellValue(viewSales.getTboOrderNo());
