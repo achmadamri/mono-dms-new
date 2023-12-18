@@ -32,6 +32,8 @@ export class ReportComponent implements OnInit {
   pageDisabledOrder: boolean = false;
   brandOrder = "";
   orderNoOrder = "";
+  marketIdOrder = "";
+  frontlinerOrder = "";
   rangeOrder = new FormGroup({
     start: new FormControl(new Date()),
     end: new FormControl(new Date())
@@ -45,6 +47,7 @@ export class ReportComponent implements OnInit {
   pageSizeOptionsStock: number[] = [5, 10, 25, 100];
   pageEventStock: PageEvent;
   pageDisabledStock: boolean = false;
+  marketIdStock = "";
   skuStock = "";
   itemStock = "";
   brandStock = "";
@@ -63,6 +66,8 @@ export class ReportComponent implements OnInit {
   pageDisabledSales: boolean = false;
   brandSales = "";
   orderNoSales = "";
+  marketIdSales = "";
+  frontlinerSales = "";
   skuSales = "";
   rangeSales = new FormGroup({
     start: new FormControl(new Date(new Date().getFullYear(), new Date().getMonth(), 1)), // Start of the current month
@@ -179,7 +184,7 @@ export class ReportComponent implements OnInit {
   getOrderList(pageEvent: PageEvent) {
     this.clicked = !this.clicked;
     
-    this.reportService.getOrderList(this.brandOrder, this.orderNoOrder, this.datepipe.transform(this.rangeOrder.controls.start.value, 'yyyy-MM-dd'), this.datepipe.transform(this.rangeOrder.controls.end.value, 'yyyy-MM-dd'), pageEvent != null ? pageEvent.length : this.lengthOrder, pageEvent != null ? pageEvent.pageSize : this.pageSizeOrder, pageEvent != null ? pageEvent.pageIndex : this.pageIndexOrder, this.getOrderListRequest)
+    this.reportService.getOrderList(this.brandOrder, this.marketIdOrder, this.frontlinerOrder, this.orderNoOrder, this.datepipe.transform(this.rangeOrder.controls.start.value, 'yyyy-MM-dd'), this.datepipe.transform(this.rangeOrder.controls.end.value, 'yyyy-MM-dd'), pageEvent != null ? pageEvent.length : this.lengthOrder, pageEvent != null ? pageEvent.pageSize : this.pageSizeOrder, pageEvent != null ? pageEvent.pageIndex : this.pageIndexOrder, this.getOrderListRequest)
       .subscribe(
         successResponse => {
           this.clicked = !this.clicked;
@@ -199,7 +204,10 @@ export class ReportComponent implements OnInit {
             '&orderNo=' + this.orderNoOrder +
             '&start=' + this.datepipe.transform(this.rangeOrder.controls.start.value, 'yyyy-MM-dd') +
             '&end=' + this.datepipe.transform(this.rangeOrder.controls.end.value, 'yyyy-MM-dd') +
-            '&brand=' + this.brandOrder;
+            '&brand=' + this.brandOrder +
+            '&marketId=' + this.marketIdOrder +
+            '&frontliner=' + this.frontlinerOrder
+            ;
 
           this.lengthOrder = this.getOrderListResponse.length;
 
@@ -224,7 +232,7 @@ export class ReportComponent implements OnInit {
   getStockList(pageEvent: PageEvent) {
     this.clicked = !this.clicked;
     
-    this.reportService.getStockList(this.brandStock, this.skuStock, this.itemStock, pageEvent != null ? pageEvent.length : this.lengthStock, pageEvent != null ? pageEvent.pageSize : this.pageSizeStock, pageEvent != null ? pageEvent.pageIndex : this.pageIndexStock, this.getStockListRequest)
+    this.reportService.getStockList(this.brandStock, this.marketIdStock, this.skuStock, this.itemStock, pageEvent != null ? pageEvent.length : this.lengthStock, pageEvent != null ? pageEvent.pageSize : this.pageSizeStock, pageEvent != null ? pageEvent.pageIndex : this.pageIndexStock, this.getStockListRequest)
       .subscribe(
         successResponse => {
           this.clicked = !this.clicked;
@@ -245,7 +253,9 @@ export class ReportComponent implements OnInit {
             '&item=' + this.itemStock +
             '&start=' + this.datepipe.transform(this.rangeStock.controls.start.value, 'yyyy-MM-dd') +
             '&end=' + this.datepipe.transform(this.rangeStock.controls.end.value, 'yyyy-MM-dd') +
-            '&brand=' + this.brandStock;
+            '&brand=' + this.brandStock +
+            '&marketId=' + this.marketIdStock
+            ;
 
           this.lengthStock = this.getStockListResponse.length;
 
@@ -270,7 +280,7 @@ export class ReportComponent implements OnInit {
   getSalesList(pageEvent: PageEvent) {
     this.clicked = !this.clicked;
     
-    this.reportService.getSalesList(this.brandSales, this.orderNoSales, this.skuSales, this.datepipe.transform(this.rangeSales.controls.start.value, 'yyyy-MM-dd'), this.datepipe.transform(this.rangeSales.controls.end.value, 'yyyy-MM-dd'), pageEvent != null ? pageEvent.length : this.lengthSales, pageEvent != null ? pageEvent.pageSize : this.pageSizeSales, pageEvent != null ? pageEvent.pageIndex : this.pageIndexSales, this.getSalesListRequest)
+    this.reportService.getSalesList(this.brandSales, this.marketIdSales, this.frontlinerSales, this.orderNoSales, this.skuSales, this.datepipe.transform(this.rangeSales.controls.start.value, 'yyyy-MM-dd'), this.datepipe.transform(this.rangeSales.controls.end.value, 'yyyy-MM-dd'), pageEvent != null ? pageEvent.length : this.lengthSales, pageEvent != null ? pageEvent.pageSize : this.pageSizeSales, pageEvent != null ? pageEvent.pageIndex : this.pageIndexSales, this.getSalesListRequest)
       .subscribe(
         successResponse => {
           this.clicked = !this.clicked;
@@ -291,7 +301,9 @@ export class ReportComponent implements OnInit {
             '&sku=' + this.skuSales +
             '&start=' + this.datepipe.transform(this.rangeSales.controls.start.value, 'yyyy-MM-dd') +
             '&end=' + this.datepipe.transform(this.rangeSales.controls.end.value, 'yyyy-MM-dd') +
-            '&brand=' + this.brandSales;
+            '&brand=' + this.brandSales +
+            '&marketId=' + this.marketIdSales +
+            '&frontliner=' + this.frontlinerSales;
 
           this.lengthSales = this.getSalesListResponse.length;
 

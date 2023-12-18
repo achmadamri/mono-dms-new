@@ -236,7 +236,7 @@ public class ReportService {
 		return responseModel;
 	}
 	
-	public GetOrderListResponseModel getOrderList(String brand, String orderNo, String startDate, String endDate, String length, String pageSize, String pageIndex, GetOrderListRequestModel requestModel) throws Exception {
+	public GetOrderListResponseModel getOrderList(String brand, String marketId, String frontliner, String orderNo, String startDate, String endDate, String length, String pageSize, String pageIndex, GetOrderListRequestModel requestModel) throws Exception {
 		GetOrderListResponseModel responseModel = new GetOrderListResponseModel(requestModel);
 		
 		tokenUtil.claims(requestModel);
@@ -257,10 +257,10 @@ public class ReportService {
 				lstTbmMarketId.add(tbUserMarket.getTbmMarketId());
 			}
 			
-			List<ViewOrder> lstViewOrder = viewOrderRepository.find(optTbUser.get().getTbuId(), lstTbmMarketId, brand, orderNo, new SimpleDateFormat("yyyy-MM-dd hh:mm:ss").parse(startDate + " 00:00:00"), new SimpleDateFormat("yyyy-MM-dd hh:mm:ss").parse(endDate + " 23:59:50"), PageRequest.of(Integer.valueOf(pageIndex), Integer.valueOf(pageSize), Sort.by("tboCreateDate").ascending()));
+			List<ViewOrder> lstViewOrder = viewOrderRepository.find(optTbUser.get().getTbuId(), lstTbmMarketId, brand, marketId, frontliner, orderNo, new SimpleDateFormat("yyyy-MM-dd hh:mm:ss").parse(startDate + " 00:00:00"), new SimpleDateFormat("yyyy-MM-dd hh:mm:ss").parse(endDate + " 23:59:50"), PageRequest.of(Integer.valueOf(pageIndex), Integer.valueOf(pageSize), Sort.by("tboCreateDate").ascending()));
 			
 			if (lstViewOrder.size() > 0) {
-				responseModel.setLength(viewOrderRepository.count(optTbUser.get().getTbuId(), lstTbmMarketId, brand, orderNo, new SimpleDateFormat("yyyy-MM-dd hh:mm:ss").parse(startDate + " 00:00:00"), new SimpleDateFormat("yyyy-MM-dd hh:mm:ss").parse(endDate + " 23:59:50")));
+				responseModel.setLength(viewOrderRepository.count(optTbUser.get().getTbuId(), lstTbmMarketId, brand, marketId, frontliner, orderNo, new SimpleDateFormat("yyyy-MM-dd hh:mm:ss").parse(startDate + " 00:00:00"), new SimpleDateFormat("yyyy-MM-dd hh:mm:ss").parse(endDate + " 23:59:50")));
 				responseModel.setLstViewOrder(lstViewOrder);
 				
 				responseModel.setStatus("200");
@@ -277,7 +277,7 @@ public class ReportService {
 		return responseModel;
 	}
 	
-	public ByteArrayInputStream getOrderListReportExcel(String brand, String orderNo, String startDate, String endDate, String length, String pageSize, String pageIndex, GetOrderListRequestModel requestModel) throws Exception {
+	public ByteArrayInputStream getOrderListReportExcel(String brand, String marketId, String frontliner, String orderNo, String startDate, String endDate, String length, String pageSize, String pageIndex, GetOrderListRequestModel requestModel) throws Exception {
 		pageSize = "1000000000";
 		
 		ByteArrayOutputStream out = new ByteArrayOutputStream();
@@ -317,7 +317,7 @@ public class ReportService {
 		
 		SimpleDateFormat simpleDateFormat = new SimpleDateFormat("MM/dd/yyyy");
 		
-		List<ViewOrder> lstViewOrderRaw = getOrderList(brand, orderNo, startDate, endDate, length, pageSize, "0", requestModel).getLstViewOrder();
+		List<ViewOrder> lstViewOrderRaw = getOrderList(brand, marketId, frontliner, orderNo, startDate, endDate, length, pageSize, "0", requestModel).getLstViewOrder();
 		for (ViewOrder viewOrder : lstViewOrderRaw) {
 			row = sheet.createRow(intRow);
 			
@@ -353,7 +353,7 @@ public class ReportService {
 		return new ByteArrayInputStream(out.toByteArray());
 	}
 	
-	public GetStockListResponseModel getStockList(String brand, String sku, String item, String length, String pageSize, String pageIndex, GetStockListRequestModel requestModel) throws Exception {
+	public GetStockListResponseModel getStockList(String brand, String marketId, String sku, String item, String length, String pageSize, String pageIndex, GetStockListRequestModel requestModel) throws Exception {
 		GetStockListResponseModel responseModel = new GetStockListResponseModel(requestModel);
 		
 		tokenUtil.claims(requestModel);
@@ -374,10 +374,10 @@ public class ReportService {
 				lstTbmMarketId.add(tbUserMarket.getTbmMarketId());
 			}
 
-			List<ViewStock> lstViewStock = viewStockRepository.find(lstTbmMarketId, brand, sku, item, PageRequest.of(Integer.valueOf(pageIndex), Integer.valueOf(pageSize), Sort.by("tbpSku", "tbpmQty").descending()));
+			List<ViewStock> lstViewStock = viewStockRepository.find(lstTbmMarketId, brand, marketId, sku, item, PageRequest.of(Integer.valueOf(pageIndex), Integer.valueOf(pageSize), Sort.by("tbpSku", "tbpmQty").descending()));
 			
 			if (lstViewStock.size() > 0) {
-				responseModel.setLength(viewStockRepository.count(lstTbmMarketId, brand, sku, item));
+				responseModel.setLength(viewStockRepository.count(lstTbmMarketId, brand, marketId, sku, item));
 				responseModel.setLstViewStock(lstViewStock);
 				
 				responseModel.setStatus("200");
@@ -394,7 +394,7 @@ public class ReportService {
 		return responseModel;
 	}
 	
-	public ByteArrayInputStream getStockListReportExcel(String brand, String sku, String item, String length, String pageSize, String pageIndex, GetStockListRequestModel requestModel) throws Exception {
+	public ByteArrayInputStream getStockListReportExcel(String brand, String marketId, String sku, String item, String length, String pageSize, String pageIndex, GetStockListRequestModel requestModel) throws Exception {
 		pageSize = "1000000000";
 		
 		ByteArrayOutputStream out = new ByteArrayOutputStream();
@@ -425,7 +425,7 @@ public class ReportService {
 		
 		SimpleDateFormat simpleDateFormat = new SimpleDateFormat("MM/dd/yyyy");
 		
-		List<ViewStock> lstViewStockRaw = getStockList(brand, sku, item, length, pageSize, "0", requestModel).getLstViewStock();
+		List<ViewStock> lstViewStockRaw = getStockList(brand, marketId, sku, item, length, pageSize, "0", requestModel).getLstViewStock();
 		for (ViewStock viewStock : lstViewStockRaw) {
 			row = sheet.createRow(intRow);
 			
@@ -452,7 +452,7 @@ public class ReportService {
 		return new ByteArrayInputStream(out.toByteArray());
 	}
 	
-	public GetSalesListResponseModel getSalesList(String brand, String orderNo, String sku, String startDate, String endDate, String length, String pageSize, String pageIndex, GetSalesListRequestModel requestModel) throws Exception {
+	public GetSalesListResponseModel getSalesList(String brand, String marketId, String frontliner, String orderNo, String sku, String startDate, String endDate, String length, String pageSize, String pageIndex, GetSalesListRequestModel requestModel) throws Exception {
 		GetSalesListResponseModel responseModel = new GetSalesListResponseModel(requestModel);
 		
 		tokenUtil.claims(requestModel);
@@ -473,10 +473,10 @@ public class ReportService {
 				lstTbmMarketId.add(tbUserMarket.getTbmMarketId());
 			}
 
-			List<ViewSales> lstViewSales = viewSalesRepository.find(optTbUser.get().getTbuId(), lstTbmMarketId, brand, orderNo, sku, new SimpleDateFormat("yyyy-MM-dd hh:mm:ss").parse(startDate + " 00:00:00"), new SimpleDateFormat("yyyy-MM-dd hh:mm:ss").parse(endDate + " 23:59:50"), PageRequest.of(Integer.valueOf(pageIndex), Integer.valueOf(pageSize), Sort.by("tboCreateDate").ascending()));
+			List<ViewSales> lstViewSales = viewSalesRepository.find(optTbUser.get().getTbuId(), lstTbmMarketId, brand, marketId, frontliner, orderNo, sku, new SimpleDateFormat("yyyy-MM-dd hh:mm:ss").parse(startDate + " 00:00:00"), new SimpleDateFormat("yyyy-MM-dd hh:mm:ss").parse(endDate + " 23:59:50"), PageRequest.of(Integer.valueOf(pageIndex), Integer.valueOf(pageSize), Sort.by("tboCreateDate").ascending()));
 			
 			if (lstViewSales.size() > 0) {
-				responseModel.setLength(viewSalesRepository.count(optTbUser.get().getTbuId(), lstTbmMarketId, brand, orderNo, sku, new SimpleDateFormat("yyyy-MM-dd hh:mm:ss").parse(startDate + " 00:00:00"), new SimpleDateFormat("yyyy-MM-dd hh:mm:ss").parse(endDate + " 23:59:50")));
+				responseModel.setLength(viewSalesRepository.count(optTbUser.get().getTbuId(), lstTbmMarketId, brand, marketId, frontliner, orderNo, sku, new SimpleDateFormat("yyyy-MM-dd hh:mm:ss").parse(startDate + " 00:00:00"), new SimpleDateFormat("yyyy-MM-dd hh:mm:ss").parse(endDate + " 23:59:50")));
 				responseModel.setLstViewSales(lstViewSales);
 				
 				responseModel.setStatus("200");
@@ -493,7 +493,7 @@ public class ReportService {
 		return responseModel;
 	}
 	
-	public ByteArrayInputStream getSalesListReportExcel(String brand, String orderNo, String sku, String startDate, String endDate, String length, String pageSize, String pageIndex, GetSalesListRequestModel requestModel) throws Exception {
+	public ByteArrayInputStream getSalesListReportExcel(String brand, String marketId, String frontliner, String orderNo, String sku, String startDate, String endDate, String length, String pageSize, String pageIndex, GetSalesListRequestModel requestModel) throws Exception {
 		pageSize = "1000000000";
 		
 		ByteArrayOutputStream out = new ByteArrayOutputStream();
@@ -533,7 +533,7 @@ public class ReportService {
 		
 		SimpleDateFormat simpleDateFormat = new SimpleDateFormat("MM/dd/yyyy");
 		
-		List<ViewSales> lstViewSalesRaw = getSalesList(brand, orderNo, sku, startDate, endDate, length, pageSize, "0", requestModel).getLstViewSales();
+		List<ViewSales> lstViewSalesRaw = getSalesList(brand, marketId, frontliner, orderNo, sku, startDate, endDate, length, pageSize, "0", requestModel).getLstViewSales();
 		for (ViewSales viewSales : lstViewSalesRaw) {
 			row = sheet.createRow(intRow);
 			

@@ -34,7 +34,7 @@
                           <div class="tab-pane active" id="order">
                             <div class="card-body table-responsive">            
                               <div class="row">
-                                <div class="col-md-4">
+                                <div class="col-md-2">
                                   <mat-form-field>
                                     <mat-label>Order Date</mat-label>
                                     <mat-date-range-input [formGroup]="rangeOrder" [rangePicker]="pickerOrder">
@@ -48,7 +48,7 @@
                                     <mat-error *ngIf="rangeOrder.controls.end.hasError('matEndDateInvalid')">Invalid end date</mat-error>
                                   </mat-form-field>
                                 </div>
-                                <div class="col-md-4">
+                                <div class="col-md-2">
                                   <mat-form-field>
                                     <mat-label>Brand</mat-label>
                                     <mat-select [(ngModel)]="brandOrder" (selectionChange)="getOrderList(null)">
@@ -60,8 +60,18 @@
                                       </mat-option>
                                     </mat-select>
                                   </mat-form-field>
-                                </div> 
-                                <div class="col-md-4">
+                                </div>
+                                <div class="col-md-2">
+                                  <mat-form-field class="example-full-width">
+                                    <input matInput placeholder="Market ID" type="text" [(ngModel)]="marketIdOrder" (keyup.enter)="getOrderList(null)">
+                                  </mat-form-field>
+                                </div>
+                                <div class="col-md-3">
+                                  <mat-form-field class="example-full-width">
+                                    <input matInput placeholder="Frontliner" type="text" [(ngModel)]="frontlinerOrder" (keyup.enter)="getOrderList(null)">
+                                  </mat-form-field>
+                                </div>
+                                <div class="col-md-3">
                                   <mat-form-field class="example-full-width">
                                     <input matInput placeholder="Order No" type="text" [(ngModel)]="orderNoOrder" (keyup.enter)="getOrderList(null)">
                                   </mat-form-field>
@@ -103,7 +113,7 @@
                           <div class="tab-pane" id="stock">
                             <div class="card-body table-responsive">            
                               <div class="row">
-                                <div class="col-md-4">
+                                <div class="col-md-3">
                                   <mat-form-field>
                                     <mat-label>Brand</mat-label>
                                     <mat-select [(ngModel)]="brandStock" (selectionChange)="getStockList(null)">
@@ -116,12 +126,17 @@
                                     </mat-select>
                                   </mat-form-field>
                                 </div>
-                                <div class="col-md-4">
+                                <div class="col-md-3">
+                                  <mat-form-field class="example-full-width">
+                                    <input matInput placeholder="Market ID" type="text" [(ngModel)]="marketIdStock" (keyup.enter)="getStockList(null)">
+                                  </mat-form-field>
+                                </div>
+                                <div class="col-md-3">
                                   <mat-form-field class="example-full-width">
                                     <input matInput placeholder="Sku/Code" type="text" [(ngModel)]="skuStock" (keyup.enter)="getStockList(null)">
                                   </mat-form-field>
                                 </div>
-                                <div class="col-md-4">
+                                <div class="col-md-3">
                                   <mat-form-field class="example-full-width">
                                     <input matInput placeholder="Item" type="text" [(ngModel)]="itemStock" (keyup.enter)="getStockList(null)">
                                   </mat-form-field>
@@ -157,7 +172,7 @@
                           <div class="tab-pane" id="sales">
                             <div class="card-body table-responsive">            
                               <div class="row">
-                                <div class="col-md-3">
+                                <div class="col-md-2">
                                   <mat-form-field>
                                     <mat-label>Sales Date</mat-label>
                                     <mat-date-range-input [formGroup]="rangeSales" [rangePicker]="pickerSales">
@@ -171,7 +186,7 @@
                                     <mat-error *ngIf="rangeSales.controls.end.hasError('matEndDateInvalid')">Invalid end date</mat-error>
                                   </mat-form-field>
                                 </div>
-                                <div class="col-md-3">
+                                <div class="col-md-2">
                                   <mat-form-field>
                                     <mat-label>Brand</mat-label>
                                     <mat-select [(ngModel)]="brandSales" (selectionChange)="getSalesList(null)">
@@ -184,12 +199,22 @@
                                     </mat-select>
                                   </mat-form-field>
                                 </div> 
-                                <div class="col-md-3">
+                                <div class="col-md-2">
+                                  <mat-form-field class="example-full-width">
+                                    <input matInput placeholder="Market ID" type="text" [(ngModel)]="marketIdSales" (keyup.enter)="getOrderList(null)">
+                                  </mat-form-field>
+                                </div>
+                                <div class="col-md-2">
+                                  <mat-form-field class="example-full-width">
+                                    <input matInput placeholder="Frontliner" type="text" [(ngModel)]="frontlinerSales" (keyup.enter)="getOrderList(null)">
+                                  </mat-form-field>
+                                </div>
+                                <div class="col-md-2">
                                   <mat-form-field class="example-full-width">
                                     <input matInput placeholder="Order No" type="text" [(ngModel)]="orderNoSales" (keyup.enter)="getSalesList(null)">
                                   </mat-form-field>
                                 </div>
-                                <div class="col-md-3">
+                                <div class="col-md-2">
                                   <mat-form-field class="example-full-width">
                                     <input matInput placeholder="Sku/Code" type="text" [(ngModel)]="skuSales" (keyup.enter)="getSalesList(null)">
                                   </mat-form-field>

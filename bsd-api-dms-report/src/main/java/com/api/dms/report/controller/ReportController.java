@@ -117,7 +117,7 @@ public class ReportController {
 	}
 	
 	@GetMapping("/getorderlist")
-	public HttpEntity<?> getOrderList(HttpServletRequest request, @RequestParam String brand, @RequestParam String orderNo, @RequestParam String start, @RequestParam String end, @RequestParam String length, @RequestParam String pageSize, @RequestParam String pageIndex, @RequestParam String email, @RequestParam String token, @RequestParam String requestId, @RequestParam String requestDate) throws Exception {
+	public HttpEntity<?> getOrderList(HttpServletRequest request, @RequestParam String brand, @RequestParam String marketId, @RequestParam String frontliner, @RequestParam String orderNo, @RequestParam String start, @RequestParam String end, @RequestParam String length, @RequestParam String pageSize, @RequestParam String pageIndex, @RequestParam String email, @RequestParam String token, @RequestParam String requestId, @RequestParam String requestDate) throws Exception {
 		GetOrderListRequestModel requestModel = new GetOrderListRequestModel();
 		requestModel.setEmail(email);
 		requestModel.setToken(token);
@@ -127,7 +127,7 @@ public class ReportController {
 		String fid = new Uid().generateString(20);
 		log.info(request.getRequestURL().toString() + " [fid" + fid + "] requestModel : " + objectMapper.writeValueAsString(requestModel));
 		
-		GetOrderListResponseModel responseModel = reportService.getOrderList(brand, orderNo, start, end, length, pageSize, pageIndex, requestModel);
+		GetOrderListResponseModel responseModel = reportService.getOrderList(brand, marketId, frontliner, orderNo, start, end, length, pageSize, pageIndex, requestModel);
 		
 		ResponseEntity<?> responseEntity = new ResponseEntity<>(responseModel, responseModel.getStatus().equals("200") ? HttpStatus.OK : HttpStatus.NOT_FOUND);
 		log.info(request.getRequestURL().toString() + " [fid" + fid + "] responseEntity : " + objectMapper.writeValueAsString(responseEntity));
@@ -136,7 +136,7 @@ public class ReportController {
 	}
 	
 	@GetMapping("/getorderlistreportexcel")
-	public HttpEntity<?> getOrderListReportExcel(HttpServletRequest request, @RequestParam String brand, @RequestParam String orderNo, @RequestParam String start, @RequestParam String end, @RequestParam String length, @RequestParam String pageSize, @RequestParam String pageIndex, @RequestParam String email, @RequestParam String token, @RequestParam String requestId, @RequestParam String requestDate) throws Exception {
+	public HttpEntity<?> getOrderListReportExcel(HttpServletRequest request, @RequestParam String brand, @RequestParam String marketId, @RequestParam String frontliner, @RequestParam String orderNo, @RequestParam String start, @RequestParam String end, @RequestParam String length, @RequestParam String pageSize, @RequestParam String pageIndex, @RequestParam String email, @RequestParam String token, @RequestParam String requestId, @RequestParam String requestDate) throws Exception {
 		GetOrderListRequestModel requestModel = new GetOrderListRequestModel();
 		requestModel.setEmail(email);
 		requestModel.setToken(token);
@@ -146,7 +146,7 @@ public class ReportController {
 		String fid = new Uid().generateString(20);
 		log.info(request.getRequestURL().toString() + " [fid" + fid + "] requestModel : " + objectMapper.writeValueAsString(requestModel));
 		
-		ByteArrayInputStream in = reportService.getOrderListReportExcel(brand, orderNo, start, end, length, pageSize, pageIndex, requestModel);
+		ByteArrayInputStream in = reportService.getOrderListReportExcel(brand, marketId, frontliner, orderNo, start, end, length, pageSize, pageIndex, requestModel);
 
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_OCTET_STREAM);
@@ -157,7 +157,7 @@ public class ReportController {
 	}
 	
 	@GetMapping("/getstocklist")
-	public HttpEntity<?> getStockList(HttpServletRequest request, @RequestParam String brand, @RequestParam String sku, @RequestParam String item, @RequestParam String length, @RequestParam String pageSize, @RequestParam String pageIndex, @RequestParam String email, @RequestParam String token, @RequestParam String requestId, @RequestParam String requestDate) throws Exception {
+	public HttpEntity<?> getStockList(HttpServletRequest request, @RequestParam String brand, @RequestParam String marketId, @RequestParam String sku, @RequestParam String item, @RequestParam String length, @RequestParam String pageSize, @RequestParam String pageIndex, @RequestParam String email, @RequestParam String token, @RequestParam String requestId, @RequestParam String requestDate) throws Exception {
 		GetStockListRequestModel requestModel = new GetStockListRequestModel();
 		requestModel.setEmail(email);
 		requestModel.setToken(token);
@@ -167,7 +167,7 @@ public class ReportController {
 		String fid = new Uid().generateString(20);
 		log.info(request.getRequestURL().toString() + " [fid" + fid + "] requestModel : " + objectMapper.writeValueAsString(requestModel));
 		
-		GetStockListResponseModel responseModel = reportService.getStockList(brand, sku, item, length, pageSize, pageIndex, requestModel);
+		GetStockListResponseModel responseModel = reportService.getStockList(brand, marketId, sku, item, length, pageSize, pageIndex, requestModel);
 		
 		ResponseEntity<?> responseEntity = new ResponseEntity<>(responseModel, responseModel.getStatus().equals("200") ? HttpStatus.OK : HttpStatus.NOT_FOUND);
 		log.info(request.getRequestURL().toString() + " [fid" + fid + "] responseEntity : " + objectMapper.writeValueAsString(responseEntity));
@@ -176,7 +176,7 @@ public class ReportController {
 	}
 	
 	@GetMapping("/getstocklistreportexcel")
-	public HttpEntity<?> getStockListReportExcel(HttpServletRequest request, @RequestParam String brand, @RequestParam String sku, @RequestParam String item, @RequestParam String length, @RequestParam String pageSize, @RequestParam String pageIndex, @RequestParam String email, @RequestParam String token, @RequestParam String requestId, @RequestParam String requestDate) throws Exception {
+	public HttpEntity<?> getStockListReportExcel(HttpServletRequest request, @RequestParam String brand, @RequestParam String marketId, @RequestParam String sku, @RequestParam String item, @RequestParam String length, @RequestParam String pageSize, @RequestParam String pageIndex, @RequestParam String email, @RequestParam String token, @RequestParam String requestId, @RequestParam String requestDate) throws Exception {
 		GetStockListRequestModel requestModel = new GetStockListRequestModel();
 		requestModel.setEmail(email);
 		requestModel.setToken(token);
@@ -186,7 +186,7 @@ public class ReportController {
 		String fid = new Uid().generateString(20);
 		log.info(request.getRequestURL().toString() + " [fid" + fid + "] requestModel : " + objectMapper.writeValueAsString(requestModel));
 		
-		ByteArrayInputStream in = reportService.getStockListReportExcel(brand, sku, item, length, pageSize, pageIndex, requestModel);
+		ByteArrayInputStream in = reportService.getStockListReportExcel(brand, marketId, sku, item, length, pageSize, pageIndex, requestModel);
 
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_OCTET_STREAM);
@@ -197,7 +197,7 @@ public class ReportController {
 	}
 	
 	@GetMapping("/getsaleslist")
-	public HttpEntity<?> getSalesList(HttpServletRequest request, @RequestParam String brand, @RequestParam String orderNo, @RequestParam String sku, @RequestParam String start, @RequestParam String end, @RequestParam String length, @RequestParam String pageSize, @RequestParam String pageIndex, @RequestParam String email, @RequestParam String token, @RequestParam String requestId, @RequestParam String requestDate) throws Exception {
+	public HttpEntity<?> getSalesList(HttpServletRequest request, @RequestParam String brand, @RequestParam String marketId, @RequestParam String frontliner, @RequestParam String orderNo, @RequestParam String sku, @RequestParam String start, @RequestParam String end, @RequestParam String length, @RequestParam String pageSize, @RequestParam String pageIndex, @RequestParam String email, @RequestParam String token, @RequestParam String requestId, @RequestParam String requestDate) throws Exception {
 		GetSalesListRequestModel requestModel = new GetSalesListRequestModel();
 		requestModel.setEmail(email);
 		requestModel.setToken(token);
@@ -207,7 +207,7 @@ public class ReportController {
 		String fid = new Uid().generateString(20);
 		log.info(request.getRequestURL().toString() + " [fid" + fid + "] requestModel : " + objectMapper.writeValueAsString(requestModel));
 		
-		GetSalesListResponseModel responseModel = reportService.getSalesList(brand, orderNo, sku, start, end, length, pageSize, pageIndex, requestModel);
+		GetSalesListResponseModel responseModel = reportService.getSalesList(brand, marketId, frontliner, orderNo, sku, start, end, length, pageSize, pageIndex, requestModel);
 		
 		ResponseEntity<?> responseEntity = new ResponseEntity<>(responseModel, responseModel.getStatus().equals("200") ? HttpStatus.OK : HttpStatus.NOT_FOUND);
 		log.info(request.getRequestURL().toString() + " [fid" + fid + "] responseEntity : " + objectMapper.writeValueAsString(responseEntity));
@@ -216,7 +216,7 @@ public class ReportController {
 	}
 	
 	@GetMapping("/getsaleslistreportexcel")
-	public HttpEntity<?> getSalesListReportExcel(HttpServletRequest request, @RequestParam String brand, @RequestParam String orderNo, @RequestParam String sku, @RequestParam String start, @RequestParam String end, @RequestParam String length, @RequestParam String pageSize, @RequestParam String pageIndex, @RequestParam String email, @RequestParam String token, @RequestParam String requestId, @RequestParam String requestDate) throws Exception {
+	public HttpEntity<?> getSalesListReportExcel(HttpServletRequest request, @RequestParam String brand, @RequestParam String marketId, @RequestParam String frontliner, @RequestParam String orderNo, @RequestParam String sku, @RequestParam String start, @RequestParam String end, @RequestParam String length, @RequestParam String pageSize, @RequestParam String pageIndex, @RequestParam String email, @RequestParam String token, @RequestParam String requestId, @RequestParam String requestDate) throws Exception {
 		GetSalesListRequestModel requestModel = new GetSalesListRequestModel();
 		requestModel.setEmail(email);
 		requestModel.setToken(token);
@@ -226,7 +226,7 @@ public class ReportController {
 		String fid = new Uid().generateString(20);
 		log.info(request.getRequestURL().toString() + " [fid" + fid + "] requestModel : " + objectMapper.writeValueAsString(requestModel));
 		
-		ByteArrayInputStream in = reportService.getSalesListReportExcel(brand, orderNo, sku, start, end, length, pageSize, pageIndex, requestModel);
+		ByteArrayInputStream in = reportService.getSalesListReportExcel(brand, marketId, frontliner, orderNo, sku, start, end, length, pageSize, pageIndex, requestModel);
 
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_OCTET_STREAM);

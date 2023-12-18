@@ -35,7 +35,7 @@ export class ReportService {
     return this.httpClient.get<GetDashboardResponse>(`${this.apiUrl}/getdashboard`, { headers, params });
   }
 
-  getOrderList(brand: string, orderNo: string, start: string, end: string, length: number, pageSize: number, pageIndex: number, getOrderListRequest: GetOrderListRequest): Observable<GetOrderListResponse> {
+  getOrderList(brand: string, marketId: string, frontliner: string, orderNo: string, start: string, end: string, length: number, pageSize: number, pageIndex: number, getOrderListRequest: GetOrderListRequest): Observable<GetOrderListResponse> {
     const headers = new HttpHeaders()
       .set('Content-Type', 'application/json');
 
@@ -51,12 +51,14 @@ export class ReportService {
       .set('start', start)
       .set('end', end)
       .set('brand', brand)
+      .set('marketId', marketId)
+      .set('frontliner', frontliner)
       ;
 
     return this.httpClient.get<GetOrderListResponse>(`${this.apiUrl}/getorderlist`, { headers, params });
   }
 
-  getStockList(brand: string, sku: string, item: string, length: number, pageSize: number, pageIndex: number, getStockListRequest: GetStockListRequest): Observable<GetStockListResponse> {
+  getStockList(brand: string, marketId: string, sku: string, item: string, length: number, pageSize: number, pageIndex: number, getStockListRequest: GetStockListRequest): Observable<GetStockListResponse> {
     const headers = new HttpHeaders()
       .set('Content-Type', 'application/json');
 
@@ -71,12 +73,13 @@ export class ReportService {
       .set('sku', sku)
       .set('item', item)
       .set('brand', brand)
+      .set('marketId', marketId)
       ;
 
     return this.httpClient.get<GetStockListResponse>(`${this.apiUrl}/getstocklist`, { headers, params });
   }
 
-  getSalesList(brand: string, orderNo: string, sku: string, start: string, end: string, length: number, pageSize: number, pageIndex: number, getSalesListRequest: GetSalesListRequest): Observable<GetSalesListResponse> {
+  getSalesList(brand: string, marketId: string, frontliner: string, orderNo: string, sku: string, start: string, end: string, length: number, pageSize: number, pageIndex: number, getSalesListRequest: GetSalesListRequest): Observable<GetSalesListResponse> {
     const headers = new HttpHeaders()
       .set('Content-Type', 'application/json');
 
@@ -93,6 +96,8 @@ export class ReportService {
       .set('start', start)
       .set('end', end)
       .set('brand', brand)
+      .set('marketId', marketId)
+      .set('frontliner', frontliner)
       ;
 
     return this.httpClient.get<GetSalesListResponse>(`${this.apiUrl}/getsaleslist`, { headers, params });
