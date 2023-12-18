@@ -303,6 +303,9 @@ public class ReportService {
 		
 		cell = row.createCell(intCell++);
 		cell.setCellValue("Frontliner");
+		
+		cell = row.createCell(intCell++);
+		cell.setCellValue("Order SQ");
 
 		cell = row.createCell(intCell++);
 		cell.setCellValue("Order No");
@@ -337,6 +340,9 @@ public class ReportService {
 			
 			cell = row.createCell(intCell++);
 			cell.setCellValue(viewOrder.getTboFrontliner());
+			
+			cell = row.createCell(intCell++);
+			cell.setCellValue(viewOrder.getTboOrderSq());
 			
 			cell = row.createCell(intCell++);
 			cell.setCellValue(viewOrder.getTboOrderNo());
