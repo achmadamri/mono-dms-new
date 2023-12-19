@@ -9,6 +9,8 @@ export class ViewOrder {
 	tboFrontliner: string;
 	tboName: string;
 	tboSku: string;
+	tboItem: string;
+	tboQty: string;
 	tboOrderSq: string;
 	tboOrderNo: string;
 	tboUpdateDate: Date;

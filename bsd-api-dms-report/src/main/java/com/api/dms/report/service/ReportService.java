@@ -305,12 +305,18 @@ public class ReportService {
 		
 		cell = row.createCell(intCell++);
 		cell.setCellValue("Frontliner");
-		
-		cell = row.createCell(intCell++);
-		cell.setCellValue("Order SQ");
 
 		cell = row.createCell(intCell++);
 		cell.setCellValue("Order No");
+
+		cell = row.createCell(intCell++);
+		cell.setCellValue("Sku");
+
+		cell = row.createCell(intCell++);
+		cell.setCellValue("Item");
+
+		cell = row.createCell(intCell++);
+		cell.setCellValue("Qty");
 		
 		cell = row.createCell(intCell++);
 		cell.setCellValue("Name");
@@ -344,10 +350,16 @@ public class ReportService {
 			cell.setCellValue(viewOrder.getTboFrontliner());
 			
 			cell = row.createCell(intCell++);
-			cell.setCellValue(viewOrder.getTboOrderSq());
+			cell.setCellValue(viewOrder.getTboOrderNo());
 			
 			cell = row.createCell(intCell++);
-			cell.setCellValue(viewOrder.getTboOrderNo());
+			cell.setCellValue(viewOrder.getTboSku());
+			
+			cell = row.createCell(intCell++);
+			cell.setCellValue(viewOrder.getTboItem());
+			
+			cell = row.createCell(intCell++);
+			cell.setCellValue(viewOrder.getTboQty());
 			
 			cell = row.createCell(intCell++);
 			cell.setCellValue(viewOrder.getTboName());

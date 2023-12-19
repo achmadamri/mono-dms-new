@@ -54,6 +54,12 @@ public class ViewOrder implements Serializable {
 	@Column(name="tbo_sku")
 	private String tboSku;
 
+	@Column(name="tbo_item")
+	private String tboItem;
+
+	@Column(name="tbo_qty")
+	private Integer tboQty;
+
 	@Column(name="tbo_order_sq")
 	private String tboOrderSq;
 
@@ -161,6 +167,22 @@ public class ViewOrder implements Serializable {
 
 	public void setTboSku(String tboSku) {
 		this.tboSku = tboSku;
+	}
+
+	public String getTboItem() {
+		return tboItem;
+	}
+
+	public void setTboItem(String tboItem) {
+		this.tboItem = tboItem;
+	}
+
+	public Integer getTboQty() {
+		return tboQty;
+	}
+
+	public void setTboQty(Integer tboQty) {
+		this.tboQty = tboQty;
 	}
 
 	public String getTboOrderSq() {

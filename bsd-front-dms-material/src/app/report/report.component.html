@@ -89,11 +89,10 @@
                                     <th scope="col">Brand</th>
                                     <th scope="col">Market ID</th>
                                     <th scope="col">Frontliner</th>
-                                    <th scope="col">Order SQ</th>
                                     <th scope="col">Order No</th>
-                                    <th scope="col">Name</th>
-                                    <th scope="col">Hp</th>
-                                    <th scope="col">Address</th>
+                                    <th scope="col">Sku</th>
+                                    <th scope="col">Item</th>
+                                    <th scope="col">Qty</th>
                                   </tr>
                                 </thead>
                                 <tbody *ngIf="this.getOrderListResponse.lstViewOrder[0].tboOrderNo != undefined">
@@ -102,11 +101,10 @@
                                     <td>{{viewOrder.tboBrand}}</td>
                                     <td>{{viewOrder.tboMarketId}}</td>
                                     <td>{{viewOrder.tboFrontliner}}</td>
-                                    <td>{{viewOrder.tboOrderSq}}</td>
                                     <td>{{viewOrder.tboOrderNo}}</td>
-                                    <td>{{viewOrder.tboName}}</td>
-                                    <td>{{viewOrder.tboHp}}</td>
-                                    <td style="width: 50%;">{{viewOrder.tboFullAddress}}</td>
+                                    <td>{{viewOrder.tboSku}}</td>
+                                    <td>{{viewOrder.tboItem}}</td>
+                                    <td>{{viewOrder.tboQty}}</td>
                                   </tr>
                                 </tbody>
                               </table>
