@@ -74,7 +74,7 @@ export class ConfirmComponent implements OnInit {
       end: new FormControl(new Date()) // Current date
     });
     
-    this.titleService.setTitle('DMS - Confirm');
+    this.titleService.setTitle('DMS - View');
 
     this.productService.getBrand(this.getBrandRequest)
     .subscribe(

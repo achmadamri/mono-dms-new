@@ -10,6 +10,8 @@ import { GetSalesListRequest } from './getsaleslistrequest';
 import { GetSalesListResponse } from './getsaleslistresponse';
 import { GetDashboardRequest } from './getdashboardrequest';
 import { GetDashboardResponse } from './getdashboardresponse';
+import { GetReportRequest } from './getreportrequest';
+import { GetReportResponse } from './getreportresponse';
 
 @Injectable({
   providedIn: 'root'
@@ -20,7 +22,7 @@ export class ReportService {
 
   constructor(private httpClient: HttpClient) { }  
 
-  getDashboard(geDashboardRequest: GetDashboardRequest): Observable<GetDashboardResponse> {
+  getDashboard(getDashboardRequest: GetDashboardRequest): Observable<GetDashboardResponse> {
     const headers = new HttpHeaders()
       .set('Content-Type', 'application/json');
 
@@ -101,5 +103,20 @@ export class ReportService {
       ;
 
     return this.httpClient.get<GetSalesListResponse>(`${this.apiUrl}/getsaleslist`, { headers, params });
+  }
+
+  getReport(getReportRequest: GetReportRequest): Observable<GetReportResponse> {
+    const headers = new HttpHeaders()
+      .set('Content-Type', 'application/json');
+
+    const params = new HttpParams()
+      .set('requestId', this.util.randomString(10))
+      .set('requestDate', ((new Date(Date.now() - ((new Date()).getTimezoneOffset() * 60000))).toISOString().slice(0, -1)) + '000')
+      .set('email', localStorage.getItem('email'))
+      .set('token', localStorage.getItem('token'))
+      .set('length', length.toString())
+      ;
+
+    return this.httpClient.get<GetReportResponse>(`${this.apiUrl}/getreport`, { headers, params });
   }
 }

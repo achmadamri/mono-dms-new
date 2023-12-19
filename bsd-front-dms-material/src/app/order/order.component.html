@@ -96,9 +96,7 @@
                 </tr>
               </tbody>
             </table>
-            <mat-paginator [length]="length" [pageSize]="pageSize" [pageSizeOptions]="pageSizeOptions" (page)="getPage($event)" [disabled]="clicked"></mat-paginator>
-            <input type="button" class="btn btn-success pull-right" value="Download Packing List" [disabled]="clicked || !download" (click)="downloadFilePacking();" />            
-            <input type="button" class="btn btn-success pull-right" value="Manual Stock Out" [disabled]="clicked" (click)="orderManual();" />
+            <mat-paginator [length]="length" [pageSize]="pageSize" [pageSizeOptions]="pageSizeOptions" (page)="getPage($event)" [disabled]="clicked"></mat-paginator>            
             <input type="button" class="btn btn-success pull-right" value="Upload File" [disabled]="clicked" (click)="uploadFile();" />
             <input type="button" class="btn btn-success pull-right" value="Download File" [disabled]="clicked || !download" (click)="downloadFileOrder();" />
           </div>

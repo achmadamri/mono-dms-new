@@ -15,6 +15,8 @@ import { GetStockListRequest } from 'app/services/report/getstocklistrequest';
 import { GetStockListResponse } from 'app/services/report/getstocklistresponse';
 import { GetSalesListRequest } from 'app/services/report/getsaleslistrequest';
 import { GetSalesListResponse } from 'app/services/report/getsaleslistresponse';
+import { GetReportRequest } from 'app/services/report/getreportrequest';
+import { GetReportResponse } from 'app/services/report/getreportresponse';
 
 @Component({
   selector: 'app-report',
@@ -78,13 +80,14 @@ export class ReportComponent implements OnInit {
   util: Util = new Util();
   getBrandRequest: GetBrandRequest = new GetBrandRequest();
   getBrandResponse: GetBrandResponse = new GetBrandResponse();
-    
   getOrderListRequest: GetOrderListRequest = new GetOrderListRequest();
   getOrderListResponse: GetOrderListResponse = new GetOrderListResponse();
   getStockListRequest: GetStockListRequest = new GetStockListRequest();
   getStockListResponse: GetStockListResponse = new GetStockListResponse();
   getSalesListRequest: GetSalesListRequest = new GetSalesListRequest();
-  getSalesListResponse: GetSalesListResponse = new GetSalesListResponse();  
+  getSalesListResponse: GetSalesListResponse = new GetSalesListResponse();
+  getReportRequest: GetReportRequest = new GetReportRequest();
+  getReportResponse: GetReportResponse = new GetReportResponse();
 
   constructor(
     private router: Router,
@@ -114,6 +117,7 @@ export class ReportComponent implements OnInit {
     });
 
     this.titleService.setTitle('DMS - Report');
+
     this.productService.getBrand(this.getBrandRequest)
     .subscribe(
       successResponse => {
@@ -124,7 +128,20 @@ export class ReportComponent implements OnInit {
         this.router.navigate(['/user-login']);
       }
     );
+    
+    this.reportService.getReport(this.getReportRequest)
+    .subscribe(
+      successResponse => {
+        this.getReportResponse = successResponse;
+      },
+      errorResponse => {
+        this.util.showNotification('danger', 'top', 'center', errorResponse.error.error + '<br>' + errorResponse.error.message);
+        this.router.navigate(['/user-login']);
+      }
+    );
+
     this.getOrderList(null);
+
     this.urlOrder = (isDevMode() ? 'http://localhost:2085' : 'https://dms.id-trec.com/2085') + '/report/getorderlistreportexcel?' +
       'requestId=' + this.util.randomString(10) +
       '&requestDate=' + ((new Date(Date.now() - ((new Date()).getTimezoneOffset() * 60000))).toISOString().slice(0, -1)) + '000' +

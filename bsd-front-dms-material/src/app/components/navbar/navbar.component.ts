@@ -130,7 +130,7 @@ export class NavbarComponent implements OnInit {
         // if (normTitle.match(/orderpack packing.*/)) return "Order Packing";
         // if (normTitle.match(/orderpack qc.*/)) return "Order Qc";
         if (normTitle.match(/user edit.*/)) return "User Edit";
-        if (normTitle.match(/confirm details.*/)) return "Confirm Details";
+        if (normTitle.match(/confirm details.*/)) return "View Details";
 
         normTitle = this.autoUppercase(normTitle);
 

@@ -52,6 +52,8 @@ import com.api.dms.report.model.report.GetDashboardRequestModel;
 import com.api.dms.report.model.report.GetDashboardResponseModel;
 import com.api.dms.report.model.report.GetOrderListRequestModel;
 import com.api.dms.report.model.report.GetOrderListResponseModel;
+import com.api.dms.report.model.report.GetReportRequestModel;
+import com.api.dms.report.model.report.GetReportResponseModel;
 import com.api.dms.report.model.report.GetSalesListRequestModel;
 import com.api.dms.report.model.report.GetSalesListResponseModel;
 import com.api.dms.report.model.report.GetStockListRequestModel;
@@ -698,6 +700,43 @@ public class ReportService {
 			
 			responseModel.setStatus("200");
 			responseModel.setMessage("Sync Brand ok");
+		} else {
+			responseModel.setStatus("404");
+			responseModel.setMessage("Not found");
+		}
+		
+		return responseModel;
+	}
+	
+	public GetReportResponseModel getReport(GetReportRequestModel requestModel) throws Exception {
+		GetReportResponseModel responseModel = new GetReportResponseModel(requestModel);
+		
+		tokenUtil.claims(requestModel);
+		
+		TbUser exampleTbUser = new TbUser();
+		exampleTbUser.setTbuEmail(requestModel.getEmail());
+		exampleTbUser.setTbuStatus(TbUserRepository.Active);
+		Optional<TbUser> optTbUser = tbUserRepository.findOne(Example.of(exampleTbUser));
+		
+		if (optTbUser.isPresent()) {
+			TbUserMarket exampleTbUserMarket = new TbUserMarket();
+			exampleTbUserMarket.setTbuId(optTbUser.get().getTbuId());
+			exampleTbUserMarket.setTbmMarketCheck(1);
+
+			List<TbUserMarket> lstTbUserMarket = tbUserMarketRepository.findAll(Example.of(exampleTbUserMarket), Sort.by("tbmMarketId").ascending());
+
+			responseModel.setLstTbUserMarket(lstTbUserMarket);
+
+			List<String> lstTbmMarketId = new ArrayList<>();
+			lstTbmMarketId.add("");
+			for (TbUserMarket tbUserMarket : lstTbUserMarket) {
+				lstTbmMarketId.add(tbUserMarket.getTbmMarketId());
+			}
+
+			responseModel.setLstFrontliner(viewOrderRepository.reportFrontliner(optTbUser.get().getTbuId(), lstTbmMarketId));			
+
+			responseModel.setStatus("200");
+			responseModel.setMessage("Get Report ok");
 		} else {
 			responseModel.setStatus("404");
 			responseModel.setMessage("Not found");

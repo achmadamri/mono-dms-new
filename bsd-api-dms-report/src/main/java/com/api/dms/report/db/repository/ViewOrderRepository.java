@@ -40,4 +40,10 @@ public interface ViewOrderRepository extends JpaRepository<ViewOrder, Integer> {
            "WHERE DATE(t.tboCreateDate) >= :startDate " +
            "GROUP BY DATE(t.tboCreateDate)")
     List<Object[]> dashboardMarketPerformance(@Param("startDate") Date startDate);
+
+	@Query("SELECT v.tboFrontliner " +
+           "FROM ViewOrder v " +
+           "WHERE v.tbuId = :tbuId and v.tboMarketId in :tboMarketId " +
+           "GROUP BY v.tboMarketId, v.tboFrontliner")
+    List<Object[]> reportFrontliner(@Param("tbuId") Integer tbuId, @Param("tboMarketId") List<String> tboMarketId);
 }

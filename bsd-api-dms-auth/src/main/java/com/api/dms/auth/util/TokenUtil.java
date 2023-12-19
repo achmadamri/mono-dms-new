@@ -40,7 +40,7 @@ public class TokenUtil {
 		expiration = expiration.plusDays(365);
 		
 		// Allow single login at the time
-		keyMap.put(email, generateString(36));
+		// keyMap.put(email, generateString(36));
 
 		String tokenSalt = keyMap.get(email);
 		
