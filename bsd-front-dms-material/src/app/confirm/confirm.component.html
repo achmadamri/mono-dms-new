@@ -96,10 +96,11 @@
                 <tr>
                   <th scope="col" style="cursor: pointer;" (click)="checkAll();">Check All</th>
                   <th scope="col">Date</th>
-                  <th scope="col">Order Number</th>
+                  <th scope="col">Brand</th>
+                  <th scope="col">Market ID</th>
+                  <th scope="col">Order No</th>
                   <th scope="col">Sku</th>
-                  <th scope="col">Code</th>
-                  <th scope="col">Product</th>
+                  <th scope="col">Item</th>
                   <th scope="col">Order Qty</th>
                   <th scope="col">Packing Qty</th>
                   <th scope="col">Packing PIC</th>
@@ -121,9 +122,10 @@
                     </div>
                   </td>
                   <td>{{viewOrderConfirm.createDate | date: 'M/dd/yyyy'}}</td>
+                  <td>{{viewOrderConfirm.brand}}</td>
+                  <td>{{viewOrderConfirm.market}}</td>
                   <td>{{viewOrderConfirm.orderNo}}</td>
                   <td>{{viewOrderConfirm.sku}}</td>
-                  <td>{{viewOrderConfirm.code}}</td>
                   <td title="{{viewOrderConfirm.item}}">{{viewOrderConfirm.itemShort}}</td>
                   <td>{{viewOrderConfirm.orderQty}}</td>
                   <td>{{viewOrderConfirm.packQty}}</td>

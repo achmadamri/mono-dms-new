@@ -618,13 +618,19 @@ public class OrderService {
 		cell.setCellValue("Date");
 		
 		cell = row.createCell(intCell++);
-		cell.setCellValue("Order Number");
+		cell.setCellValue("Brand");
+		
+		cell = row.createCell(intCell++);
+		cell.setCellValue("Market ID");
+		
+		cell = row.createCell(intCell++);
+		cell.setCellValue("Order No");
 		
 		cell = row.createCell(intCell++);
 		cell.setCellValue("Sku");
 
 		cell = row.createCell(intCell++);
-		cell.setCellValue("Product");
+		cell.setCellValue("Item");
 		
 		cell = row.createCell(intCell++);
 		cell.setCellValue("Order Qty");
@@ -637,9 +643,6 @@ public class OrderService {
 		
 		cell = row.createCell(intCell++);
 		cell.setCellValue("Type");
-		
-		cell = row.createCell(intCell++);
-		cell.setCellValue("Not Packed Type");
 		
 		cell = row.createCell(intCell++);
 		cell.setCellValue("Status");
@@ -656,6 +659,12 @@ public class OrderService {
 			
 			cell = row.createCell(intCell++);
 			cell.setCellValue(simpleDateFormat.format(viewOrderConfirm.getCreateDate()));
+			
+			cell = row.createCell(intCell++);
+			cell.setCellValue(viewOrderConfirm.getBrand());
+			
+			cell = row.createCell(intCell++);
+			cell.setCellValue(viewOrderConfirm.getMarket());
 			
 			cell = row.createCell(intCell++);
 			cell.setCellValue(viewOrderConfirm.getOrderNo());
@@ -677,9 +686,6 @@ public class OrderService {
 			
 			cell = row.createCell(intCell++);
 			cell.setCellValue(viewOrderConfirm.getType());
-			
-			cell = row.createCell(intCell++);
-			cell.setCellValue(viewOrderConfirm.getTypeNotPacked());
 			
 			cell = row.createCell(intCell++);
 			cell.setCellValue(viewOrderConfirm.getStatus());
@@ -831,7 +837,10 @@ public class OrderService {
 		cell.setCellValue("Brand");
 		
 		cell = row.createCell(intCell++);
-		cell.setCellValue("Market");
+		cell.setCellValue("Market ID");
+
+		cell = row.createCell(intCell++);
+		cell.setCellValue("Frontliner");
 
 		cell = row.createCell(intCell++);
 		cell.setCellValue("Order No");
@@ -841,12 +850,6 @@ public class OrderService {
 
 		cell = row.createCell(intCell++);
 		cell.setCellValue("Item");
-		
-		cell = row.createCell(intCell++);
-		cell.setCellValue("Qty");
-		
-		cell = row.createCell(intCell++);
-		cell.setCellValue("Paid Total");
 		
 		cell = row.createCell(intCell++);
 		cell.setCellValue("Name");
@@ -859,6 +862,12 @@ public class OrderService {
 		
 		cell = row.createCell(intCell++);
 		cell.setCellValue("Type");
+		
+		cell = row.createCell(intCell++);
+		cell.setCellValue("Qty");
+		
+		cell = row.createCell(intCell++);
+		cell.setCellValue("Order SUM");
 		
 		intRow++;
 		
@@ -880,6 +889,9 @@ public class OrderService {
 			cell.setCellValue(tbOrder.getTboMarketId());
 			
 			cell = row.createCell(intCell++);
+			cell.setCellValue(tbOrder.getTboFrontliner());
+			
+			cell = row.createCell(intCell++);
 			cell.setCellValue(tbOrder.getTboOrderNo());
 			
 			cell = row.createCell(intCell++);
@@ -887,12 +899,6 @@ public class OrderService {
 			
 			cell = row.createCell(intCell++);
 			cell.setCellValue(tbOrder.getTboItem());
-			
-			cell = row.createCell(intCell++);
-			cell.setCellValue(tbOrder.getTboQty());
-			
-			cell = row.createCell(intCell++);
-			cell.setCellValue(tbOrder.getTboPaidTotal() == null ? 0 : tbOrder.getTboPaidTotal().doubleValue());
 			
 			cell = row.createCell(intCell++);
 			cell.setCellValue(tbOrder.getTboName());
@@ -905,6 +911,12 @@ public class OrderService {
 			
 			cell = row.createCell(intCell++);
 			cell.setCellValue(tbOrder.getTboType());
+			
+			cell = row.createCell(intCell++);
+			cell.setCellValue(tbOrder.getTboQty());
+			
+			cell = row.createCell(intCell++);
+			cell.setCellValue(tbOrder.getTboPaidTotal() == null ? 0 : tbOrder.getTboPaidTotal().doubleValue());
 			
 			intRow++;
 		}
