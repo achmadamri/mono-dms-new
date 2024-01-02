@@ -34,6 +34,9 @@ export class ReportComponent implements OnInit {
   pageDisabledOrder: boolean = false;
   brandOrder = "";
   orderNoOrder = "";
+  skuOrder = "";
+  itemOrder = "";
+  nameOrder = "";
   marketIdOrder = "";
   frontlinerOrder = "";
   rangeOrder = new FormGroup({
@@ -201,7 +204,7 @@ export class ReportComponent implements OnInit {
   getOrderList(pageEvent: PageEvent) {
     this.clicked = !this.clicked;
     
-    this.reportService.getOrderList(this.brandOrder, this.marketIdOrder, this.frontlinerOrder, this.orderNoOrder, this.datepipe.transform(this.rangeOrder.controls.start.value, 'yyyy-MM-dd'), this.datepipe.transform(this.rangeOrder.controls.end.value, 'yyyy-MM-dd'), pageEvent != null ? pageEvent.length : this.lengthOrder, pageEvent != null ? pageEvent.pageSize : this.pageSizeOrder, pageEvent != null ? pageEvent.pageIndex : this.pageIndexOrder, this.getOrderListRequest)
+    this.reportService.getOrderList(this.brandOrder, this.marketIdOrder, this.frontlinerOrder, this.orderNoOrder, this.skuOrder, this.itemOrder, this.nameOrder, this.datepipe.transform(this.rangeOrder.controls.start.value, 'yyyy-MM-dd'), this.datepipe.transform(this.rangeOrder.controls.end.value, 'yyyy-MM-dd'), pageEvent != null ? pageEvent.length : this.lengthOrder, pageEvent != null ? pageEvent.pageSize : this.pageSizeOrder, pageEvent != null ? pageEvent.pageIndex : this.pageIndexOrder, this.getOrderListRequest)
       .subscribe(
         successResponse => {
           this.clicked = !this.clicked;
@@ -219,6 +222,9 @@ export class ReportComponent implements OnInit {
             '&pageSize=' + this.pageSizeOrder +
             '&pageIndex=' + this.pageIndexOrder +
             '&orderNo=' + this.orderNoOrder +
+            '&sku=' + this.skuOrder +
+            '&item=' + this.itemOrder +
+            '&name=' + this.nameOrder +
             '&start=' + this.datepipe.transform(this.rangeOrder.controls.start.value, 'yyyy-MM-dd') +
             '&end=' + this.datepipe.transform(this.rangeOrder.controls.end.value, 'yyyy-MM-dd') +
             '&brand=' + this.brandOrder +

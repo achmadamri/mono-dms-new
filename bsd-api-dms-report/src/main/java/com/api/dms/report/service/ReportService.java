@@ -238,7 +238,7 @@ public class ReportService {
 		return responseModel;
 	}
 	
-	public GetOrderListResponseModel getOrderList(String brand, String marketId, String frontliner, String orderNo, String startDate, String endDate, String length, String pageSize, String pageIndex, GetOrderListRequestModel requestModel) throws Exception {
+	public GetOrderListResponseModel getOrderList(String brand, String marketId, String frontliner, String orderNo, String sku, String item, String name, String startDate, String endDate, String length, String pageSize, String pageIndex, GetOrderListRequestModel requestModel) throws Exception {
 		GetOrderListResponseModel responseModel = new GetOrderListResponseModel(requestModel);
 		
 		tokenUtil.claims(requestModel);
@@ -259,10 +259,10 @@ public class ReportService {
 				lstTbmMarketId.add(tbUserMarket.getTbmMarketId());
 			}
 			
-			List<ViewOrder> lstViewOrder = viewOrderRepository.find(optTbUser.get().getTbuId(), lstTbmMarketId, brand, marketId, frontliner, orderNo, new SimpleDateFormat("yyyy-MM-dd hh:mm:ss").parse(startDate + " 00:00:00"), new SimpleDateFormat("yyyy-MM-dd hh:mm:ss").parse(endDate + " 23:59:50"), PageRequest.of(Integer.valueOf(pageIndex), Integer.valueOf(pageSize), Sort.by("tboCreateDate").ascending()));
+			List<ViewOrder> lstViewOrder = viewOrderRepository.find(optTbUser.get().getTbuId(), lstTbmMarketId, brand, marketId, frontliner, orderNo, sku, item, name, new SimpleDateFormat("yyyy-MM-dd hh:mm:ss").parse(startDate + " 00:00:00"), new SimpleDateFormat("yyyy-MM-dd hh:mm:ss").parse(endDate + " 23:59:50"), PageRequest.of(Integer.valueOf(pageIndex), Integer.valueOf(pageSize), Sort.by("tboCreateDate").ascending()));
 			
 			if (lstViewOrder.size() > 0) {
-				responseModel.setLength(viewOrderRepository.count(optTbUser.get().getTbuId(), lstTbmMarketId, brand, marketId, frontliner, orderNo, new SimpleDateFormat("yyyy-MM-dd hh:mm:ss").parse(startDate + " 00:00:00"), new SimpleDateFormat("yyyy-MM-dd hh:mm:ss").parse(endDate + " 23:59:50")));
+				responseModel.setLength(viewOrderRepository.count(optTbUser.get().getTbuId(), lstTbmMarketId, brand, marketId, frontliner, orderNo, sku, item, name, new SimpleDateFormat("yyyy-MM-dd hh:mm:ss").parse(startDate + " 00:00:00"), new SimpleDateFormat("yyyy-MM-dd hh:mm:ss").parse(endDate + " 23:59:50")));
 				responseModel.setLstViewOrder(lstViewOrder);
 				
 				responseModel.setStatus("200");
@@ -279,7 +279,7 @@ public class ReportService {
 		return responseModel;
 	}
 	
-	public ByteArrayInputStream getOrderListReportExcel(String brand, String marketId, String frontliner, String orderNo, String startDate, String endDate, String length, String pageSize, String pageIndex, GetOrderListRequestModel requestModel) throws Exception {
+	public ByteArrayInputStream getOrderListReportExcel(String brand, String marketId, String frontliner, String orderNo, String sku, String item, String name, String startDate, String endDate, String length, String pageSize, String pageIndex, GetOrderListRequestModel requestModel) throws Exception {
 		pageSize = "1000000000";
 		
 		ByteArrayOutputStream out = new ByteArrayOutputStream();
@@ -324,14 +324,11 @@ public class ReportService {
 		cell = row.createCell(intCell++);
 		cell.setCellValue("Hp");
 		
-		cell = row.createCell(intCell++);
-		cell.setCellValue("Address");
-		
 		intRow++;
 		
 		SimpleDateFormat simpleDateFormat = new SimpleDateFormat("MM/dd/yyyy");
 		
-		List<ViewOrder> lstViewOrderRaw = getOrderList(brand, marketId, frontliner, orderNo, startDate, endDate, length, pageSize, "0", requestModel).getLstViewOrder();
+		List<ViewOrder> lstViewOrderRaw = getOrderList(brand, marketId, frontliner, orderNo, sku, item, name, startDate, endDate, length, pageSize, "0", requestModel).getLstViewOrder();
 		for (ViewOrder viewOrder : lstViewOrderRaw) {
 			row = sheet.createRow(intRow);
 			
@@ -366,9 +363,6 @@ public class ReportService {
 			
 			cell = row.createCell(intCell++);
 			cell.setCellValue(viewOrder.getTboHp());
-			
-			cell = row.createCell(intCell++);
-			cell.setCellValue(viewOrder.getTboFullAddress());
 			
 			intRow++;
 		}

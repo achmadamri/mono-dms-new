@@ -120,7 +120,7 @@ export class OrderService {
     return this.httpClient.get<GetOrderConfirmSumResponse>(`${this.apiUrl}/getorderconfirmsum`, { headers, params });
   }
 
-  getOrderList(orderNo: string, start: string, end: string, status: string, length: number, pageSize: number, pageIndex: number, getOrderListRequest: GetOrderListRequest): Observable<GetOrderListResponse> {
+  getOrderList(orderNo: string, sku: string, item: string, name: string, start: string, end: string, status: string, length: number, pageSize: number, pageIndex: number, getOrderListRequest: GetOrderListRequest): Observable<GetOrderListResponse> {
     const headers = new HttpHeaders()
       .set('Content-Type', 'application/json');
 
@@ -133,6 +133,9 @@ export class OrderService {
       .set('pageSize', pageSize.toString())
       .set('pageIndex', pageIndex.toString())
       .set('orderNo', orderNo)
+      .set('sku', sku)
+      .set('item', item)
+      .set('name', name)
       .set('start', start)
       .set('end', end)
       .set('status', status)

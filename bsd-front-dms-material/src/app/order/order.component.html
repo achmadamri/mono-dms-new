@@ -57,6 +57,23 @@
                 </mat-form-field>
               </div>
             </div>
+            <div class="row">
+              <div class="col-md-4">
+                <mat-form-field class="example-full-width">
+                  <input matInput placeholder="Sku" type="text" [(ngModel)]="sku" (keyup.enter)="getOrderList(null)">
+                </mat-form-field>
+              </div>
+              <div class="col-md-4">
+                <mat-form-field class="example-full-width">
+                  <input matInput placeholder="Item" type="text" [(ngModel)]="item" (keyup.enter)="getOrderList(null)">
+                </mat-form-field>
+              </div>
+              <div class="col-md-4">
+                <mat-form-field class="example-full-width">
+                  <input matInput placeholder="Name" type="text" [(ngModel)]="name" (keyup.enter)="getOrderList(null)">
+                </mat-form-field>
+              </div>
+            </div>
             <mat-paginator [length]="length" [pageSize]="pageSize" [pageSizeOptions]="pageSizeOptions" (page)="getPage($event)" [disabled]="clicked"></mat-paginator>
             <table class="table table-hover">
               <thead class="text-warning">
@@ -68,6 +85,7 @@
                   <th scope="col">Order No</th>
                   <th scope="col">Sku</th>
                   <th scope="col">Item</th>
+                  <th scope="col">Qty</th>
                   <th scope="col">Name</th>
                   <th scope="col">Hp</th>
                   <th scope="col">Status</th>
@@ -84,6 +102,7 @@
                   <td>{{tbOrder.tboOrderNo}}</td>
                   <td>{{tbOrder.tboSku}}</td>
                   <td title="{{tbOrder.tboItem}}">{{tbOrder.tboItemShort}}</td>
+                  <td>{{tbOrder.tboQty}}</td>
                   <td title="{{tbOrder.tboName}}">{{tbOrder.tboNameShort}}</td>
                   <td>{{tbOrder.tboHp}}</td>
                   <td>{{tbOrder.tboStatus}}</td>

@@ -95,7 +95,7 @@ public class OrderController {
 	}
 	
 	@GetMapping("/getorderlistreportexcel")
-	public HttpEntity<?> getOrderListReportExcel(HttpServletRequest request, @RequestParam String orderNo, @RequestParam String start, @RequestParam String end, @RequestParam String status, @RequestParam String length, @RequestParam String pageSize, @RequestParam String pageIndex, @RequestParam String email, @RequestParam String token, @RequestParam String requestId, @RequestParam String requestDate) throws Exception {
+	public HttpEntity<?> getOrderListReportExcel(HttpServletRequest request, @RequestParam String orderNo, @RequestParam String sku, @RequestParam String item, @RequestParam String name, @RequestParam String start, @RequestParam String end, @RequestParam String status, @RequestParam String length, @RequestParam String pageSize, @RequestParam String pageIndex, @RequestParam String email, @RequestParam String token, @RequestParam String requestId, @RequestParam String requestDate) throws Exception {
 		GetOrderListRequestModel requestModel = new GetOrderListRequestModel();
 		requestModel.setEmail(email);
 		requestModel.setToken(token);
@@ -105,7 +105,7 @@ public class OrderController {
 		String fid = new Uid().generateString(20);
 		log.info(request.getRequestURL().toString() + " [fid:" + fid + "] requestModel : " + objectMapper.writeValueAsString(requestModel));
 		
-		ByteArrayInputStream in = orderService.getOrderListReportExcel(orderNo, start, end, status, length, pageSize, pageIndex, requestModel);
+		ByteArrayInputStream in = orderService.getOrderListReportExcel(orderNo, sku, item, name, start, end, status, length, pageSize, pageIndex, requestModel);
 
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_OCTET_STREAM);
@@ -137,7 +137,7 @@ public class OrderController {
 	}
 	
 	@GetMapping("/getorderlist")
-	public HttpEntity<?> getOrderList(HttpServletRequest request, @RequestParam String orderNo, @RequestParam String start, @RequestParam String end, @RequestParam String status, @RequestParam String length, @RequestParam String pageSize, @RequestParam String pageIndex, @RequestParam String email, @RequestParam String token, @RequestParam String requestId, @RequestParam String requestDate) throws Exception {
+	public HttpEntity<?> getOrderList(HttpServletRequest request, @RequestParam String orderNo, @RequestParam String sku, @RequestParam String item, @RequestParam String name, @RequestParam String start, @RequestParam String end, @RequestParam String status, @RequestParam String length, @RequestParam String pageSize, @RequestParam String pageIndex, @RequestParam String email, @RequestParam String token, @RequestParam String requestId, @RequestParam String requestDate) throws Exception {
 		GetOrderListRequestModel requestModel = new GetOrderListRequestModel();
 		requestModel.setEmail(email);
 		requestModel.setToken(token);
@@ -147,7 +147,7 @@ public class OrderController {
 		String fid = new Uid().generateString(20);
 		log.info(request.getRequestURL().toString() + " [fid:" + fid + "] requestModel : " + objectMapper.writeValueAsString(requestModel));
 		
-		GetOrderListResponseModel responseModel = orderService.getOrderList(orderNo, start, end, status, length, pageSize, pageIndex, requestModel);
+		GetOrderListResponseModel responseModel = orderService.getOrderList(orderNo, sku, item, name, start, end, status, length, pageSize, pageIndex, requestModel);
 		
 		ResponseEntity<?> responseEntity = new ResponseEntity<>(responseModel, responseModel.getStatus().equals("200") ? HttpStatus.OK : HttpStatus.NOT_FOUND);
 		log.info(request.getRequestURL().toString() + " [fid:" + fid + "] responseEntity : " + objectMapper.writeValueAsString(responseEntity));

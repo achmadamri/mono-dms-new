@@ -32,7 +32,10 @@ export class OrderComponent implements OnInit {
   getOrderListResponse: GetOrderListResponse = new GetOrderListResponse();
   postConfirmOrderRequest: PostConfirmOrderRequest = new PostConfirmOrderRequest();
   postConfirmOrderResponse: PostConfirmOrderResponse = new PostConfirmOrderResponse();
-    orderNo = "";
+  orderNo = "";
+  sku = "";
+  item = "";
+  name = "";
   status = "";
     
   range = new FormGroup({
@@ -98,7 +101,7 @@ export class OrderComponent implements OnInit {
   getOrderList(pageEvent: PageEvent) {
     this.clicked = !this.clicked;
     
-    this.orderService.getOrderList(this.orderNo, this.datepipe.transform(this.range.controls.start.value, 'yyyy-MM-dd'), this.datepipe.transform(this.range.controls.end.value, 'yyyy-MM-dd'), this.status, pageEvent != null ? pageEvent.length : this.length, pageEvent != null ? pageEvent.pageSize : this.pageSize, pageEvent != null ? pageEvent.pageIndex : this.pageIndex, this.getOrderListRequest)
+    this.orderService.getOrderList(this.orderNo, this.sku, this.item, this.name, this.datepipe.transform(this.range.controls.start.value, 'yyyy-MM-dd'), this.datepipe.transform(this.range.controls.end.value, 'yyyy-MM-dd'), this.status, pageEvent != null ? pageEvent.length : this.length, pageEvent != null ? pageEvent.pageSize : this.pageSize, pageEvent != null ? pageEvent.pageIndex : this.pageIndex, this.getOrderListRequest)
       .subscribe(
         successResponse => {
           this.clicked = !this.clicked;
@@ -116,6 +119,9 @@ export class OrderComponent implements OnInit {
             '&pageSize=' + this.pageSize +
             '&pageIndex=' + this.pageIndex +
             '&orderNo=' + this.orderNo +
+            '&sku=' + this.sku +
+            '&item=' + this.item +
+            '&name=' + this.name +
             '&start=' + this.datepipe.transform(this.range.controls.start.value, 'yyyy-MM-dd') +
             '&end=' + this.datepipe.transform(this.range.controls.end.value, 'yyyy-MM-dd') +
             '&status=' + this.status;
@@ -129,6 +135,9 @@ export class OrderComponent implements OnInit {
             '&pageSize=' + this.pageSize +
             '&pageIndex=' + this.pageIndex +
             '&orderNo=' + this.orderNo +
+            '&sku=' + this.sku +
+            '&item=' + this.item +
+            '&name=' + this.name +
             '&start=' + this.datepipe.transform(this.range.controls.start.value, 'yyyy-MM-dd') +
             '&end=' + this.datepipe.transform(this.range.controls.end.value, 'yyyy-MM-dd') +
             '&status=' + this.status;

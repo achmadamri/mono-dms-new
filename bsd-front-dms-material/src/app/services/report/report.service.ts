@@ -37,7 +37,7 @@ export class ReportService {
     return this.httpClient.get<GetDashboardResponse>(`${this.apiUrl}/getdashboard`, { headers, params });
   }
 
-  getOrderList(brand: string, marketId: string, frontliner: string, orderNo: string, start: string, end: string, length: number, pageSize: number, pageIndex: number, getOrderListRequest: GetOrderListRequest): Observable<GetOrderListResponse> {
+  getOrderList(brand: string, marketId: string, frontliner: string, orderNo: string, sku: string, item: string, name: string, start: string, end: string, length: number, pageSize: number, pageIndex: number, getOrderListRequest: GetOrderListRequest): Observable<GetOrderListResponse> {
     const headers = new HttpHeaders()
       .set('Content-Type', 'application/json');
 
@@ -50,6 +50,9 @@ export class ReportService {
       .set('pageSize', pageSize.toString())
       .set('pageIndex', pageIndex.toString())
       .set('orderNo', orderNo)
+      .set('sku', sku)
+      .set('item', item)
+      .set('name', name)
       .set('start', start)
       .set('end', end)
       .set('brand', brand)

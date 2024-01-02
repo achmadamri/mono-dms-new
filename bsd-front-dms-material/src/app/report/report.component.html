@@ -22,7 +22,7 @@
                           <div class="tab-pane active" id="order">
                             <div class="card-body table-responsive">            
                               <div class="row">
-                                <div class="col-md-2">
+                                <div class="col-md-3">
                                   <mat-form-field>
                                     <mat-label>Order Date</mat-label>
                                     <mat-date-range-input [formGroup]="rangeOrder" [rangePicker]="pickerOrder">
@@ -36,7 +36,7 @@
                                     <mat-error *ngIf="rangeOrder.controls.end.hasError('matEndDateInvalid')">Invalid end date</mat-error>
                                   </mat-form-field>
                                 </div>
-                                <div class="col-md-2">
+                                <div class="col-md-3">
                                   <mat-form-field>
                                     <mat-label>Brand</mat-label>
                                     <mat-select [(ngModel)]="brandOrder" (selectionChange)="getOrderList(null)">
@@ -49,7 +49,7 @@
                                     </mat-select>
                                   </mat-form-field>
                                 </div>
-                                <div class="col-md-2">
+                                <div class="col-md-3">
                                   <mat-form-field>
                                     <mat-label>Market ID</mat-label>
                                     <mat-select [(ngModel)]="marketIdOrder" (selectionChange)="getOrderList(null)">
@@ -75,9 +75,26 @@
                                     </mat-select>
                                   </mat-form-field>
                                 </div>
+                              </div>
+                              <div class="row">
                                 <div class="col-md-3">
                                   <mat-form-field class="example-full-width">
                                     <input matInput placeholder="Order No" type="text" [(ngModel)]="orderNoOrder" (keyup.enter)="getOrderList(null)">
+                                  </mat-form-field>
+                                </div>
+                                <div class="col-md-3">
+                                  <mat-form-field class="example-full-width">
+                                    <input matInput placeholder="Sku" type="text" [(ngModel)]="skuOrder" (keyup.enter)="getOrderList(null)">
+                                  </mat-form-field>
+                                </div>
+                                <div class="col-md-3">
+                                  <mat-form-field class="example-full-width">
+                                    <input matInput placeholder="Item" type="text" [(ngModel)]="itemOrder" (keyup.enter)="getOrderList(null)">
+                                  </mat-form-field>
+                                </div>
+                                <div class="col-md-3">
+                                  <mat-form-field class="example-full-width">
+                                    <input matInput placeholder="Name" type="text" [(ngModel)]="nameOrder" (keyup.enter)="getOrderList(null)">
                                   </mat-form-field>
                                 </div>
                               </div>
@@ -93,6 +110,8 @@
                                     <th scope="col">Sku</th>
                                     <th scope="col">Item</th>
                                     <th scope="col">Qty</th>
+                                    <th scope="col">Name</th>
+                                    <th scope="col">Hp</th>
                                   </tr>
                                 </thead>
                                 <tbody *ngIf="this.getOrderListResponse.lstViewOrder[0].tboOrderNo != undefined">
@@ -105,6 +124,8 @@
                                     <td>{{viewOrder.tboSku}}</td>
                                     <td>{{viewOrder.tboItem}}</td>
                                     <td>{{viewOrder.tboQty}}</td>
+                                    <td>{{viewOrder.tboName}}</td>
+                                    <td>{{viewOrder.tboHp}}</td>
                                   </tr>
                                 </tbody>
                               </table>

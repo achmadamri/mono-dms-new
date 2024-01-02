@@ -815,7 +815,7 @@ public class OrderService {
 		return new ByteArrayInputStream(out.toByteArray());
 	}
 	
-	public ByteArrayInputStream getOrderListReportExcel(String orderNo, String startDate, String endDate, String status, String length, String pageSize, String pageIndex, GetOrderListRequestModel requestModel) throws Exception {
+	public ByteArrayInputStream getOrderListReportExcel(String orderNo, String sku, String item, String name, String startDate, String endDate, String status, String length, String pageSize, String pageIndex, GetOrderListRequestModel requestModel) throws Exception {
 		pageSize = "1000000000";
 		
 		ByteArrayOutputStream out = new ByteArrayOutputStream();
@@ -873,7 +873,7 @@ public class OrderService {
 		
 		SimpleDateFormat simpleDateFormat = new SimpleDateFormat("MM/dd/yyyy");
 		
-		List<TbOrder> lstTbOrderRaw = getOrderList(orderNo, startDate, endDate, status, length, pageSize, pageIndex, requestModel).getLstTbOrder();
+		List<TbOrder> lstTbOrderRaw = getOrderList(orderNo, sku, item, name, startDate, endDate, status, length, pageSize, pageIndex, requestModel).getLstTbOrder();
 		for (TbOrder tbOrder : lstTbOrderRaw) {
 			row = sheet.createRow(intRow);
 			
@@ -968,7 +968,7 @@ public class OrderService {
 		return responseModel;
 	}
 	
-	public GetOrderListResponseModel getOrderList(String orderNo, String startDate, String endDate, String status, String length, String pageSize, String pageIndex, GetOrderListRequestModel requestModel) throws Exception {
+	public GetOrderListResponseModel getOrderList(String orderNo, String sku, String item, String name, String startDate, String endDate, String status, String length, String pageSize, String pageIndex, GetOrderListRequestModel requestModel) throws Exception {
 		GetOrderListResponseModel responseModel = new GetOrderListResponseModel(requestModel);
 		
 		tokenUtil.claims(requestModel);
@@ -979,10 +979,10 @@ public class OrderService {
 		Optional<TbUser> optTbUser = tbUserRepository.findOne(Example.of(exampleTbUser));
 		
 		if (optTbUser.isPresent()) {
-			List<TbOrder> lstTbOrder = tbOrderRepository.find(optTbUser.get().getTbuId(), orderNo, new SimpleDateFormat("yyyy-MM-dd hh:mm:ss").parse(startDate + " 00:00:00"), new SimpleDateFormat("yyyy-MM-dd hh:mm:ss").parse(endDate + " 23:59:50"), status, PageRequest.of(Integer.valueOf(pageIndex), Integer.valueOf(pageSize), Sort.by("tboOrderNo", "tboSku").ascending()));
+			List<TbOrder> lstTbOrder = tbOrderRepository.find(optTbUser.get().getTbuId(), orderNo, sku, item, name, new SimpleDateFormat("yyyy-MM-dd hh:mm:ss").parse(startDate + " 00:00:00"), new SimpleDateFormat("yyyy-MM-dd hh:mm:ss").parse(endDate + " 23:59:50"), status, PageRequest.of(Integer.valueOf(pageIndex), Integer.valueOf(pageSize), Sort.by("tboOrderNo", "tboSku").ascending()));
 			
 			if (lstTbOrder.size() > 0) {
-				responseModel.setLength(tbOrderRepository.count(optTbUser.get().getTbuId(), orderNo, new SimpleDateFormat("yyyy-MM-dd hh:mm:ss").parse(startDate + " 00:00:00"), new SimpleDateFormat("yyyy-MM-dd hh:mm:ss").parse(endDate + " 23:59:50"), status));
+				responseModel.setLength(tbOrderRepository.count(optTbUser.get().getTbuId(), orderNo, sku, item, name, new SimpleDateFormat("yyyy-MM-dd hh:mm:ss").parse(startDate + " 00:00:00"), new SimpleDateFormat("yyyy-MM-dd hh:mm:ss").parse(endDate + " 23:59:50"), status));
 				responseModel.setLstTbOrder(lstTbOrder);
 				
 				responseModel.setStatus("200");
