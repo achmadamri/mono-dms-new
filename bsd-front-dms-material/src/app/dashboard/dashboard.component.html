@@ -3,7 +3,7 @@
         <div class="row">
             <div class="col-lg-3 col-md-6 col-sm-6">
                 <div class="card card-stats">
-                    <div class="card-header card-header-warning card-header-icon">
+                    <div class="card-header card-header-success card-header-icon">
                         <div class="card-icon">
                             <i class="material-icons">content_copy</i>
                         </div>
@@ -12,14 +12,14 @@
                     </div>
                     <div class="card-footer">
                         <div class="stats">
-                            <i class="material-icons text-warning">warning</i> Low skus
+                            <i class="material-icons text-success">success</i> Low skus
                         </div>
                     </div>
                 </div>
             </div>
             <div class="col-lg-3 col-md-6 col-sm-6">
                 <div class="card card-stats">
-                    <div class="card-header card-header-info card-header-icon">
+                    <div class="card-header card-header-success card-header-icon">
                         <div class="card-icon">
                             <i class="material-icons">store</i>
                         </div>
@@ -28,14 +28,14 @@
                     </div>
                     <div class="card-footer">
                         <div class="stats">
-                            <i class="material-icons text-info">date_range</i> Today
+                            <i class="material-icons text-success">date_range</i> Today
                         </div>
                     </div>
                 </div>
             </div>
             <div class="col-lg-3 col-md-6 col-sm-6">
                 <div class="card card-stats">
-                    <div class="card-header card-header-danger card-header-icon">
+                    <div class="card-header card-header-success card-header-icon">
                         <div class="card-icon">
                             <i class="material-icons">assignment_late</i>
                         </div>
@@ -44,14 +44,14 @@
                     </div>
                     <div class="card-footer">
                         <div class="stats">
-                            <i class="material-icons text-danger">date_range</i> Today
+                            <i class="material-icons text-success">date_range</i> Today
                         </div>
                     </div>
                 </div>
             </div>
             <div class="col-lg-3 col-md-6 col-sm-6">
                 <div class="card card-stats">
-                    <div class="card-header card-header-info card-header-icon">
+                    <div class="card-header card-header-success card-header-icon">
                         <div class="card-icon">
                             <i class="material-icons">add_shopping_carts</i>
                         </div>
@@ -60,7 +60,7 @@
                     </div>
                     <div class="card-footer">
                         <div class="stats">
-                            <i class="material-icons text-info">date_range</i> Today
+                            <i class="material-icons text-success">date_range</i> Today
                         </div>
                     </div>
                 </div>
@@ -69,7 +69,7 @@
         <div class="row">
             <div class="col-md-6">
                 <div class="card card-chart">
-                    <div class="card-header card-header-success">
+                    <div class="card-header">
                         <h4 class="card-title">Top 10 Sales By Quantity</h4>
                         <div class="ct-chart" id="top10SalesByQuantity"></div>
                     </div>
@@ -92,7 +92,7 @@
             </div>
             <div class="col-md-6">
                 <div class="card card-chart">
-                    <div class="card-header card-header-success">
+                    <div class="card-header">
                         <h4 class="card-title">Top 10 Sales By Values</h4>
                         <div class="ct-chart" id="top10SalesByValues"></div>
                     </div>
@@ -117,12 +117,12 @@
         <!--<div class="row">
             <div class="col-lg-6 col-md-12">
                 <div class="card">
-                    <div class="card-header card-header-warning">
+                    <div class="card-header card-header-success">
                         <h4 class="card-title">Low Skus</h4>
                     </div>
                     <div class="card-body table-responsive" style="max-height: 250px;">
                         <table class="table table-hover">
-                            <thead class="text-warning">
+                            <thead class="text-success">
                                 <th>Sku</th>
                                 <th>Market ID</th>
                                 <th>Quantity</th>
@@ -133,7 +133,7 @@
                                     <td title="{{lowSku.tbmMarketId}}">{{ lowSku.tbmMarketId?.length > 10 ? (lowSku.tbmMarketId | slice:0:10) + '...' : lowSku.tbmMarketId }}</td>
                                     <td>{{lowSku.tbpmQty === null ? 0 : lowSku.tbpmQty}}</td>
                                     <td>
-                                        <input type="button" style="padding: 2px 15px;" class="btn btn-warning" value="view" [disabled]="clicked" [routerLink]="['/product-edit', lowSku.tbpSku]"/>
+                                        <input type="button" style="padding: 2px 15px;" class="btn btn-success" value="view" [disabled]="clicked" [routerLink]="['/product-edit', lowSku.tbpSku]"/>
                                     </td>
                                 </tr>
                             </tbody>
@@ -143,12 +143,12 @@
             </div>
             <div class="col-lg-6 col-md-12">
                 <div class="card">
-                    <div class="card-header card-header-warning">
+                    <div class="card-header card-header-success">
                         <h4 class="card-title">Market Stats</h4>
                     </div>
                     <div class="card-body table-responsive" style="max-height: 250px;">
                         <table class="table table-hover">
-                            <thead class="text-warning">
+                            <thead class="text-success">
                                 <th>Market ID</th>
                                 <th>Frontliner</th>
                                 <th>Order No</th>
@@ -164,7 +164,7 @@
                                     <td>{{lstMarketStats.tboSku}}</td>
                                     <td>{{lstMarketStats.tboOrderSum}}</td>
                                     <td>
-                                        <input type="button" style="padding: 2px 15px;" class="btn btn-warning" value="view" [disabled]="clicked" [routerLink]="['/order-edit', lstMarketStats.tboId]"/>
+                                        <input type="button" style="padding: 2px 15px;" class="btn btn-success" value="view" [disabled]="clicked" [routerLink]="['/order-edit', lstMarketStats.tboId]"/>
                                     </td>
                                 </tr>
                             </tbody>
