@@ -88,16 +88,55 @@ export class DashboardComponent implements OnInit {
       successResponse => {
         this.getDashboardResponse = successResponse;
 
-        /* ----------==========     Top 10 Sales By Quantity    ==========---------- */
-        var labelQuantity = this.getDashboardResponse.lstTop10SalesByQuantity.map(function (e) { return e.tboItem.length > 20 ? e.tboItem.substring(0, 20) + '...' : e.tboItem; });
-        var seriesQuantity = this.getDashboardResponse.lstTop10SalesByQuantity.map(function (e) { return e.tboQty; });
-        var datawebsiteViewsChart1 = {
-          labels: labelQuantity,
+        /* ----------==========     Daily Sales Chart initialization For Documentation    ==========---------- */
+
+        var labelValues1 = this.getDashboardResponse.lstMarketPerformance.map(function (e) {
+          const date = new Date(e[0]);
+          return `${date.getMonth() + 1}/${date.getDate()}/${date.getFullYear()}`;
+        });
+        var seriesValues1 = this.getDashboardResponse.lstMarketPerformance.map(function (e) {
+          return e[1];
+        });
+
+        console.log(labelValues1);
+        console.log(seriesValues1);
+
+        var data1 = {
+          labels: labelValues1,
           series: [
-            seriesQuantity
+            seriesValues1
           ]
         };
-        var optionswebsiteViewsChart1 = {
+        var options1 = {
+          lineSmooth: Chartist.Interpolation.cardinal({
+            tension: 0
+          }),
+          chartPadding: {
+            top: 15,
+            right: 15,
+            bottom: 5,
+            left: 10
+          },
+          width: '100%',
+          height: '300px'
+        };
+
+        var dailySalesChart = new Chartist.Line('#dailySalesChart', data1, options1);
+
+        this.startAnimationForLineChart(dailySalesChart);
+
+        // ------------------------------------------------------------------------------------------------------
+        /* ----------==========    Top 10 Sales By Values Chart initialization    ==========---------- */
+
+        var labelValues2 = this.getDashboardResponse.lstTop10SalesByQuantity.map(function (e) { return e.tboItem.length > 20 ? e.tboItem.substring(0, 20) + '...' : e.tboItem; });
+        var seriesValues2 = this.getDashboardResponse.lstTop10SalesByValues.map(function (e) { return e.tboOrderSum / 1000; });
+        var data2 = {
+          labels: labelValues2,
+          series: [
+            seriesValues2
+          ]
+        };
+        var options2 = {
           horizontalBars: true,
           reverseData: true,
           axisY: {            
@@ -113,7 +152,7 @@ export class DashboardComponent implements OnInit {
           width: '100%',
           height: '300px'
         };
-        var responsiveOptions: any[] = [
+        var responsiveOptions2: any[] = [
           ['screen and (max-width: 640px)', {
             seriesBarDistance: 5,
             axisX: {
@@ -123,50 +162,10 @@ export class DashboardComponent implements OnInit {
             }
           }]
         ];
-        var top10SalesByQuantity = new Chartist.Bar('#top10SalesByQuantity', datawebsiteViewsChart1, optionswebsiteViewsChart1, responsiveOptions);
-
-        //start animation
-        this.startAnimationForBarChart(top10SalesByQuantity);
-
-        /* ----------==========     Top 10 Sales By Sales    ==========---------- */        
-        var labelValues = this.getDashboardResponse.lstTop10SalesByQuantity.map(function (e) { return e.tboItem.length > 20 ? e.tboItem.substring(0, 20) + '...' : e.tboItem; });
-        var seriesValues = this.getDashboardResponse.lstTop10SalesByValues.map(function (e) { return e.tboOrderSum; });
-        var datawebsiteViewsChart2 = {
-          labels: labelValues,
-          series: [
-            seriesValues
-          ]
-        };
-        var optionswebsiteViewsChart2 = {
-          horizontalBars: true,
-          reverseData: true,
-          axisY: {            
-            onlyInteger: true,
-            offset: 200
-          },
-          chartPadding: {
-            top: 15,
-            right: 15,
-            bottom: 5,
-            left: 10
-          },
-          width: '100%',
-          height: '300px'
-        };
-        var responsiveOptions: any[] = [
-          ['screen and (max-width: 640px)', {
-            seriesBarDistance: 5,
-            axisX: {
-              labelInterpolationFnc: function (value) {
-                return value[0];
-              }
-            }
-          }]
-        ];
-        var top10SalesByValues = new Chartist.Bar('#top10SalesByValues', datawebsiteViewsChart2, optionswebsiteViewsChart2, responsiveOptions);
-
-        //start animation
-        this.startAnimationForBarChart(top10SalesByValues);
+        var marketPerformanceChart = new Chartist.Bar('#marketPerformanceChart', data2, options2, responsiveOptions2);
+  
+        //start animation for the Emails Subscription Chart
+        this.startAnimationForBarChart(marketPerformanceChart);
       },
       errorResponse => {
         this.util.showNotification('danger', 'top', 'center', errorResponse.error.error + '<br>' + errorResponse.error.message);

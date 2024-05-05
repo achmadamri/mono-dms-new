@@ -48,7 +48,7 @@ CREATE TABLE `tb_auth` (
 
 LOCK TABLES `tb_auth` WRITE;
 /*!40000 ALTER TABLE `tb_auth` DISABLE KEYS */;
-INSERT INTO `tb_auth` VALUES (1,NULL,NULL,'2024-05-05 07:27:46',0,'admin@mail.com','202cb962ac59075b964b07152d234b70','active','de7dv6h87bp0c6v6x82wh6cfn57kkn13troh','ADMIN'),(170,'2023-12-17 15:37:52',0,'2024-05-02 01:49:12',0,'aicepusat@mail.com','202cb962ac59075b964b07152d234b70','active','kp129p8xculpj2jvg5uf7hsnsvdc5eu6boib','PRINCIPAL'),(171,'2023-12-17 15:38:58',0,'2024-01-02 10:47:51',0,'user1@mail.com','202cb962ac59075b964b07152d234b70','active','i046ykl8qyqwl2gey6bozit0j6uyl1kdhnkh','DISTRIBUTOR'),(172,'2023-12-17 15:39:24',0,'2023-12-19 10:17:57',0,'user2@mail.com','202cb962ac59075b964b07152d234b70','active','2pp0zwztmom6tt18mbpm2fg0ib7qi4sl41jl','DISTRIBUTOR'),(173,'2024-05-05 07:08:45',0,'2024-05-05 07:26:52',0,'roxy1@mail.com','202cb962ac59075b964b07152d234b70','active','sseokgarui9l8wio8rmg72i96zca9yprc9nm','PRINCIPAL');
+INSERT INTO `tb_auth` VALUES (1,NULL,NULL,'2024-05-05 07:27:46',0,'admin@mail.com','202cb962ac59075b964b07152d234b70','active','de7dv6h87bp0c6v6x82wh6cfn57kkn13troh','ADMIN'),(170,'2023-12-17 15:37:52',0,'2024-05-02 01:49:12',0,'aicepusat@mail.com','202cb962ac59075b964b07152d234b70','active','kp129p8xculpj2jvg5uf7hsnsvdc5eu6boib','PRINCIPAL'),(171,'2023-12-17 15:38:58',0,'2024-01-02 10:47:51',0,'user1@mail.com','202cb962ac59075b964b07152d234b70','active','i046ykl8qyqwl2gey6bozit0j6uyl1kdhnkh','DISTRIBUTOR'),(172,'2023-12-17 15:39:24',0,'2023-12-19 10:17:57',0,'user2@mail.com','202cb962ac59075b964b07152d234b70','active','2pp0zwztmom6tt18mbpm2fg0ib7qi4sl41jl','DISTRIBUTOR'),(173,'2024-05-05 07:08:45',0,'2024-05-05 12:19:42',0,'roxy1@mail.com','202cb962ac59075b964b07152d234b70','active','sseokgarui9l8wio8rmg72i96zca9yprc9nm','PRINCIPAL');
 /*!40000 ALTER TABLE `tb_auth` ENABLE KEYS */;
 UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
@@ -61,4 +61,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2024-05-05 14:28:34
+-- Dump completed on 2024-05-05 19:50:45

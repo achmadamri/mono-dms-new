@@ -81,7 +81,7 @@ public class OrderController {
     private OrderService orderService;
 	
 	@PostMapping("/postuploadorder")
-	// @Transactional
+	@Transactional
 	public HttpEntity<?> postUploadOrder(HttpServletRequest request, PostUploadOrderRequestModel requestModel, @RequestParam("file") MultipartFile file) throws Exception {
 		String fid = new Uid().generateString(20);
 		log.info(request.getRequestURL().toString() + " [fid:" + fid + "] requestModel : " + file.toString());
