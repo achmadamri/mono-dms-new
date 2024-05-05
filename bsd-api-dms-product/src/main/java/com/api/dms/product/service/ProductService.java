@@ -410,6 +410,7 @@ public class ProductService {
 			
 			TbUserMarket exampleTbUserMarket = new TbUserMarket();
 			exampleTbUserMarket.setTbuId(optTbUser.get().getTbuId());
+			exampleTbUserMarket.setTbmMarketCheck(1);
 			List<TbUserMarket> lstTbUserMarket = tbUserMarketRepository.findAll(Example.of(exampleTbUserMarket));
 
 			SimpleMapper simpleMapper = new SimpleMapper();
