@@ -51,11 +51,11 @@ public interface ViewOrderRepository extends JpaRepository<ViewOrder, Integer> {
            "FROM ViewOrder t " +
            "WHERE DATE(t.tboCreateDate) >= :startDate " +
            "ORDER BY t.tboQty DESC")
-    List<ViewOrder> top10SalesByQuantity(@Param("startDate") Date startDate);
+    List<ViewOrder> top10SalesByQuantity(@Param("startDate") Date startDate, Pageable pageable);
 
 	@Query("SELECT t " +
            "FROM ViewOrder t " +
            "WHERE DATE(t.tboCreateDate) >= :startDate " +
            "ORDER BY t.tboOrderSum DESC")
-    List<ViewOrder> top10SalesByValues(@Param("startDate") Date startDate);
+    List<ViewOrder> top10SalesByValues(@Param("startDate") Date startDate, Pageable pageable);
 }

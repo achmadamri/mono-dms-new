@@ -24,6 +24,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.env.Environment;
 import org.springframework.data.domain.Example;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
@@ -653,9 +654,11 @@ public class ReportService {
 
 			responseModel.setLstMarketPerformance(viewOrderRepository.dashboardMarketPerformance(sevenDaysAgoDate));
 
-			responseModel.setLstTop10SalesByQuantity(viewOrderRepository.top10SalesByQuantity(currentDateInUtc));
+			Pageable topTen = PageRequest.of(0, 10);
 
-			responseModel.setLstTop10SalesByValues(viewOrderRepository.top10SalesByValues(currentDateInUtc));
+			responseModel.setLstTop10SalesByQuantity(viewOrderRepository.top10SalesByQuantity(currentDateInUtc, topTen));
+
+			responseModel.setLstTop10SalesByValues(viewOrderRepository.top10SalesByValues(currentDateInUtc, topTen));
 
 			responseModel.setStatus("200");
 			responseModel.setMessage("Get Dashboard ok");
