@@ -28,8 +28,7 @@
             "mainClass": "com.api.dms.order.Application",
             "projectName": "bsd-api-dms-order",
             "args": "",
-            "envFile": "${workspaceFolder}/.env",
-            "vmArgs": " -Dcom.sun.management.jmxremote -Dcom.sun.management.jmxremote.port=62751 -Dcom.sun.management.jmxremote.authenticate=false -Dcom.sun.management.jmxremote.ssl=false -Dspring.jmx.enabled=true -Djava.rmi.server.hostname=localhost -Dspring.application.admin.enabled=true -Dspring.boot.project.name=bsd-api-dms-order"
+            "envFile": "${workspaceFolder}/.env"
         },
         {
             "type": "java",

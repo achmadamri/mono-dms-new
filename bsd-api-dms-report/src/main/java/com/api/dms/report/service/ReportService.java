@@ -653,6 +653,10 @@ public class ReportService {
 
 			responseModel.setLstMarketPerformance(viewOrderRepository.dashboardMarketPerformance(sevenDaysAgoDate));
 
+			responseModel.setLstTop10SalesByQuantity(viewOrderRepository.top10SalesByQuantity(currentDateInUtc));
+
+			responseModel.setLstTop10SalesByValues(viewOrderRepository.top10SalesByValues(currentDateInUtc));
+
 			responseModel.setStatus("200");
 			responseModel.setMessage("Get Dashboard ok");
 			

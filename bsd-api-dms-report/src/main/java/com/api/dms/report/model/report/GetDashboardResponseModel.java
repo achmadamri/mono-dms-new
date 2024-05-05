@@ -28,6 +28,10 @@ public class GetDashboardResponseModel extends ResponseModel {
 
 	private List<TbProductMarket> lstLowSku;
 
+	private List<ViewOrder> lstTop10SalesByQuantity;
+
+	private List<ViewOrder> lstTop10SalesByValues;
+
 	public String getSku() {
 		return sku;
 	}
@@ -90,5 +94,21 @@ public class GetDashboardResponseModel extends ResponseModel {
 
 	public void setLstLowSku(List<TbProductMarket> lstLowSku) {
 		this.lstLowSku = lstLowSku;
+	}
+
+	public List<ViewOrder> getLstTop10SalesByQuantity() {
+		return lstTop10SalesByQuantity;
+	}
+
+	public void setLstTop10SalesByQuantity(List<ViewOrder> lstTop10SalesByQuantity) {
+		this.lstTop10SalesByQuantity = lstTop10SalesByQuantity;
+	}
+
+	public List<ViewOrder> getLstTop10SalesByValues() {
+		return lstTop10SalesByValues;
+	}
+
+	public void setLstTop10SalesByValues(List<ViewOrder> lstTop10SalesByValues) {
+		this.lstTop10SalesByValues = lstTop10SalesByValues;
 	}
 }

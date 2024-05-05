@@ -17,4 +17,6 @@ export class GetDashboardResponse {
     lstMarketPerformance: ViewOrder[] = Array(new ViewOrder());
     lstMarketStats: ViewOrder[] = Array(new ViewOrder());
     lstLowSku: TbProductMarket[] = Array(new TbProductMarket());
+    lstTop10SalesByQuantity: ViewOrder[] = Array(new ViewOrder());
+    lstTop10SalesByValues: ViewOrder[] = Array(new ViewOrder());
 }

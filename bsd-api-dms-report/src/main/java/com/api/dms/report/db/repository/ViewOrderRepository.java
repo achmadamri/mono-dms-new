@@ -46,4 +46,16 @@ public interface ViewOrderRepository extends JpaRepository<ViewOrder, Integer> {
            "WHERE v.tbuId = :tbuId and v.tboMarketId in :tboMarketId " +
            "GROUP BY v.tboMarketId, v.tboFrontliner")
     List<Object[]> reportFrontliner(@Param("tbuId") Integer tbuId, @Param("tboMarketId") List<String> tboMarketId);
+
+	@Query("SELECT t " +
+           "FROM ViewOrder t " +
+           "WHERE DATE(t.tboCreateDate) >= :startDate " +
+           "ORDER BY t.tboQty DESC")
+    List<ViewOrder> top10SalesByQuantity(@Param("startDate") Date startDate);
+
+	@Query("SELECT t " +
+           "FROM ViewOrder t " +
+           "WHERE DATE(t.tboCreateDate) >= :startDate " +
+           "ORDER BY t.tboOrderSum DESC")
+    List<ViewOrder> top10SalesByValues(@Param("startDate") Date startDate);
 }

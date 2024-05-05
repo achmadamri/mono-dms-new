@@ -89,10 +89,12 @@ export class DashboardComponent implements OnInit {
         this.getDashboardResponse = successResponse;
 
         /* ----------==========     Top 10 Sales By Quantity    ==========---------- */
+        var labelQuantity = this.getDashboardResponse.lstTop10SalesByQuantity.map(function (e) { return e.tboItem.length > 20 ? e.tboItem.substring(0, 20) + '...' : e.tboItem; });
+        var seriesQuantity = this.getDashboardResponse.lstTop10SalesByQuantity.map(function (e) { return e.tboQty; });
         var datawebsiteViewsChart1 = {
-          labels: ['CONCOR 2.5MG TAB', 'STROCIN-P TAB', 'DECOGLEN FX CPL', 'CERIN 10MG CPL', 'AERIUS 5MG TAB', 'ALERTEN Q 25MG CPS', 'VOSDEDON 10MG TAB', 'HERBESSE CR 100MG CPS', 'EFLAGEN 50MG ENTERIC TAB', 'MYONEP 50MG TAB'],
+          labels: labelQuantity,
           series: [
-            [2492, 1767, 1640, 1453, 805, 360, 253, 244, 120, 105]
+            seriesQuantity
           ]
         };
         var optionswebsiteViewsChart1 = {
@@ -126,11 +128,13 @@ export class DashboardComponent implements OnInit {
         //start animation
         this.startAnimationForBarChart(top10SalesByQuantity);
 
-        /* ----------==========     Top 10 Sales By Sales    ==========---------- */
+        /* ----------==========     Top 10 Sales By Sales    ==========---------- */        
+        var labelValues = this.getDashboardResponse.lstTop10SalesByQuantity.map(function (e) { return e.tboItem.length > 20 ? e.tboItem.substring(0, 20) + '...' : e.tboItem; });
+        var seriesValues = this.getDashboardResponse.lstTop10SalesByValues.map(function (e) { return e.tboOrderSum; });
         var datawebsiteViewsChart2 = {
-          labels: ['CONCOR 2.5MG TAB', 'AERIUS 5MG TAB', 'CERIN 10MG CPL', 'ARAVA 20MG TAB', 'STROCIN-P TAB', 'ALERTEN Q 25MG CPS', 'HERBESSER CD 100MG CPS', 'HERBESSER CD 200MG CPS', 'LANAKELOID E CR 10G', 'ACCU CHEK SOFTCLIX 100 S'],
+          labels: labelValues,
           series: [
-            [24920, 10625, 7410, 6210, 5654, 3269, 2520, 1891, 1379, 1290]  // Example quantities multiplied by 100 for visual scaling
+            seriesValues
           ]
         };
         var optionswebsiteViewsChart2 = {
