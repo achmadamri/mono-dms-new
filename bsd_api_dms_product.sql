@@ -334,7 +334,7 @@ CREATE TABLE `tb_user` (
 
 LOCK TABLES `tb_user` WRITE;
 /*!40000 ALTER TABLE `tb_user` DISABLE KEYS */;
-INSERT INTO `tb_user` VALUES (1,NULL,NULL,'2024-05-05 07:08:18',1,'admin@mail.com','202cb962ac59075b964b07152d234b70','admin','admin',NULL,NULL,NULL,'active',NULL,NULL,'de7dv6h87bp0c6v6x82wh6cfn57kkn13troh','ADMIN'),(170,'2023-12-17 15:37:52',1,'2024-05-02 01:49:12',170,'aicepusat@mail.com','202cb962ac59075b964b07152d234b70','aice','pusat',NULL,NULL,NULL,'active',NULL,NULL,'kp129p8xculpj2jvg5uf7hsnsvdc5eu6boib','PRINCIPAL'),(171,'2023-12-17 15:38:58',1,'2024-01-02 10:47:50',171,'user1@mail.com','202cb962ac59075b964b07152d234b70','user','satu',NULL,NULL,NULL,'active',NULL,NULL,'i046ykl8qyqwl2gey6bozit0j6uyl1kdhnkh','DISTRIBUTOR'),(172,'2023-12-17 15:39:24',1,'2023-12-19 10:17:57',1,'user2@mail.com','202cb962ac59075b964b07152d234b70','user','dua',NULL,NULL,NULL,'active',NULL,NULL,'2pp0zwztmom6tt18mbpm2fg0ib7qi4sl41jl','DISTRIBUTOR'),(173,'2024-05-05 07:08:45',1,'2024-05-05 07:20:26',173,'roxy1@mail.com','202cb962ac59075b964b07152d234b70','Roxy','Satu',NULL,NULL,NULL,'active',NULL,NULL,'sseokgarui9l8wio8rmg72i96zca9yprc9nm','PRINCIPAL');
+INSERT INTO `tb_user` VALUES (1,NULL,NULL,'2024-05-05 07:27:46',1,'admin@mail.com','202cb962ac59075b964b07152d234b70','admin','admin',NULL,NULL,NULL,'active',NULL,NULL,'de7dv6h87bp0c6v6x82wh6cfn57kkn13troh','ADMIN'),(170,'2023-12-17 15:37:52',1,'2024-05-02 01:49:12',170,'aicepusat@mail.com','202cb962ac59075b964b07152d234b70','aice','pusat',NULL,NULL,NULL,'active',NULL,NULL,'kp129p8xculpj2jvg5uf7hsnsvdc5eu6boib','PRINCIPAL'),(171,'2023-12-17 15:38:58',1,'2024-01-02 10:47:50',171,'user1@mail.com','202cb962ac59075b964b07152d234b70','user','satu',NULL,NULL,NULL,'active',NULL,NULL,'i046ykl8qyqwl2gey6bozit0j6uyl1kdhnkh','DISTRIBUTOR'),(172,'2023-12-17 15:39:24',1,'2023-12-19 10:17:57',1,'user2@mail.com','202cb962ac59075b964b07152d234b70','user','dua',NULL,NULL,NULL,'active',NULL,NULL,'2pp0zwztmom6tt18mbpm2fg0ib7qi4sl41jl','DISTRIBUTOR'),(173,'2024-05-05 07:08:45',1,'2024-05-05 07:26:52',173,'roxy1@mail.com','202cb962ac59075b964b07152d234b70','Roxy','Satu',NULL,NULL,NULL,'active',NULL,NULL,'sseokgarui9l8wio8rmg72i96zca9yprc9nm','PRINCIPAL');
 /*!40000 ALTER TABLE `tb_user` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -575,4 +575,4 @@ SET character_set_client = @saved_cs_client;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2024-05-05  7:21:06
+-- Dump completed on 2024-05-05 14:28:34
