@@ -70,10 +70,10 @@
             <div class="col-md-6">
                 <div class="card card-chart">
                     <div class="card-header card-header-success">
-                        <div class="ct-chart" id="dailySalesChart"></div>
+                        <div class="ct-chart" id="yearlySalesChart"></div>
                     </div>
                     <div class="card-body">
-                        <h4 class="card-title">Daily Sales</h4>
+                        <h4 class="card-title">Yearly Sales 2023 vs 2024</h4>
                         <p class="card-category" *ngIf="percentageTodaySales > 0">
                             <span class="text"><i class="fa fa-long-arrow-up"></i> <b>{{percentageTodaySales.toFixed(2)}}%</b> </span> increase in today
                             sales.
@@ -92,6 +92,63 @@
             </div>
             <div class="col-md-6">
                 <div class="card card-chart">
+                    <div class="card-header card-header-success">
+                        <div class="ct-chart" id="dailySalesChart"></div>
+                    </div>
+                    <div class="card-body">
+                        <h4 class="card-title">Daily Sales March vs April 2024</h4>
+                        <p class="card-category" *ngIf="percentageTodaySales > 0">
+                            <span class="text"><i class="fa fa-long-arrow-up"></i> <b>{{percentageTodaySales.toFixed(2)}}%</b> </span> increase in today
+                            sales.
+                        </p>
+                        <p class="card-category" *ngIf="percentageTodaySales <= 0">
+                            <span class="text"><i class="fa fa-long-arrow-down"></i> <b>{{percentageTodaySales.toFixed(2)}}%</b> </span> increase in today
+                            sales.
+                        </p>
+                    </div>
+                    <div class="card-footer">
+                        <div class="stats">
+                            <i class="material-icons">access_time</i> total sales today = 1000
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-6">
+                <div class="card card-chart">
+                    <div class="card-header card-header-warning">
+                        <div class="ct-chart" id="deadstockChart"></div>
+                    </div>
+                    <div class="card-body">
+                        <h4 class="card-title">Deadstock more 1 month</h4>
+                    </div>
+                    <div class="card-footer">
+                        <div class="stats">
+                            <i class="material-icons">access_time</i> campaign sent 2 days ago
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="card card-chart">
+                    <div class="card-header card-header-warning">
+                        <div class="ct-chart" id="expiredChart"></div>
+                    </div>
+                    <div class="card-body">
+                        <h4 class="card-title">Expired date less than 2 weeks</h4>
+                    </div>
+                    <div class="card-footer">
+                        <div class="stats">
+                            <i class="material-icons">access_time</i> campaign sent 2 days ago
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-6">
+                <div class="card card-chart">
                     <div class="card-header card-header-warning">
                         <div class="ct-chart" id="marketPerformanceChart"></div>
                     </div>
@@ -105,65 +162,38 @@
                     </div>
                 </div>
             </div>
-        </div>
-        <!--<div class="row">
-            <div class="col-lg-6 col-md-12">
-                <div class="card">
+            <div class="col-md-6">
+                <div class="card card-chart">
                     <div class="card-header card-header-warning">
-                        <h4 class="card-title">Low Skus</h4>
+                        <div class="ct-chart" id="stockChart"></div>
                     </div>
-                    <div class="card-body table-responsive" style="max-height: 250px;">
-                        <table class="table table-hover">
-                            <thead class="text-warning">
-                                <th>Sku</th>
-                                <th>Market ID</th>
-                                <th>Quantity</th>
-                            </thead>
-                            <tbody *ngIf="this.getDashboardResponse.lstLowSku[0] != undefined">
-                                <tr *ngFor="let lowSku of getDashboardResponse.lstLowSku; let i = index">
-                                    <td>{{lowSku.tbpSku}}</td>
-                                    <td title="{{lowSku.tbmMarketId}}">{{ lowSku.tbmMarketId?.length > 10 ? (lowSku.tbmMarketId | slice:0:10) + '...' : lowSku.tbmMarketId }}</td>
-                                    <td>{{lowSku.tbpmQty === null ? 0 : lowSku.tbpmQty}}</td>
-                                    <td>
-                                        <input type="button" style="padding: 2px 15px;" class="btn btn-warning" value="view" [disabled]="clicked" [routerLink]="['/product-edit', lowSku.tbpSku]"/>
-                                    </td>
-                                </tr>
-                            </tbody>
-                        </table>
+                    <div class="card-body">
+                        <h4 class="card-title">Stock under minimum buffer</h4>
+                    </div>
+                    <div class="card-footer">
+                        <div class="stats">
+                            <i class="material-icons">access_time</i> campaign sent 2 days ago
+                        </div>
                     </div>
                 </div>
             </div>
-            <div class="col-lg-6 col-md-12">
-                <div class="card">
+        </div>
+        <div class="row">
+            <div class="col-md-6">
+                <div class="card card-chart">
                     <div class="card-header card-header-warning">
-                        <h4 class="card-title">Market Stats</h4>
+                        <div class="ct-chart" id="outletChart"></div>
                     </div>
-                    <div class="card-body table-responsive" style="max-height: 250px;">
-                        <table class="table table-hover">
-                            <thead class="text-warning">
-                                <th>Market ID</th>
-                                <th>Frontliner</th>
-                                <th>Order No</th>
-                                <th>Sku</th>
-                                <th>Order SUM</th>
-                                <th>Action</th>
-                            </thead>
-                            <tbody *ngIf="this.getDashboardResponse.lstMarketStats[0] != undefined">
-                                <tr *ngFor="let lstMarketStats of getDashboardResponse.lstMarketStats; let i = index">
-                                    <td title="{{lstMarketStats.tboMarketId}}">{{ lstMarketStats.tboMarketId?.length > 10 ? (lstMarketStats.tboMarketId | slice:0:10) + '...' : lstMarketStats.tboMarketId }}</td>
-                                    <td title="{{lstMarketStats.tboFrontliner}}">{{ lstMarketStats.tboFrontliner?.length > 10 ? (lstMarketStats.tboFrontliner | slice:0:10) + '...' : lstMarketStats.tboFrontliner }}</td>
-                                    <td>{{lstMarketStats.tboOrderNo}}</td>
-                                    <td>{{lstMarketStats.tboSku}}</td>
-                                    <td>{{lstMarketStats.tboOrderSum}}</td>
-                                    <td>
-                                        <input type="button" style="padding: 2px 15px;" class="btn btn-warning" value="view" [disabled]="clicked" [routerLink]="['/order-edit', lstMarketStats.tboId]"/>
-                                    </td>
-                                </tr>
-                            </tbody>
-                        </table>
+                    <div class="card-body">
+                        <h4 class="card-title">Top 5 outlet sales compare March vs April 2024</h4>
+                    </div>
+                    <div class="card-footer">
+                        <div class="stats">
+                            <i class="material-icons">access_time</i> campaign sent 2 days ago
+                        </div>
                     </div>
                 </div>
-            </div>            
-        </div>-->
+            </div>
+        </div>
     </div>
 </div>
